@@ -1,0 +1,576 @@
+run_id: f4c52563
+company_name: Vodafone
+company_domain: vodafone.com
+timestamp: '2026-01-21T04:20:21.740118+00:00'
+url_count: 30
+kpi_results:
+- kpi_id: strat_ai_vision
+  pillar: Strategy & Governance
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ag=eu) [Europe](https://www.vodafone.com/news/newsroom?tag=europe) [Infrastructure](https://www.vodafone.com/news/newsroom?tag=infrastructure)
+      [Networks](https://www.vodafone.com/news/newsroom?tag=networks) [Policy](https://www.vodafone.com
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  details:
+    llm_used: false
+- kpi_id: strat_ai_governance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 5.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: for the things that really matter it can improve people's lives and the
+      world around us. We achieve this by empowering people, regardless of who they
+      are or where they live, protecting the planet and help our customers to do the
+      same, all w
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: o-16_9-VF_TogetherWeCan_Father_Daughters_Laptop_RGB.jpg)\\ \\ **Our Offer**
+      \\ \\ With us, you can transform an industry. You'll get unique opportunities
+      to learn and develop new skills, and be empowered to develop ground-breaking
+      solutions
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: providers. Our next gen services are enriching people's lives and ensuring
+      everyone benefits from digital transformation fairly and safely. ![AI improving
+      customer experience across Europe](https://www.vodafone.com/~/media/Images/V/vodafone
+  details:
+    llm_used: false
+- kpi_id: strat_responsible_ai_mentions
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - responsible ai
+    - ai ethics
+    - ai governance
+    - ai safety
+    - responsible use
+- kpi_id: strat_ai_case_studies
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - case study
+    - customer story
+    - success story
+    - AI deployment
+- kpi_id: strat_ai_announcement_recency
+  pillar: Strategy & Governance
+  type: quant
+  score: 5.0
+  confidence: 0.6
+  rationale: Most recent AI mention 20 days ago.
+  citations: []
+  details:
+    days_since: 20
+- kpi_id: prod_ai_product_depth
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: Financial](https://www.vodafone.com/news/newsroom?tag=corporate-and-financial)
+      [Mergers and Acquisitions](https://www.vodafone.com/news/newsroom?tag=mergers-and-acquisitions)
+      [Press Release](https://www.vodafone.com/news/newsroom?tag=press-
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: "ion-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)\
+      \ 08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)\
+      \ [**Vodafone Ireland and ATU receive \u20AC4.6 million EU funding to develop\
+      \ digital technologi"
+  details:
+    llm_used: false
+- kpi_id: prod_ai_use_cases
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: e.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.vodafone.com) Vodafone
+      Group 8.64K subscribers [What are subsea cables?](https://www.youtube.com/watch?list=TLGGvRCclj-OxiUyMTAxMjAyNg&v=OIbUwKtHMAU)
+      Vodafone Group Search 1/1 Info Shopping
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: 'backgrounds and cultures. Hear more about some of our people''s journeys
+      and stories here.](https://careers.vodafone.com/life-at-vodafone/projects-stories/)
+      ## Whatdifferencewillyoumake? We have a shared purpose that if we use technology
+      for'
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ing_origin=https%3A%2F%2Fwww.vodafone.com) Vodafone Life 5.32K subscribers
+      [Meet Nayera](https://www.youtube.com/watch?list=TLGGhaxktcwZpz8yMTAxMjAyNg&v=bpspd5xSIAI)
+      Vodafone Life Search 1/1 Info Shopping Tap to unmute If playback doesn't b
+  details:
+    llm_used: false
+- kpi_id: prod_ai_features_count
+  pillar: Product & Delivery
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 15 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  details:
+    count: 15
+    keywords:
+    - ai feature
+    - predictive
+    - recommendation
+    - automation
+    - ml model
+- kpi_id: prod_ai_pricing_signal
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: "ion-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)\
+      \ 08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)\
+      \ [**Vodafone Ireland and ATU receive \u20AC4.6 million EU funding to develop\
+      \ digital technologi"
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: /www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-appoints-publicis-as-new-brand-creative-agency)
+      08 Dec 2025 [Corporate and Financial](https://www.vodafone.com/news/newsroom/corporate-and-financial)
+      [**Vodafone appoints Publ
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  details:
+    llm_used: false
+- kpi_id: prod_ai_quality
+  pillar: Product & Delivery
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: "ion-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)\
+      \ 08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)\
+      \ [**Vodafone Ireland and ATU receive \u20AC4.6 million EU funding to develop\
+      \ digital technologi"
+  details:
+    llm_used: false
+- kpi_id: people_ai_hiring_volume
+  pillar: People & Operations
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - machine learning
+    - ml engineer
+    - data scientist
+    - ai engineer
+    - mlops
+- kpi_id: people_ai_team_org
+  pillar: People & Operations
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ing fixer drones that are powered by ambient energy ["Link](https://www.vodafone.com/news/newsroom/technology/vodafone-to-show-fixer-drones-a-network-that-can-sense-rain-and-devices-powered-by-ambient-energy-at-mwc-25)
+      ![Vodafone Business I
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: h in a** digital world No matter the size of your business, our technology
+      can help you progress and thrive. With our expertise in connectivity, our leading
+      IoT platform and our global scale, we're taking customers to bold new heights,
+      unlo
+  details:
+    llm_used: false
+- kpi_id: people_ai_training
+  pillar: People & Operations
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: "areers?pid=563018695083194&domain=vodafone.com&triggerGoButton=false)\
+      \ #### Tax Manager Finance \u2013 LISBOA, Portugal Join Us At Vodafone, we\u2019\
+      re not just shaping the future of connectivity for our customers \u2013 we\u2019\
+      re shaping the future for everyo"
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: 'EXPLORE CONNECTING CONTINENTS 0 countries connected through undersea cables
+      ## continents. _connected_ continents. **connected** Deep **connections** Subsea
+      cable systems are an invisible engine driving digital economies. We have over
+      80 of'
+  details:
+    llm_used: false
+- kpi_id: ops_data_infra
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: providers. Our next gen services are enriching people's lives and ensuring
+      everyone benefits from digital transformation fairly and safely. ![AI improving
+      customer experience across Europe](https://www.vodafone.com/~/media/Images/V/vodafone
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: ramme is designed to kick-start your career. Over your two years, you'll
+      experience at least two different teams and have a wealth of opportunities to
+      grow beyond your role. ![](https://careers.vodafone.com/wp-content/uploads/2024/09/113.pn
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ibers [Meet Aslam \| Customer Care Advisor](https://www.youtube.com/watch?list=TLGG5z3viBGQdhQyMTAxMjAyNg&v=XezgJGcJwaw)
+      Vodafone Life Search 1/1 Info Shopping Tap to unmute If playback doesn't begin
+      shortly, try restarting your device. You
+  details:
+    llm_used: false
+- kpi_id: ops_ai_partnerships
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 25 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  details:
+    count: 25
+    keywords:
+    - partner
+    - partnership
+    - collaboration
+    - aws
+    - azure
+    - google cloud
+    - openai
+- kpi_id: ops_ai_compliance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: 'EXPLORE CONNECTING CONTINENTS 0 countries connected through undersea cables
+      ## continents. _connected_ continents. **connected** Deep **connections** Subsea
+      cable systems are an invisible engine driving digital economies. We have over
+      80 of'
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '* Results [View the latest results](https://www.vodafone.com/investors/performance-and-reports/results-and-presentations)
+      Captions Your browser does not support the video tag. 00:00 / 00:00 1080p HD
+      - 1080p HD - 720p HD - 360p 1x - 0.5x - 1'
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  details:
+    llm_used: false
+- kpi_id: prod_ai_support
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: www.vodafone.com) Vodafone Business 5.06K subscribers [Introducing Vodafone
+      Business Security](https://www.youtube.com/watch?list=TLGGriGNKmdThtEyMTAxMjAyNg&v=s_YLbVO32UA)
+      Vodafone Business Search 1/1 Info Shopping Tap to unmute If playback
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '3A%2F%2Fwww.vodafone.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.vodafone.com)
+      Vodafone Group 8.64K subscribers [Digital Success Stories: Perky Blenders and
+      Vodafone](https://www.youtube.com/watch?list=TLGGeEjT21LjZNYyMTAxMjAyNg&v=H8Uk'
+  - source_id: vodafone.com-2345623c91
+    url: https://vodafone.com/company
+    quote: s://www.vodafone.com/) If you still can't find what you're looking for,
+      please contact us and we'll see how we can help. Click [here](https://www.vodafone.com/)
+      to go to the home page OR you will be automatically redirected to the home page
+  details:
+    llm_used: false
+- kpi_id: ops_ai_publications
+  pillar: People & Operations
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - research
+    - paper
+    - publication
+    - conference
+    - arxiv
+pillar_scores:
+- pillar: Strategy & Governance
+  score: 3.5
+  confidence: 0.4
+  kpis:
+  - strat_ai_vision
+  - strat_ai_governance
+  - strat_responsible_ai_mentions
+  - strat_ai_case_studies
+  - strat_ai_announcement_recency
+  - ops_ai_compliance
+- pillar: Product & Delivery
+  score: 3.67
+  confidence: 0.45
+  kpis:
+  - prod_ai_product_depth
+  - prod_ai_use_cases
+  - prod_ai_features_count
+  - prod_ai_pricing_signal
+  - prod_ai_quality
+  - prod_ai_support
+- pillar: People & Operations
+  score: 3.4
+  confidence: 0.42
+  kpis:
+  - people_ai_hiring_volume
+  - people_ai_team_org
+  - people_ai_training
+  - ops_data_infra
+  - ops_ai_partnerships
+  - ops_ai_publications
+overall_score: 3.53
+missing_evidence:
+- strat_responsible_ai_mentions
+- strat_ai_case_studies
+- people_ai_hiring_volume
+- ops_ai_publications
+debug_log:
+- '[fetch] firecrawl ok: https://vodafone.com'
+- '[fetch] firecrawl ok: https://vodafone.com/about'
+- '[fetch] firecrawl ok: https://vodafone.com/company'
+- '[fetch] firecrawl ok: https://vodafone.com/product'
+- '[fetch] firecrawl ok: https://vodafone.com/products'
+- '[fetch] firecrawl ok: https://vodafone.com/solutions'
+- '[fetch] firecrawl ok: https://vodafone.com/pricing'
+- '[fetch] firecrawl ok: https://vodafone.com/careers'
+- '[fetch] firecrawl ok: https://vodafone.com/jobs'
+- '[fetch] firecrawl ok: https://vodafone.com/press'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/news (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 11, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 51s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/news'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/blog (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 12, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 49s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/blog'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/investors (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 13, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 48s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/investors'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/investor-relations (HTTPSConnectionPool(host=''api.firecrawl.dev'',
+  port=443): Max retries exceeded with url: /v1/scrape (Caused by ConnectTimeoutError(<HTTPSConnection(host=''api.firecrawl.dev'',
+  port=443) at 0x24178cadbd0>, ''Connection to api.firecrawl.dev timed out. (connect
+  timeout=30)'')))'
+- '[fetch] readability failed: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/annual-report (Firecrawl
+  error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 14,
+  Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased
+  rate limits or please retry after 29s, resets at Wed Jan 21 2026 04:20:17 GMT+0000
+  (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/annual-report'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/sustainability (Firecrawl
+  error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 15,
+  Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased
+  rate limits or please retry after 27s, resets at Wed Jan 21 2026 04:20:17 GMT+0000
+  (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/sustainability'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/responsible-ai (Firecrawl
+  error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 16,
+  Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased
+  rate limits or please retry after 25s, resets at Wed Jan 21 2026 04:20:17 GMT+0000
+  (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/responsible-ai'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/ai (Firecrawl error 429:
+  {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 17, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 23s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/ai'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/security (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 18, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 22s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/security'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/privacy (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 19, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 20s, resets at Wed Jan 21 2026 04:20:17 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/privacy'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  20, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 18s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  21, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 17s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/our-company/megatrends
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  22, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 16s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/our-company/megatrends'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  23, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 15s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  24, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 14s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/our-company/our-strategic-priorities
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  25, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 12s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/our-company/our-strategic-priorities'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/everyone-connected/connecting-futures
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  26, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 11s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/everyone-connected/connecting-futures'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/technology
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  27, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 10s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/technology'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  28, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 9s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  29, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 8s, resets at Wed Jan 21 2026 04:20:17
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'

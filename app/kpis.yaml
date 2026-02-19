@@ -1,0 +1,180 @@
+- kpi_id: strat_ai_vision
+  name: AI Vision Clarity
+  pillar: Strategy & Governance
+  type: rubric
+  question: "How clearly does the company articulate its AI strategy and goals?"
+  rubric:
+    - "1: No AI strategy mentioned."
+    - "3: Some AI initiatives described but vague or fragmented."
+    - "5: Clear, coherent AI strategy with priorities and outcomes."
+  evidence_requirements: "Official strategy, leadership messaging, or investor communications."
+- kpi_id: strat_ai_governance
+  name: AI Governance & Oversight
+  pillar: Strategy & Governance
+  type: rubric
+  question: "Does the company describe AI governance, risk management, or oversight?"
+  rubric:
+    - "1: No governance or oversight referenced."
+    - "3: General risk or ethics language without structure."
+    - "5: Formal governance structure, committees, or policies referenced."
+  evidence_requirements: "Policy pages, governance statements, or compliance docs."
+- kpi_id: strat_responsible_ai_mentions
+  name: Responsible AI Mentions
+  pillar: Strategy & Governance
+  type: quant
+  question: "How often does the company mention responsible AI or ethics?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["responsible ai", "ai ethics", "ai governance", "ai safety", "responsible use"]
+    thresholds: [1, 3, 6, 10]
+  evidence_requirements: "Policy or public statements."
+- kpi_id: strat_ai_case_studies
+  name: AI Case Studies
+  pillar: Strategy & Governance
+  type: quant
+  question: "How many AI case studies or AI customer stories are present?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["case study", "customer story", "success story", "AI deployment"]
+    thresholds: [1, 2, 4, 6]
+  evidence_requirements: "Press or customer success pages."
+- kpi_id: strat_ai_announcement_recency
+  name: AI Announcement Recency
+  pillar: Strategy & Governance
+  type: quant
+  question: "How recent is the latest AI-related announcement?"
+  quant_rule:
+    method: recency_days
+    keywords: ["ai", "machine learning", "genai", "generative ai"]
+    thresholds: [30, 90, 180, 365]
+  evidence_requirements: "Press/news posts with dates."
+- kpi_id: prod_ai_product_depth
+  name: AI Product Depth
+  pillar: Product & Delivery
+  type: rubric
+  question: "How integrated is AI within core products or services?"
+  rubric:
+    - "1: AI not mentioned in products."
+    - "3: AI features mentioned but limited scope."
+    - "5: AI is central to products with multiple concrete features."
+  evidence_requirements: "Product pages or documentation."
+- kpi_id: prod_ai_use_cases
+  name: AI Use Case Specificity
+  pillar: Product & Delivery
+  type: rubric
+  question: "Are AI use cases specific and measurable?"
+  rubric:
+    - "1: Generic AI statements without examples."
+    - "3: Some examples but limited detail."
+    - "5: Multiple specific use cases with outcomes or metrics."
+  evidence_requirements: "Product, blog, or case study content."
+- kpi_id: prod_ai_features_count
+  name: AI Feature Mentions
+  pillar: Product & Delivery
+  type: quant
+  question: "How many AI feature mentions exist across product pages?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["ai feature", "predictive", "recommendation", "automation", "ml model"]
+    thresholds: [1, 4, 8, 12]
+  evidence_requirements: "Product or feature pages."
+- kpi_id: prod_ai_pricing_signal
+  name: AI Monetization Signals
+  pillar: Product & Delivery
+  type: rubric
+  question: "Is AI clearly monetized or differentiated in pricing/packaging?"
+  rubric:
+    - "1: No AI pricing or packaging evidence."
+    - "3: AI mentioned in tiers without clear differentiation."
+    - "5: AI explicitly packaged or priced."
+  evidence_requirements: "Pricing or packaging pages."
+- kpi_id: prod_ai_quality
+  name: AI Quality & Performance Claims
+  pillar: Product & Delivery
+  type: rubric
+  question: "Are there credible AI performance or quality claims?"
+  rubric:
+    - "1: No performance or quality signals."
+    - "3: Generic claims without evidence."
+    - "5: Concrete benchmarks, metrics, or outcomes."
+  evidence_requirements: "Technical blogs, benchmarks, or reports."
+- kpi_id: people_ai_hiring_volume
+  name: AI Hiring Volume
+  pillar: People & Operations
+  type: quant
+  question: "How many AI/ML job postings or mentions exist?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["machine learning", "ml engineer", "data scientist", "ai engineer", "mlops"]
+    thresholds: [1, 3, 6, 10]
+  evidence_requirements: "Careers pages or job listings."
+- kpi_id: people_ai_team_org
+  name: AI Team Structure
+  pillar: People & Operations
+  type: rubric
+  question: "Does the company describe AI teams, labs, or centers of excellence?"
+  rubric:
+    - "1: No team structure described."
+    - "3: Mentions teams but limited detail."
+    - "5: Clear AI org structure or lab with leadership."
+  evidence_requirements: "About, careers, or leadership pages."
+- kpi_id: people_ai_training
+  name: AI Enablement & Training
+  pillar: People & Operations
+  type: rubric
+  question: "Is AI training or enablement for staff described?"
+  rubric:
+    - "1: No enablement mentioned."
+    - "3: General training mentioned."
+    - "5: Specific AI training programs or certifications."
+  evidence_requirements: "HR or learning pages."
+- kpi_id: ops_data_infra
+  name: Data & Infrastructure Signals
+  pillar: People & Operations
+  type: rubric
+  question: "Are data platforms or infrastructure described to support AI?"
+  rubric:
+    - "1: No data or infra details."
+    - "3: Some tooling mentioned."
+    - "5: Clear data platform or infrastructure described."
+  evidence_requirements: "Engineering or tech stack content."
+- kpi_id: ops_ai_partnerships
+  name: AI Partnerships
+  pillar: People & Operations
+  type: quant
+  question: "How many AI-related partnerships or vendor mentions exist?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["partner", "partnership", "collaboration", "aws", "azure", "google cloud", "openai"]
+    thresholds: [1, 2, 4, 6]
+  evidence_requirements: "Press releases or announcements."
+- kpi_id: ops_ai_compliance
+  name: AI Compliance & Risk Language
+  pillar: Strategy & Governance
+  type: rubric
+  question: "Is AI risk/compliance addressed (privacy, bias, regulation)?"
+  rubric:
+    - "1: No compliance or risk language."
+    - "3: Mentions compliance without specifics."
+    - "5: Clear compliance frameworks or commitments."
+  evidence_requirements: "Compliance or legal pages."
+- kpi_id: prod_ai_support
+  name: AI-Enabled Customer Support
+  pillar: Product & Delivery
+  type: rubric
+  question: "Is AI used to enhance customer support or service?"
+  rubric:
+    - "1: No support AI mentioned."
+    - "3: Mentions chatbots or automation without details."
+    - "5: Clear AI support capabilities and outcomes."
+  evidence_requirements: "Support or product pages."
+- kpi_id: ops_ai_publications
+  name: AI Research or Publications
+  pillar: People & Operations
+  type: quant
+  question: "How many AI research or publication mentions exist?"
+  quant_rule:
+    method: count_mentions
+    keywords: ["research", "paper", "publication", "conference", "arxiv"]
+    thresholds: [1, 2, 4, 6]
+  evidence_requirements: "Research or blog pages."

@@ -1,0 +1,625 @@
+run_id: 43ccba42
+company_name: Vodafone
+company_domain: vodafone.com
+timestamp: '2026-01-26T04:12:38.139832+00:00'
+url_count: 30
+kpi_results:
+- kpi_id: strat_ai_vision
+  pillar: Strategy & Governance
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "ents/investors/images/66c73b3773717d9c5bcf9ad6547d558b2034fc2983faa6cdc790fed2b975b8ca.jpg)\
+      \ # Vodafone\u2019s AI Framework # Transparency and Accountability ![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/8b"
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: "future of cloud unfolds, Vodafone's innovative services \u2013 including\
+      \ secure storage, SaaS solutions, and hybrid cloud \u2013 help drive these transformative\
+      \ benefits while ensuring data responsibility. EXPLORE TREND The increasing\
+      \ adoption of adv"
+  details:
+    llm_used: false
+- kpi_id: strat_ai_governance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: up Limited is the first Channel Partner to successfully offer Scam Signal,
+      boosting fraud defence for financial institutions. ["Link](https://www.vodafone.com/news/newsroom/technology/vodafone-business-launches-scam-signal-to-defend-against
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: for the things that really matter it can improve people's lives and the
+      world around us. We achieve this by empowering people, regardless of who they
+      are or where they live, protecting the planet and help our customers to do the
+      same, all w
+  - source_id: www.vodafone.com-dd73e6359c
+    url: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+    quote: "ommittee and other senior leaders to share the forces they believe will\
+      \ define the year ahead. From a satellite\u2011powered leap in global connectivity\
+      \ to AI that anticipates decisions before we make them, these are the trends\
+      \ set to shape conv"
+  details:
+    llm_used: false
+- kpi_id: strat_responsible_ai_mentions
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - responsible ai
+    - ai ethics
+    - ai governance
+    - ai safety
+    - responsible use
+- kpi_id: strat_ai_case_studies
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - case study
+    - customer story
+    - success story
+    - AI deployment
+- kpi_id: strat_ai_announcement_recency
+  pillar: Strategy & Governance
+  type: quant
+  score: 5.0
+  confidence: 0.6
+  rationale: Most recent AI mention 25 days ago.
+  citations: []
+  details:
+    days_since: 25
+- kpi_id: prod_ai_product_depth
+  pillar: Product & Delivery
+  type: rubric
+  score: 2.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: "and corporate data, allowing the company to utilise the innovations of\
+      \ AI while limiting its risks. \u201CThis unique data platform sits at the heart\
+      \ of Vodafone\u2019s drive to personalise customer offers, resolve customer\
+      \ issues more quickly and ma"
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: rmation on how we use, collect, and share your personal data when you visit
+      Vodafone.com. We understand this is a big responsibility and we work hard to
+      protect your personal data. For more information, please see below our cookie
+      and priva
+  - source_id: www.vodafone.com-dd73e6359c
+    url: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+    quote: "the digital economy for the very first time.\u201D ## Ruth McGill, Chief\
+      \ Human Resources Officer, on AI as a digital coworker \u201CWe\u2019ve already\
+      \ seen rapid adoption of AI copilots, automated case resolution, and predictive\
+      \ analytics when it comes to"
+  details:
+    llm_used: false
+- kpi_id: prod_ai_use_cases
+  pillar: Product & Delivery
+  type: rubric
+  score: 5.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-dd73e6359c
+    url: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+    quote: "where data is managed. It\u2019s already happening and will become paramount\
+      \ in 2026. I\u2019m excited that Vodafone\u2019s scale and global experience\
+      \ gives us an opportunity to be Europe\u2019s leading trusted provider of services\
+      \ to governments and business"
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: r content you connect to using our products and services. You may choose
+      to disclose your information in certain ways such as social plug-ins (including
+      those offered by Google, Facebook, Twitter and Pinterest) or using third-party
+      services
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "ved; \u2022 AI techniques in our networks are used to identify where capacity\
+      \ is needed so that our customers can enjoy optimised data services, such as\
+      \ high quality video streaming; Vodafone employees use AI tools and software\
+      \ to help them work"
+  details:
+    llm_used: false
+- kpi_id: prod_ai_features_count
+  pillar: Product & Delivery
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 22 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/0d25e84d5b6d5bf722c72d4aa8eaf4c1c4d2823bf47e930b001ad34181044759.jpg)\
+      \ # Introduction Vodafone Group\u2019s Artificial Intelligence (AI) Framework\
+      \ sets out our "
+  details:
+    count: 22
+    keywords:
+    - ai feature
+    - predictive
+    - recommendation
+    - automation
+    - ml model
+- kpi_id: prod_ai_pricing_signal
+  pillar: Product & Delivery
+  type: rubric
+  score: 1.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: "0:00 0:00 / 3:57 \u2022Live \u2022 #### Brief history of AI In 1956, Alan\
+      \ Turing wrote a paper on how to build intelligent machines. He believed machines\
+      \ could use knowledge and reason to solve problems and make decisions, the same\
+      \ way humans do. Ove"
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: 'ast updated: 11 October 2024** In the following privacy policy "we/us"
+      means Vodafone Group Plc; "third party" means someone who is not you or us;
+      and "Vodafone Group" means Vodafone Group Plc and any company or other organisation
+      in which '
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: still relatively new in AI years, which has been around since the 1950s.
+      Hear him explain below. How Vodafone is using AI to benefit our customers -
+      YouTube [Photo image of Vodafone Group](https://www.youtube.com/channel/UC2RuXpylS8gTPY7yEJ
+  details:
+    llm_used: false
+- kpi_id: prod_ai_quality
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)
+      [**Vodafone Ireland
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: tion and only used with AI systems when we have established a clear legal
+      basis to do so. We will ensure that we respect international human rights standards
+      and best practice around ensuring AI systems foster diversity, accessibility
+      and i
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  details:
+    llm_used: false
+- kpi_id: people_ai_hiring_volume
+  pillar: People & Operations
+  type: quant
+  score: 3.0
+  confidence: 0.7
+  rationale: Matched 5 keyword mentions.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/0d25e84d5b6d5bf722c72d4aa8eaf4c1c4d2823bf47e930b001ad34181044759.jpg)\
+      \ # Introduction Vodafone Group\u2019s Artificial Intelligence (AI) Framework\
+      \ sets out our "
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  details:
+    count: 5
+    keywords:
+    - machine learning
+    - ml engineer
+    - data scientist
+    - ai engineer
+    - mlops
+- kpi_id: people_ai_team_org
+  pillar: People & Operations
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)
+      [**Vodafone Ireland
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ing fixer drones that are powered by ambient energy ["Link](https://www.vodafone.com/news/newsroom/technology/vodafone-to-show-fixer-drones-a-network-that-can-sense-rain-and-devices-powered-by-ambient-energy-at-mwc-25)
+      ![Vodafone Business I
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: h in a** digital world No matter the size of your business, our technology
+      can help you progress and thrive. With our expertise in connectivity, our leading
+      IoT platform and our global scale, we're taking customers to bold new heights,
+      unlo
+  details:
+    llm_used: false
+- kpi_id: people_ai_training
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: still relatively new in AI years, which has been around since the 1950s.
+      Hear him explain below. How Vodafone is using AI to benefit our customers -
+      YouTube [Photo image of Vodafone Group](https://www.youtube.com/channel/UC2RuXpylS8gTPY7yEJ
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)
+      [**Vodafone Ireland
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: "and corporate data, allowing the company to utilise the innovations of\
+      \ AI while limiting its risks. \u201CThis unique data platform sits at the heart\
+      \ of Vodafone\u2019s drive to personalise customer offers, resolve customer\
+      \ issues more quickly and ma"
+  details:
+    llm_used: false
+- kpi_id: ops_data_infra
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-fe6ff47941
+    url: https://vodafone.com/sustainability
+    quote: "technology. It\u2019s a lifeline. From helping young people access education\
+      \ to enabling our customers to help protect our planet through reducing their\
+      \ emissions footprint, we're using our networks to break down barriers and create\
+      \ opportunitie"
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: 'ds/2024/09/114.png) #### Internships & Work Experience Our internship
+      and work experience programmes are designed to give you the chance to grow your
+      skills and gain experience working in a global and diverse community. ## Featuredjobs
+      ####'
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: 'oyees and customers. We are committed to handling this data responsibly
+      and in compliance with applicable data protection laws. ##### When we collect
+      your personal information We collect your personal information when you: - Browse
+      and inte'
+  details:
+    llm_used: false
+- kpi_id: ops_ai_partnerships
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 91 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: '[skip to main content](https://www.vodafone.com/site-services/privacy-and-cookies#maincontent)
+      # _Privacy_ _and_ _Cookie_ _Policy_ - [Link to Home page](https://www.vodafone.com/)
+      - [Link to](https://www.vodafone.com/site-services/privacy-a'
+  details:
+    count: 91
+    keywords:
+    - partner
+    - partnership
+    - collaboration
+    - aws
+    - azure
+    - google cloud
+    - openai
+- kpi_id: ops_ai_compliance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: 'EXPLORE CONNECTING CONTINENTS 0 countries connected through undersea cables
+      ## continents. _connected_ continents. **connected** Deep **connections** Subsea
+      cable systems are an invisible engine driving digital economies. We have over
+      80 of'
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: vodafone.com-fe6ff47941
+    url: https://vodafone.com/sustainability
+    quote: 'perational markets around the world. Find out how Vodafone''s local markets
+      are working towards our sustainability goals by clicking on a country. ## OUR
+      _IMPACT_ Zoom InZoom Out Map List Key **Select Explore** Select a country -
+      Romania - C'
+  details:
+    llm_used: false
+- kpi_id: prod_ai_support
+  pillar: Product & Delivery
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: www.vodafone.com) Vodafone Business 5.06K subscribers [Introducing Vodafone
+      Business Security](https://www.youtube.com/watch?list=TLGGriGNKmdThtEyNjAxMjAyNg&v=s_YLbVO32UA)
+      Vodafone Business Search 1/1 Info Shopping Tap to unmute If playback
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: 'e usage. Worldwide GenAI spending growth is stratospheric. It''s set to
+      grow 76% to $644bn between 2024 and 2025, and the market is predicted to reach
+      $1.3 trillion by 2032. ## IN _ACTION_ Vodafone is adopting GenAI at industry-leading
+      speed'
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: 'rmation to ensure you get the right information and response. ##### To
+      personalise this website and track its performance Because of the way this website
+      operates, we may also use information from your browser or browsing activities
+      to pers'
+  details:
+    llm_used: false
+- kpi_id: ops_ai_publications
+  pillar: People & Operations
+  type: quant
+  score: 4.0
+  confidence: 0.7
+  rationale: Matched 4 keyword mentions.
+  citations:
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: '[skip to main content](https://www.vodafone.com/site-services/privacy-and-cookies#maincontent)
+      # _Privacy_ _and_ _Cookie_ _Policy_ - [Link to Home page](https://www.vodafone.com/)
+      - [Link to](https://www.vodafone.com/site-services/privacy-a'
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/0d25e84d5b6d5bf722c72d4aa8eaf4c1c4d2823bf47e930b001ad34181044759.jpg)\
+      \ # Introduction Vodafone Group\u2019s Artificial Intelligence (AI) Framework\
+      \ sets out our "
+  details:
+    count: 4
+    keywords:
+    - research
+    - paper
+    - publication
+    - conference
+    - arxiv
+pillar_scores:
+- pillar: Strategy & Governance
+  score: 3.33
+  confidence: 0.4
+  kpis:
+  - strat_ai_vision
+  - strat_ai_governance
+  - strat_responsible_ai_mentions
+  - strat_ai_case_studies
+  - strat_ai_announcement_recency
+  - ops_ai_compliance
+- pillar: Product & Delivery
+  score: 3.52
+  confidence: 0.45
+  kpis:
+  - prod_ai_product_depth
+  - prod_ai_use_cases
+  - prod_ai_features_count
+  - prod_ai_pricing_signal
+  - prod_ai_quality
+  - prod_ai_support
+- pillar: People & Operations
+  score: 3.76
+  confidence: 0.55
+  kpis:
+  - people_ai_hiring_volume
+  - people_ai_team_org
+  - people_ai_training
+  - ops_data_infra
+  - ops_ai_partnerships
+  - ops_ai_publications
+overall_score: 3.56
+missing_evidence:
+- strat_responsible_ai_mentions
+- strat_ai_case_studies
+debug_log:
+- '[fetch] firecrawl ok: https://vodafone.com'
+- '[fetch] firecrawl ok: https://vodafone.com/about'
+- '[fetch] firecrawl ok: https://vodafone.com/company'
+- '[fetch] firecrawl ok: https://vodafone.com/product'
+- '[fetch] firecrawl ok: https://vodafone.com/products'
+- '[fetch] firecrawl ok: https://vodafone.com/solutions'
+- '[fetch] firecrawl ok: https://vodafone.com/pricing'
+- '[fetch] firecrawl ok: https://vodafone.com/careers'
+- '[fetch] firecrawl ok: https://vodafone.com/jobs'
+- '[fetch] firecrawl ok: https://vodafone.com/press'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/news'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/news'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/news (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 13, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 44s, resets at Mon Jan 26 2026 04:07:35 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/news'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/blog'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/blog'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/blog (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 16, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 35s, resets at Mon Jan 26 2026 04:07:35 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/blog'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/investors'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/investors'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/investors (Firecrawl error
+  429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 19, Remaining
+  (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased rate
+  limits or please retry after 26s, resets at Mon Jan 26 2026 04:07:35 GMT+0000 (Coordinated
+  Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/investors'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/investor-relations (Firecrawl
+  error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 22,
+  Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased
+  rate limits or please retry after 17s, resets at Mon Jan 26 2026 04:07:35 GMT+0000
+  (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/annual-report'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/annual-report'
+- '[fetch] firecrawl failed, fallback: https://vodafone.com/annual-report (Firecrawl
+  error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min): 25,
+  Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for increased
+  rate limits or please retry after 9s, resets at Mon Jan 26 2026 04:07:35 GMT+0000
+  (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://vodafone.com/annual-report'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://vodafone.com/sustainability'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://vodafone.com/sustainability'
+- '[fetch] firecrawl ok: https://vodafone.com/sustainability'
+- '[fetch] firecrawl ok: https://vodafone.com/responsible-ai'
+- '[fetch] firecrawl ok: https://vodafone.com/ai'
+- '[fetch] firecrawl ok: https://vodafone.com/security'
+- '[fetch] firecrawl ok: https://vodafone.com/privacy'
+- '[fetch] firecrawl ok: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers'
+- '[fetch] firecrawl ok: https://www.vodafone.com/our-company/megatrends'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://www.vodafone.com/everyone-connected/connecting-futures'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://www.vodafone.com/everyone-connected/connecting-futures'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/everyone-connected/connecting-futures
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  13, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 41s, resets at Mon Jan 26 2026 04:08:36
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/everyone-connected/connecting-futures'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://www.vodafone.com/our-company/our-strategic-priorities'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://www.vodafone.com/our-company/our-strategic-priorities'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/our-company/our-strategic-priorities
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  16, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 33s, resets at Mon Jan 26 2026 04:08:36
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/our-company/our-strategic-priorities'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  19, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 25s, resets at Mon Jan 26 2026 04:08:36
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  22, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 18s, resets at Mon Jan 26 2026 04:08:36
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline'
+- '[fetch] firecrawl 429; retrying in 2.0s: https://www.vodafone.com/news/newsroom/technology'
+- '[fetch] firecrawl 429; retrying in 4.0s: https://www.vodafone.com/news/newsroom/technology'
+- '[fetch] firecrawl failed, fallback: https://www.vodafone.com/news/newsroom/technology
+  (Firecrawl error 429: {"success":false,"error":"Rate limit exceeded. Consumed (req/min):
+  25, Remaining (req/min): 0. Upgrade your plan at https://firecrawl.dev/pricing for
+  increased rate limits or please retry after 10s, resets at Mon Jan 26 2026 04:08:36
+  GMT+0000 (Coordinated Universal Time)"})'
+- '[fetch] readability failed: https://www.vodafone.com/news/newsroom/technology'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'
+- '[llm] 429 received; retrying in 1.5s'
+- '[llm] 429 received; retrying in 3.0s'
+- '[llm] 429 received; retrying in 6.0s'
+- '[llm] request failed; using fallback (429 Client Error: Too Many Requests for url:
+  https://api.openai.com/v1/chat/completions)'

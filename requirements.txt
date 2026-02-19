@@ -1,0 +1,11 @@
+langgraph
+chromadb
+numpy
+pyyaml
+requests
+readability-lxml
+lxml
+python-dotenv
+streamlit
+pandas
+matplotlib

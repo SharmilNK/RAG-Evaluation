@@ -1,0 +1,523 @@
+run_id: 73cd4a6f
+company_name: Vodafone
+company_domain: vodafone.com
+timestamp: '2026-02-04T04:05:15.580585+00:00'
+url_count: 30
+kpi_results:
+- kpi_id: strat_ai_vision
+  pillar: Strategy & Governance
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone articulates a clear and coherent AI strategy with defined priorities
+    and outcomes, as evidenced by their comprehensive AI framework and proactive participation
+    in industry coalitions. The documentation outlines specific initiatives and goals,
+    demonstrating a structured approach to AI implementation.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: Vodafone will proactively participate in the scientific community, industry
+      coalitions and self-regulatory bodies working on research, laws, regulations
+      and ethical guidelines for AI.
+  - source_id: www.vodafone.com-5eeea34998
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-business-iot-improves-customer-experience-with-ai-powered-anomaly-detection-tool
+    quote: The tool, which tracks and learns from previous customer traffic patterns,
+      improves efficiency for customers, increases network and service availability.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 2
+      tier2: 4
+      tier3: 0
+      avg: 1.67
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: strat_ai_governance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 0.97
+  rationale: The evidence provided includes references to risk management and ethical
+    considerations in technology deployment, but lacks a formal governance structure
+    or specific committees dedicated to AI oversight.
+  citations:
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: Europe knows it must invest in the areas where it still has the chance
+      to lead, including quantum, connectivity, edge cloud and industrial AI applications.
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: With new threats, whether digital scams or physical safety concerns, this
+      is something we work hard to maintain.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 0
+      tier2: 6
+      tier3: 0
+      avg: 2.0
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: strat_responsible_ai_mentions
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - responsible ai
+    - ai ethics
+    - ai governance
+    - ai safety
+    - responsible use
+- kpi_id: strat_ai_case_studies
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - case study
+    - customer story
+    - success story
+    - AI deployment
+- kpi_id: strat_ai_announcement_recency
+  pillar: Strategy & Governance
+  type: quant
+  score: 5.0
+  confidence: 0.6
+  rationale: Most recent AI mention 3 days ago.
+  citations: []
+  details:
+    days_since: 3
+- kpi_id: prod_ai_product_depth
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: AI features are mentioned in the context of Vodafone's services, indicating
+    some integration, but the evidence does not suggest that AI is central to multiple
+    core products or services.
+  citations:
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: How Vodafone is using AI in its digital journey long before the recent
+      AI headlines.
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: My team can respond with both empathy and compliance, offering a solution
+      right for that specific customer.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 0
+      tier2: 6
+      tier3: 0
+      avg: 2.0
+    corroboration_score: 1.0
+    unique_sources: 4
+    k_used: 6
+- kpi_id: prod_ai_use_cases
+  pillar: Product & Delivery
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone provides multiple specific use cases of AI applications, including
+    optimizing data services for high-quality video streaming and using machine learning
+    to improve network performance. These examples are measurable and demonstrate
+    clear outcomes.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: AI techniques in our networks are used to identify where capacity is needed
+      so that our customers can enjoy optimised data services, such as high quality
+      video streaming.
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: The second applications will use machine learning to fine-tune radio coverage
+      parameters that are typically kept at default settings, improving overall network
+      performance.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 2
+      tier2: 4
+      tier3: 0
+      avg: 1.67
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: prod_ai_features_count
+  pillar: Product & Delivery
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 26 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: www.vodafone.com-dd73e6359c
+    url: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions#maincontent)
+      Main Content 08 Jan 2026 [Corporate and Financial](https://www.vodafone.com/news/newsroom/corporate-and-fin'
+  details:
+    count: 26
+    keywords:
+    - ai feature
+    - predictive
+    - recommendation
+    - automation
+    - ml model
+- kpi_id: prod_ai_pricing_signal
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: AI is mentioned in various contexts, but there is no clear evidence of
+    explicit pricing or packaging differentiation for AI products. The references
+    indicate that AI is integrated into services but do not provide specific details
+    on how it is monetized or differentiated in pricing.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: AI is not an end in itself, but rather a promising means to increase human
+      flourishing.
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: As AI gets smarter, the user-experience and expectations become greater
+      yet trust and transparency must be non-negotiable.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 3
+      tier2: 3
+      tier3: 0
+      avg: 1.5
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: prod_ai_quality
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence provided includes generic claims about AI performance and
+    quality without specific benchmarks or metrics. While there are mentions of oversight
+    and ethical considerations in AI usage, there are no concrete performance metrics
+    or outcomes presented.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "Vodafone will strive to ensure that there is effective oversight and a\
+      \ \u2018human-in-control\u2019 approach to the use of AI."
+  - source_id: www.vodafone.com-dd73e6359c
+    url: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions
+    quote: "I\u2019m excited that Vodafone\u2019s scale and global experience gives\
+      \ us an opportunity to be Europe\u2019s leading trusted provider of services\
+      \ to governments and business."
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 2
+      tier2: 4
+      tier3: 0
+      avg: 1.67
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: people_ai_hiring_volume
+  pillar: People & Operations
+  type: quant
+  score: 4.0
+  confidence: 0.7
+  rationale: Matched 7 keyword mentions.
+  citations:
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: '[Skip to main content](https://careers.vodafone.com/#main-content) # Whatifwecouldmaketechnologyaforceforgood?Joinus
+      Togetherwecan. [Explore our opportunitiesOpens a new tab](https://jobs.vodafone.com/careers?domain=vodafone.com)
+      ![](https:'
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  details:
+    count: 7
+    keywords:
+    - machine learning
+    - ml engineer
+    - data scientist
+    - ai engineer
+    - mlops
+- kpi_id: people_ai_team_org
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The company mentions AI teams and initiatives but lacks detailed descriptions
+    of their structure or leadership roles.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: We endeavour to develop AI in an ethical way so that it can be trusted.
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: Europe knows it must invest in the areas where it still has the chance
+      to lead, including quantum, connectivity, edge cloud and industrial AI applications.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 1
+      tier2: 5
+      tier3: 0
+      avg: 1.83
+    corroboration_score: 1.0
+    unique_sources: 4
+    k_used: 6
+- kpi_id: people_ai_training
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence mentions general training and enablement related to AI,
+    but does not specify any particular AI training programs or certifications.
+  citations:
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: This digital journey long before the recent AI headlines... it is still
+      relatively new in AI years.
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: That balance is especially important in retail stores... digital tools
+      enhance, not replace, human interaction.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 1
+      tier2: 5
+      tier3: 0
+      avg: 1.83
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: ops_data_infra
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: Some tooling and infrastructure are mentioned in the context of AI initiatives,
+    but there is no clear, comprehensive description of a specific data platform or
+    infrastructure supporting AI.
+  citations:
+  - source_id: vb2b.vodafone.com-f7d82f6fe1
+    url: https://vb2b.vodafone.com/business/news-and-insights/company-news/joint-initiative-will-use-ai-to-unlock-value-from-connectivity-data
+    quote: Vodafone to acquire Skaylink
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: AI improving customer experience across Europe
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 0
+      tier2: 6
+      tier3: 0
+      avg: 2.0
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: ops_ai_partnerships
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 175 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: vodafone.com-a532b7808f
+    url: https://vodafone.com/news
+    quote: "[skip to main content](https://www.vodafone.com/news#maincontent) # _NEWS_\
+      \ Main Content ## LATEST ## **What\u2019s happening** [View all news](https://www.vodafone.com/news/newsroom)\
+      \ ![Getting the world\u2019s first space video call off the ground](h"
+  details:
+    count: 175
+    keywords:
+    - partner
+    - partnership
+    - collaboration
+    - aws
+    - azure
+    - google cloud
+    - openai
+- kpi_id: ops_ai_compliance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence mentions compliance in relation to AI but lacks specific
+    frameworks or commitments. While there is acknowledgment of AI's role in business,
+    detailed compliance measures are not provided.
+  citations:
+  - source_id: vodafone.com-549bbe0b01
+    url: https://vodafone.com/investors
+    quote: Captions Your browser does not support the video tag.
+  - source_id: vb2b.vodafone.com-f7d82f6fe1
+    url: https://vb2b.vodafone.com/business/news-and-insights/company-news/joint-initiative-will-use-ai-to-unlock-value-from-connectivity-data
+    quote: Joint initiative will use AI to unlock value from connectivity data.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 2
+      tier2: 4
+      tier3: 0
+      avg: 1.67
+    corroboration_score: 0.95
+    unique_sources: 3
+    k_used: 6
+- kpi_id: prod_ai_support
+  pillar: Product & Delivery
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone has implemented generative AI chatbots to enhance customer experience,
+    demonstrating clear AI support capabilities and outcomes.
+  citations:
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: Link to VOXI by Vodafone launches generative AI chatbot to enhance customer
+      experience
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: How Vodafone is using AI to enhance customer support.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 2
+      tier2: 4
+      tier3: 0
+      avg: 1.67
+    corroboration_score: 1.0
+    unique_sources: 5
+    k_used: 6
+- kpi_id: ops_ai_publications
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 12 keyword mentions.
+  citations:
+  - source_id: vodafone.com-a532b7808f
+    url: https://vodafone.com/news
+    quote: "[skip to main content](https://www.vodafone.com/news#maincontent) # _NEWS_\
+      \ Main Content ## LATEST ## **What\u2019s happening** [View all news](https://www.vodafone.com/news/newsroom)\
+      \ ![Getting the world\u2019s first space video call off the ground](h"
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: '[skip to main content](https://www.vodafone.com/site-services/privacy-and-cookies#maincontent)
+      # _Privacy_ _and_ _Cookie_ _Policy_ - [Link to Home page](https://www.vodafone.com/)
+      - [Link to](https://www.vodafone.com/site-services/privacy-a'
+  details:
+    count: 12
+    keywords:
+    - research
+    - paper
+    - publication
+    - conference
+    - arxiv
+pillar_scores:
+- pillar: Strategy & Governance
+  score: 3.48
+  confidence: 0.69
+  kpis:
+  - strat_ai_vision
+  - strat_ai_governance
+  - strat_responsible_ai_mentions
+  - strat_ai_case_studies
+  - strat_ai_announcement_recency
+  - ops_ai_compliance
+- pillar: Product & Delivery
+  score: 3.95
+  confidence: 0.95
+  kpis:
+  - prod_ai_product_depth
+  - prod_ai_use_cases
+  - prod_ai_features_count
+  - prod_ai_pricing_signal
+  - prod_ai_quality
+  - prod_ai_support
+- pillar: People & Operations
+  score: 3.69
+  confidence: 0.85
+  kpis:
+  - people_ai_hiring_volume
+  - people_ai_team_org
+  - people_ai_training
+  - ops_data_infra
+  - ops_ai_partnerships
+  - ops_ai_publications
+overall_score: 3.73
+missing_evidence:
+- strat_responsible_ai_mentions
+- strat_ai_case_studies
+debug_log:
+- '[fetch] firecrawl ok: https://vodafone.com'
+- '[fetch] firecrawl ok: https://vodafone.com/about'
+- '[fetch] firecrawl ok: https://vodafone.com/company'
+- '[fetch] firecrawl ok: https://vodafone.com/product'
+- '[fetch] firecrawl ok: https://vodafone.com/products'
+- '[fetch] firecrawl ok: https://vodafone.com/solutions'
+- '[fetch] firecrawl ok: https://vodafone.com/pricing'
+- '[fetch] firecrawl ok: https://vodafone.com/careers'
+- '[fetch] firecrawl ok: https://vodafone.com/jobs'
+- '[fetch] firecrawl ok: https://vodafone.com/press'
+- '[fetch] firecrawl ok: https://vodafone.com/news'
+- '[fetch] firecrawl ok: https://vodafone.com/blog'
+- '[fetch] firecrawl ok: https://vodafone.com/investors'
+- '[fetch] firecrawl ok: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl ok: https://vodafone.com/annual-report'
+- '[fetch] firecrawl ok: https://vodafone.com/sustainability'
+- '[fetch] firecrawl ok: https://vodafone.com/responsible-ai'
+- '[fetch] firecrawl ok: https://vodafone.com/ai'
+- '[fetch] firecrawl ok: https://vodafone.com/security'
+- '[fetch] firecrawl ok: https://vodafone.com/privacy'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai'
+- '[fetch] firecrawl ok: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf'
+- '[fetch] firecrawl ok: https://www.vodafone.com/our-company/megatrends'
+- '[fetch] firecrawl ok: https://vb2b.vodafone.com/business/news-and-insights/company-news/joint-initiative-will-use-ai-to-unlock-value-from-connectivity-data'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-advances-future-ready-radio-access-network'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-business-iot-improves-customer-experience-with-ai-powered-anomaly-detection-tool'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+
+
+
+

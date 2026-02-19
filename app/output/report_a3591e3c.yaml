@@ -1,0 +1,445 @@
+run_id: a3591e3c
+company_name: Vodafone
+company_domain: vodafone.com
+timestamp: '2026-01-21T03:54:21.621960+00:00'
+url_count: 30
+kpi_results:
+- kpi_id: strat_ai_vision
+  pillar: Strategy & Governance
+  type: rubric
+  score: 5.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: s://www.vodafone.com/news/newsroom?tags=cyber-security) [Empowering People](https://www.vodafone.com/news/newsroom?tags=empowering-people)
+      [Protecting people](https://www.vodafone.com/news/newsroom?tags=protecting-people)
+      [Security](https:/
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: iday, across our retail estate, we welcome vulnerable and older customers
+      into our stores for one-on-one support. These sessions help bridge the digital
+      divide, helping with things such as setting up a smartphone, understanding apps,
+      or sim
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  details: null
+- kpi_id: strat_ai_governance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: "time, Europe knows it must invest in the areas where it still has the\
+      \ chance to lead, including quantum, connectivity, edge cloud and industrial\
+      \ AI applications. The optimum solution is therefore one of mitigation over\
+      \ exclusion \u2013 a risk-ba"
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: "nsistent across all our stores. Each location has its own pace, customer\
+      \ needs, and pressures. But no matter where someone walks in, they should get\
+      \ the same high standard of care. That\u2019s something we work hard to maintain.\
+      \ And with new thr"
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: for the things that really matter it can improve people's lives and the
+      world around us. We achieve this by empowering people, regardless of who they
+      are or where they live, protecting the planet and help our customers to do the
+      same, all w
+  details: null
+- kpi_id: strat_responsible_ai_mentions
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - responsible ai
+    - ai ethics
+    - ai governance
+    - ai safety
+    - responsible use
+- kpi_id: strat_ai_case_studies
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - case study
+    - customer story
+    - success story
+    - AI deployment
+- kpi_id: strat_ai_announcement_recency
+  pillar: Strategy & Governance
+  type: quant
+  score: 5.0
+  confidence: 0.6
+  rationale: Most recent AI mention 20 days ago.
+  citations: []
+  details:
+    days_since: 20
+- kpi_id: prod_ai_product_depth
+  pillar: Product & Delivery
+  type: rubric
+  score: 2.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: "n the same period, the market share of European providers fell from 29%\
+      \ to just 15%. Whilst Europe\u2019s ambition for digital sovereignty is both\
+      \ urgent and legitimate, the pragmatic reality is that building fully European\
+      \ alternatives will tak"
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: "time, Europe knows it must invest in the areas where it still has the\
+      \ chance to lead, including quantum, connectivity, edge cloud and industrial\
+      \ AI applications. The optimum solution is therefore one of mitigation over\
+      \ exclusion \u2013 a risk-ba"
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: s, my team can respond with both empathy and compliance, offering a solution
+      right for that specific customer, update any vulnerability flags, and even arranging
+      a payment plan. The ultimate outcome is that we find the right mix of solution
+  details: null
+- kpi_id: prod_ai_use_cases
+  pillar: Product & Delivery
+  type: rubric
+  score: 2.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: ells properly, potentially degrading user experience. The second applications
+      will use machine learning to fine-tune radio coverage parameters that are typically
+      kept at default settings, improving overall network performance. * * * **About
+  - source_id: www.vodafone.com-bc4d6d4bb5
+    url: https://www.vodafone.com/our-company/our-strategic-priorities
+    quote: 's to use smart tech in transformative ways. The digital payments transformation
+      The rapid shift towards digital payments is boosting financial inclusion for
+      millions and revolutionising the way we manage money. It demands reliable networks '
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: s navigating operational, technological, and human factors all at once.
+      Like you, we focus on consistency and preparedness. We use a framework to guide
+      our teams through empathetic conversations and appropriate escalation. And on
+      the tech s
+  details: null
+- kpi_id: prod_ai_features_count
+  pillar: Product & Delivery
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 18 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  details:
+    count: 18
+    keywords:
+    - ai feature
+    - predictive
+    - recommendation
+    - automation
+    - ml model
+- kpi_id: prod_ai_pricing_signal
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-bc4d6d4bb5
+    url: https://www.vodafone.com/our-company/our-strategic-priorities
+    quote: 's to use smart tech in transformative ways. The digital payments transformation
+      The rapid shift towards digital payments is boosting financial inclusion for
+      millions and revolutionising the way we manage money. It demands reliable networks '
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: "ion-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)\
+      \ 08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)\
+      \ [**Vodafone Ireland and ATU receive \u20AC4.6 million EU funding to develop\
+      \ digital technologi"
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: /www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-appoints-publicis-as-new-brand-creative-agency)
+      08 Dec 2025 [Corporate and Financial](https://www.vodafone.com/news/newsroom/corporate-and-financial)
+      [**Vodafone appoints Publ
+  details: null
+- kpi_id: prod_ai_quality
+  pillar: Product & Delivery
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: evelop ground-breaking solutions and drive improvements for our customers.
+      Alongside your role, you'll find many other ways to maximise the difference
+      you make. Like our dedicated spirit and volunteering days and an exciting mix
+      of employee
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: "ion-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)\
+      \ 08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/technology)\
+      \ [**Vodafone Ireland and ATU receive \u20AC4.6 million EU funding to develop\
+      \ digital technologi"
+  details: null
+- kpi_id: people_ai_hiring_volume
+  pillar: People & Operations
+  type: quant
+  score: 3.0
+  confidence: 0.7
+  rationale: Matched 5 keyword mentions.
+  citations:
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  - source_id: www.vodafone.com-4522743c84
+    url: https://www.vodafone.com/everyone-connected/connecting-futures
+    quote: "[skip to main content](https://www.vodafone.com/everyone-connected/connecting-futures#maincontent)\
+      \ # _CONNECTING_ FUTURES Vodafone is always looking forward. Together with our\
+      \ partners, we\u2019re harnessing emerging technologies like artificial"
+  details:
+    count: 5
+    keywords:
+    - machine learning
+    - ml engineer
+    - data scientist
+    - ai engineer
+    - mlops
+- kpi_id: people_ai_team_org
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: "time, Europe knows it must invest in the areas where it still has the\
+      \ chance to lead, including quantum, connectivity, edge cloud and industrial\
+      \ AI applications. The optimum solution is therefore one of mitigation over\
+      \ exclusion \u2013 a risk-ba"
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: ople](https://www.vodafone.com/news/newsroom?tags=empowering-people) [Protecting
+      people](https://www.vodafone.com/news/newsroom?tags=protecting-people) [Security](https://www.vodafone.com/news/newsroom?tags=security)
+      [Technology](https://ww
+  details: null
+- kpi_id: people_ai_training
+  pillar: People & Operations
+  type: rubric
+  score: 5.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: hony:** That balance is especially important in retail stores. I see a
+      future where digital tools enhance, not replace, human interaction. Think smart
+      kiosks, secure self-service options, and integrated support channels. These
+      will allow cu
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: "areers?pid=563018695083194&domain=vodafone.com&triggerGoButton=false)\
+      \ #### Tax Manager Finance \u2013 LISBOA, Portugal Join Us At Vodafone, we\u2019\
+      re not just shaping the future of connectivity for our customers \u2013 we\u2019\
+      re shaping the future for everyo"
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: ?w=600)](https://www.vodafone.com/news/newsroom/technology/vodafone-ireland-and-atu-receive-4-6-million-eu-funding-to-develop-digital-technologies-for-online-apprenticeships)
+      08 Dec 2025 [Technology](https://www.vodafone.com/news/newsroom/t
+  details: null
+- kpi_id: ops_data_infra
+  pillar: People & Operations
+  type: rubric
+  score: 4.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: providers. Our next gen services are enriching people's lives and ensuring
+      everyone benefits from digital transformation fairly and safely. ![AI improving
+      customer experience across Europe](https://www.vodafone.com/~/media/Images/V/vodafone
+  - source_id: www.vodafone.com-04882614ab
+    url: https://www.vodafone.com/news/newsroom/empowering-people/protecting-our-customers-from-the-frontline
+    quote: "ntion, we\u2019re able to deliver secure and confident customer journeys.\
+      \ Our unified omnichannel model, spanning voice, chat, email, and social, drives\
+      \ seamless, personalised engagement. What\u2019s more, our teams are trained\
+      \ to spot subtle signs o"
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: ramme is designed to kick-start your career. Over your two years, you'll
+      experience at least two different teams and have a wealth of opportunities to
+      grow beyond your role. ![](https://careers.vodafone.com/wp-content/uploads/2024/09/113.pn
+  details: null
+- kpi_id: ops_ai_partnerships
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 65 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  details:
+    count: 65
+    keywords:
+    - partner
+    - partnership
+    - collaboration
+    - aws
+    - azure
+    - google cloud
+    - openai
+- kpi_id: ops_ai_compliance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: 'EXPLORE CONNECTING CONTINENTS 0 countries connected through undersea cables
+      ## continents. _connected_ continents. **connected** Deep **connections** Subsea
+      cable systems are an invisible engine driving digital economies. We have over
+      80 of'
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '* Results [View the latest results](https://www.vodafone.com/investors/performance-and-reports/results-and-presentations)
+      Captions Your browser does not support the video tag. 00:00 / 00:00 1080p HD
+      - 1080p HD - 720p HD - 360p 1x - 0.5x - 1'
+  - source_id: www.vodafone.com-4522743c84
+    url: https://www.vodafone.com/everyone-connected/connecting-futures
+    quote: 'w.vodafone.com/news/newsroom?tags=ai,quantum) 08 Jan 2026 [corporate-and-financial](https://www.vodafone.com/news/newsroom/corporate-and-financial)
+      [Vodafone Fast Forward: Predictions for 2026](https://www.vodafone.com/news/newsroom/corpora'
+  details: null
+- kpi_id: prod_ai_support
+  pillar: Product & Delivery
+  type: rubric
+  score: 5.0
+  confidence: 0.4
+  rationale: Heuristic fallback scoring based on evidence text.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: www.vodafone.com) Vodafone Business 5.06K subscribers [Introducing Vodafone
+      Business Security](https://www.youtube.com/watch?list=TLGGriGNKmdThtEyMTAxMjAyNg&v=s_YLbVO32UA)
+      Vodafone Business Search 1/1 Info Shopping Tap to unmute If playback
+  - source_id: www.vodafone.com-4522743c84
+    url: https://www.vodafone.com/everyone-connected/connecting-futures
+    quote: "[skip to main content](https://www.vodafone.com/everyone-connected/connecting-futures#maincontent)\
+      \ # _CONNECTING_ FUTURES Vodafone is always looking forward. Together with our\
+      \ partners, we\u2019re harnessing emerging technologies like artificial"
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '3A%2F%2Fwww.vodafone.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.vodafone.com)
+      Vodafone Group 8.64K subscribers [Digital Success Stories: Perky Blenders and
+      Vodafone](https://www.youtube.com/watch?list=TLGGeEjT21LjZNYyMTAxMjAyNg&v=H8Uk'
+  details: null
+- kpi_id: ops_ai_publications
+  pillar: People & Operations
+  type: quant
+  score: 3.0
+  confidence: 0.7
+  rationale: Matched 3 keyword mentions.
+  citations:
+  - source_id: www.vodafone.com-4522743c84
+    url: https://www.vodafone.com/everyone-connected/connecting-futures
+    quote: "[skip to main content](https://www.vodafone.com/everyone-connected/connecting-futures#maincontent)\
+      \ # _CONNECTING_ FUTURES Vodafone is always looking forward. Together with our\
+      \ partners, we\u2019re harnessing emerging technologies like artificial"
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right#maincontent)
+      Main Content 18 Nov 2025 [Public Policy](https://www.vodafone.com/news/newsroom/public-policy)
+      # How Europ'
+  details:
+    count: 3
+    keywords:
+    - research
+    - paper
+    - publication
+    - conference
+    - arxiv
+pillar_scores:
+- pillar: Strategy & Governance
+  score: 3.33
+  confidence: 0.4
+  kpis:
+  - strat_ai_vision
+  - strat_ai_governance
+  - strat_responsible_ai_mentions
+  - strat_ai_case_studies
+  - strat_ai_announcement_recency
+  - ops_ai_compliance
+- pillar: Product & Delivery
+  score: 3.67
+  confidence: 0.45
+  kpis:
+  - prod_ai_product_depth
+  - prod_ai_use_cases
+  - prod_ai_features_count
+  - prod_ai_pricing_signal
+  - prod_ai_quality
+  - prod_ai_support
+- pillar: People & Operations
+  score: 3.79
+  confidence: 0.55
+  kpis:
+  - people_ai_hiring_volume
+  - people_ai_team_org
+  - people_ai_training
+  - ops_data_infra
+  - ops_ai_partnerships
+  - ops_ai_publications
+overall_score: 3.62
+missing_evidence:
+- strat_responsible_ai_mentions
+- strat_ai_case_studies

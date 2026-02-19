@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(dir c:Vitelis_work*.py /B)",
+      "Bash(python test_enhanced_features.py:*)"
+    ]
+  }
+}

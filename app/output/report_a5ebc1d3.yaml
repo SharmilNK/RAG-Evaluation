@@ -1,0 +1,249 @@
+run_id: a5ebc1d3
+company_id: vitelis
+exec_summary: Run a5ebc1d3 completed for vitelis. Scored 20 KPI drivers with evidence-based
+  confidence.
+improvement_levers:
+- Improve kpi_brand (score 73.09)
+- Improve kpi_tam (score 73.2)
+- Improve kpi_root (score 73.32)
+kpi_results:
+- kpi_id: kpi_root
+  score: 73.32
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_growth
+  score: 76.48
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_efficiency
+  score: 76.67
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_product
+  score: 74.0
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_market
+  score: 76.72
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_revenue
+  score: 76.68
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_pipeline
+  score: 75.36
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_retention
+  score: 75.31
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_unit_econ
+  score: 76.92
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_costs
+  score: 74.75
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_process
+  score: 74.91
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_features
+  score: 73.46
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_quality
+  score: 73.97
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_roadmap
+  score: 73.55
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_tam
+  score: 73.2
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_competition
+  score: 75.97
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_trends
+  score: 76.41
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+- kpi_id: kpi_sales
+  score: 75.5
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_support
+  score: 74.48
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+- kpi_id: kpi_brand
+  score: 73.09
+  confidence: 0.65
+  rationale: Evidence references relevant page content.
+  citations:
+  - source_id: source_1
+    quote: Our product improves revenue pipeline visibility with automation and reporting.
+  - source_id: source_0
+    quote: We build analytics software for B2B teams. Strong product quality and roadmap
+      focus.
+aggregated_results:
+- kpi_id: kpi_root
+  score: 75.97
+  confidence: 0.65
+  children:
+  - kpi_growth
+  - kpi_efficiency
+  - kpi_product
+  - kpi_market
+- kpi_id: kpi_growth
+  score: 75.71
+  confidence: 0.65
+  children:
+  - kpi_revenue
+  - kpi_pipeline
+  - kpi_retention
+  - kpi_sales
+- kpi_id: kpi_efficiency
+  score: 75.27
+  confidence: 0.65
+  children:
+  - kpi_unit_econ
+  - kpi_costs
+  - kpi_process
+  - kpi_support
+- kpi_id: kpi_product
+  score: 73.66
+  confidence: 0.65
+  children:
+  - kpi_features
+  - kpi_quality
+  - kpi_roadmap
+- kpi_id: kpi_market
+  score: 74.67
+  confidence: 0.65
+  children:
+  - kpi_tam
+  - kpi_competition
+  - kpi_trends
+  - kpi_brand

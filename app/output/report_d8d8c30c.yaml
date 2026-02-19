@@ -1,0 +1,1251 @@
+run_id: d8d8c30c
+company_name: Vodafone
+company_domain: vodafone.com
+timestamp: '2026-02-13T05:23:07.106355+00:00'
+url_count: 30
+kpi_results:
+- kpi_id: strat_ai_vision
+  pillar: Strategy & Governance
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone articulates a clear and coherent AI strategy through its comprehensive
+    AI framework, detailing priorities and expected outcomes. The documentation reflects
+    a structured approach to AI implementation and innovation.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "Vodafone\u2019s AI Framework emphasizes transparency and accountability\
+      \ in its AI strategy."
+  - source_id: www.vodafone.com-4ce27bb5b6
+    url: https://www.vodafone.com/about-vodafone/what-we-do/innovation/artificial-intelligence
+    quote: Vodafone's AI initiatives drive transformative benefits while ensuring
+      data responsibility.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 6
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-fb0df60696: 0
+          www.vodafone.com-4ce27bb5b6: 1
+          vodafone.com-716e3c386e: 0
+          www.vodafone.com-dd73e6359c: 0
+          www.vodafone.com-48862a7ad5: 0
+          vodafone.com-27ce7e898b: 0
+        unique_sources: 6
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-fb0df60696:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:30.736696+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-4ce27bb5b6:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:29.003417+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-15T00:00:00+00:00'
+            dates_found: 2
+            age_days: 0
+          www.vodafone.com-dd73e6359c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:32.540976+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-48862a7ad5:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:36.175580+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-27ce7e898b:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:27.145833+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-fb0df60696:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-4ce27bb5b6:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-dd73e6359c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-48862a7ad5:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-27ce7e898b:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: strat_ai_governance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence provided includes references to risk management and a strategic
+    approach to digital sovereignty, but lacks a formal governance structure or specific
+    committees related to AI oversight.
+  citations:
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: Europe knows it must invest in the areas where it still has the chance
+      to lead, including quantum, connectivity, edge cloud and industrial AI applications.
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: Vodafone and Zinkworks partner to create AI platform to simplify and accelerate
+      launch of new mobile network apps for customers.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-d6b58c9a66: 0
+          vodafone.com-716e3c386e: 0
+          vodafone.com-fe6ff47941: 1
+          www.vodafone.com-2aded8c37c: 0
+        unique_sources: 4
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-d6b58c9a66:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:43.425627+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-15T00:00:00+00:00'
+            dates_found: 2
+            age_days: 0
+          vodafone.com-fe6ff47941:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:20.181741+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-2aded8c37c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:34.322059+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-d6b58c9a66:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-fe6ff47941:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-2aded8c37c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: strat_responsible_ai_mentions
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - responsible ai
+    - ai ethics
+    - ai governance
+    - ai safety
+    - responsible use
+- kpi_id: strat_ai_case_studies
+  pillar: Strategy & Governance
+  type: quant
+  score: 1.0
+  confidence: 0.3
+  rationale: Matched 0 keyword mentions.
+  citations: []
+  details:
+    count: 0
+    keywords:
+    - case study
+    - customer story
+    - success story
+    - AI deployment
+- kpi_id: strat_ai_announcement_recency
+  pillar: Strategy & Governance
+  type: quant
+  score: 5.0
+  confidence: 0.6
+  rationale: Most recent AI mention -77 days ago.
+  citations: []
+  details:
+    days_since: -77
+- kpi_id: prod_ai_product_depth
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: AI features are mentioned in the context of Vodafone's products, but
+    the evidence suggests that AI is not yet central to their core offerings. There
+    are indications of AI being utilized in various applications, but the scope appears
+    limited and not fully integrated across multiple products.
+  citations:
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: Most of the children surveyed (74%) believing that AI would play a significant
+      role in their professional lives, but less than half feeling adequately prepared
+      by their schools to engage with this new technology.
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: Vodafone is using AI in various applications, but as Scott points out,
+      it is still relatively new in AI years.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 3
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          foundation.vodafone.com-f459de0bd8: 4
+          www.vodafone.com-d6b58c9a66: 1
+          www.vodafone.com-e30d18960f: 0
+        unique_sources: 3
+      freshness:
+        boost: 0.1
+        per_source:
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:45.124755+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-d6b58c9a66:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:43.425627+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-e30d18960f:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:38.053897+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+          www.vodafone.com-d6b58c9a66:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-e30d18960f:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: prod_ai_use_cases
+  pillar: Product & Delivery
+  type: rubric
+  score: 4.0
+  confidence: 1.0
+  rationale: Vodafone provides several specific examples of AI use cases, such as
+    optimizing data services for high-quality video streaming and using AI tools to
+    enhance employee efficiency. However, while these examples are relevant, they
+    lack detailed metrics or outcomes that would elevate the score to a 5.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: AI techniques in our networks are used to identify where capacity is needed
+      so that our customers can enjoy optimised data services, such as high quality
+      video streaming; Vodafone employees use AI tools and software to help them work
+      more e
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: The second applications will use machine learning to fine-tune radio coverage
+      parameters that are typically kept at default settings, improving overall network
+      performance.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          vodafone.com-27ce7e898b: 0
+          www.vodafone.com-fb0df60696: 1
+          vodafone.com-716e3c386e: 0
+          www.vodafone.com-2aded8c37c: 1
+        unique_sources: 4
+      freshness:
+        boost: 0.094
+        per_source:
+          vodafone.com-27ce7e898b:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:27.145833+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-fb0df60696:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:30.736696+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 0.931
+            newest_date: '2026-01-28T00:00:00+00:00'
+            dates_found: 2
+            age_days: 16
+          www.vodafone.com-2aded8c37c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:34.322059+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          vodafone.com-27ce7e898b:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-fb0df60696:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-2aded8c37c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: prod_ai_features_count
+  pillar: Product & Delivery
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 20 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/0d25e84d5b6d5bf722c72d4aa8eaf4c1c4d2823bf47e930b001ad34181044759.jpg)\
+      \ # Introduction Vodafone Group\u2019s Artificial Intelligence (AI) Framework\
+      \ sets out our "
+  details:
+    count: 20
+    keywords:
+    - ai feature
+    - predictive
+    - recommendation
+    - automation
+    - ml model
+- kpi_id: prod_ai_pricing_signal
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: AI is mentioned in various contexts, but there is no clear evidence of
+    explicit packaging or pricing differentiation for AI products. The references
+    indicate a general acknowledgment of AI's importance but lack specific details
+    on how AI is monetized.
+  citations:
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: In the following privacy policy 'we/us' means Vodafone Group Plc; 'third
+      party' means someone who is not you or us; and 'Vodafone Group' means Vodafone
+      Group Plc and any company or other organisation in which Vodafone Group Plc
+      owns more th
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: While students increasingly recognize that AI is an essential part of their
+      futures, a lack of digital skills and preparedness by schools and teachers across
+      Europe is holding many of them back.
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: Vodafone, Sumitomo Corporation, and Mastercard team up to advance the Economy
+      of Things.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          vodafone.com-27ce7e898b: 1
+          foundation.vodafone.com-f459de0bd8: 0
+          www.vodafone.com-48862a7ad5: 0
+          www.vodafone.com-dd73e6359c: 0
+        unique_sources: 4
+      freshness:
+        boost: 0.037
+        per_source:
+          vodafone.com-27ce7e898b:
+            freshness_score: 0.248
+            newest_date: '2024-10-15T00:00:00+00:00'
+            dates_found: 2
+            age_days: 486
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:45.124755+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-48862a7ad5:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:36.175580+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-dd73e6359c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:32.540976+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          vodafone.com-27ce7e898b:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+          www.vodafone.com-48862a7ad5:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-dd73e6359c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: prod_ai_quality
+  pillar: Product & Delivery
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence provided includes references to AI frameworks and initiatives
+    by Vodafone, but lacks specific concrete benchmarks, metrics, or outcomes that
+    would substantiate the performance or quality claims. The claims are somewhat
+    generic and do not provide detailed evidence of AI performance.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: We will ensure that we respect international human rights standards and
+      best practice around ensuring AI systems foster diversity, accessibility and
+      inclusivity.
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: Of the 7,000 children surveyed, 59% lacked access to digital devices and
+      51% reported insufficient internet connectivity.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-fb0df60696: 0
+          vodafone.com-716e3c386e: 0
+          vodafone.com-27ce7e898b: 0
+          foundation.vodafone.com-f459de0bd8: 2
+        unique_sources: 4
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-fb0df60696:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:30.736696+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:19:52.703907+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-27ce7e898b:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:27.145833+00:00'
+            dates_found: 1
+            age_days: 0
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:45.124755+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-fb0df60696:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-27ce7e898b:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: people_ai_hiring_volume
+  pillar: People & Operations
+  type: quant
+  score: 3.0
+  confidence: 0.7
+  rationale: Matched 5 keyword mentions.
+  citations:
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "![](https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/images/0d25e84d5b6d5bf722c72d4aa8eaf4c1c4d2823bf47e930b001ad34181044759.jpg)\
+      \ # Introduction Vodafone Group\u2019s Artificial Intelligence (AI) Framework\
+      \ sets out our "
+  - source_id: www.vodafone.com-2aded8c37c
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers
+    quote: '[skip to main content](https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers#maincontent)
+      Main Content 21 Oct 2025 ['
+  details:
+    count: 5
+    keywords:
+    - machine learning
+    - ml engineer
+    - data scientist
+    - ai engineer
+    - mlops
+- kpi_id: people_ai_team_org
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence mentions AI technologies and their importance in various
+    sectors, but does not provide a clear organizational structure or specific details
+    about AI teams, labs, or centers of excellence.
+  citations:
+  - source_id: www.vodafone.com-d6b58c9a66
+    url: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right
+    quote: Cloud and AI technologies are a driving force behind everything from industrial
+      innovation to public services.
+  - source_id: www.vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: We endeavour to develop AI in an ethical way so that it can be trusted.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 3
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-d6b58c9a66: 0
+          www.vodafone.com-fb0df60696: 1
+          vodafone.com-716e3c386e: 0
+        unique_sources: 3
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-d6b58c9a66:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:43.425627+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-fb0df60696:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:30.736696+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:19:52.703907+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-d6b58c9a66:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-fb0df60696:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: true
+        contradiction_count: 1
+        contradictions:
+        - source_a: vodafone.com-716e3c386e
+          source_b: www.vodafone.com-d6b58c9a66
+          claim_a: leading
+          claim_b: behind
+          type: opposing_claims
+        confidence_penalty: -0.07
+- kpi_id: people_ai_training
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: The evidence mentions general training and initiatives related to AI
+    skills, but does not specify any particular AI training programs or certifications
+    for staff. The focus is more on the skills gap and educational initiatives rather
+    than direct enablement for employees.
+  citations:
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: 'Vodafone Foundation Managing Director Lisa Felton said: ''While students
+      increasingly recognize that AI is an essential part of their futures, a lack
+      of digital skills and preparedness by schools and teachers across Europe is
+      holding many of'
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: '''the charity runs the Skills Upload Jr Programme, partnering with governments,
+      schools, and children in nine countries across Europe, ensuring a holistic approach
+      to digital education.'''
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-e30d18960f: 0
+          foundation.vodafone.com-f459de0bd8: 5
+          vodafone.com-fe6ff47941: 1
+          www.vodafone.com-dd73e6359c: 0
+        unique_sources: 4
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-e30d18960f:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:38.053897+00:00'
+            dates_found: 1
+            age_days: 0
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:45.124755+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-fe6ff47941:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:20.181741+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-dd73e6359c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:32.540976+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-e30d18960f:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+          vodafone.com-fe6ff47941:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-dd73e6359c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: ops_data_infra
+  pillar: People & Operations
+  type: rubric
+  score: 3.0
+  confidence: 1.0
+  rationale: Some tooling and infrastructure details are mentioned, but there is no
+    clear description of a comprehensive data platform specifically supporting AI.
+  citations:
+  - source_id: vodafone.com-27ce7e898b
+    url: https://vodafone.com/privacy
+    quote: We are committed to handling this data responsibly and in compliance with
+      applicable data protection laws.
+  - source_id: foundation.vodafone.com-f459de0bd8
+    url: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe
+    quote: Vodafone Foundation is a leading global not for profit combining its technology
+      and charitable giving to ensure no one is left behind in our digital world.
+  - source_id: www.vodafone.com-e30d18960f
+    url: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai
+    quote: Vodafone CTO shares thoughts on AI.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 5
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          vodafone.com-27ce7e898b: 0
+          vodafone.com-fe6ff47941: 0
+          vodafone.com-716e3c386e: 0
+          foundation.vodafone.com-f459de0bd8: 0
+          www.vodafone.com-e30d18960f: 0
+        unique_sources: 5
+      freshness:
+        boost: 0.057
+        per_source:
+          vodafone.com-27ce7e898b:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:27.145833+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-fe6ff47941:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:20.181741+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-15T00:00:00+00:00'
+            dates_found: 2
+            age_days: 0
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 0.351
+            newest_date: '2025-01-15T00:00:00+00:00'
+            dates_found: 1
+            age_days: 394
+          www.vodafone.com-e30d18960f:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:38.053897+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          vodafone.com-27ce7e898b:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-fe6ff47941:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+          www.vodafone.com-e30d18960f:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: ops_ai_partnerships
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 119 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: vodafone.com-17d0a5c829
+    url: https://vodafone.com/careers
+    quote: '[Skip to main content](https://careers.vodafone.com/#main-content) # Whatifwecouldmaketechnologyaforceforgood?Joinus
+      Togetherwecan. [Explore our opportunitiesOpens a new tab](https://jobs.vodafone.com/careers?domain=vodafone.com)
+      ![](https:'
+  details:
+    count: 119
+    keywords:
+    - partner
+    - partnership
+    - collaboration
+    - aws
+    - azure
+    - google cloud
+    - openai
+- kpi_id: ops_ai_compliance
+  pillar: Strategy & Governance
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone has established a clear Artificial Intelligence Framework that
+    outlines their approach to working with AI technologies, including compliance
+    and risk management aspects. This framework indicates a commitment to addressing
+    privacy, bias, and regulatory concerns in AI.
+  citations:
+  - source_id: vodafone.com-fb0df60696
+    url: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf
+    quote: "Vodafone Group\u2019s Artificial Intelligence (AI) Framework sets out\
+      \ our approach to working with AI technologies and outlines how we address compliance\
+      \ and risk."
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 4
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          vodafone.com-716e3c386e: 0
+          vodafone.com-549bbe0b01: 0
+          www.vodafone.com-4ce27bb5b6: 0
+          www.vodafone.com-fb0df60696: 0
+        unique_sources: 4
+      freshness:
+        boost: 0.091
+        per_source:
+          vodafone.com-716e3c386e:
+            freshness_score: 0.895
+            newest_date: '2026-01-15T00:00:00+00:00'
+            dates_found: 2
+            age_days: 29
+          vodafone.com-549bbe0b01:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:15.160944+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-4ce27bb5b6:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:29.003417+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-fb0df60696:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:30.736696+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-549bbe0b01:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-4ce27bb5b6:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-fb0df60696:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: prod_ai_support
+  pillar: Product & Delivery
+  type: rubric
+  score: 5.0
+  confidence: 1.0
+  rationale: Vodafone has clearly implemented AI support capabilities, including the
+    launch of a generative AI chatbot to enhance customer experience. This indicates
+    a strong commitment to utilizing AI in customer support, showcasing specific outcomes
+    and capabilities.
+  citations:
+  - source_id: www.vodafone.com-48862a7ad5
+    url: https://www.vodafone.com/our-company/megatrends
+    quote: VOXI by Vodafone launches generative AI chatbot to enhance customer experience.
+  - source_id: www.vodafone.com-4ce27bb5b6
+    url: https://www.vodafone.com/about-vodafone/what-we-do/innovation/artificial-intelligence
+    quote: Vodafone has launched a new large language model (LLM) generative AI chatbot
+      in collaboration with Accenture.
+  details:
+    llm_used: true
+    tier_distribution:
+      tier1: 6
+      tier2: 0
+      tier3: 0
+      avg: 1.0
+    corroboration_score: 0.3
+    unique_sources: 6
+    k_used: 6
+    source_evaluation:
+      semantic_corroboration:
+        corroboration_score: 0.3
+        corroborated_claims: []
+        claim_counts:
+          www.vodafone.com-e30d18960f: 0
+          vodafone.com-716e3c386e: 0
+          www.vodafone.com-4ce27bb5b6: 1
+          www.vodafone.com-dd73e6359c: 0
+          www.vodafone.com-48862a7ad5: 2
+          foundation.vodafone.com-f459de0bd8: 1
+        unique_sources: 6
+      freshness:
+        boost: 0.1
+        per_source:
+          www.vodafone.com-e30d18960f:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:38.053897+00:00'
+            dates_found: 1
+            age_days: 0
+          vodafone.com-716e3c386e:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:19:52.703907+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-4ce27bb5b6:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:29.003417+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-dd73e6359c:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:32.540976+00:00'
+            dates_found: 1
+            age_days: 0
+          www.vodafone.com-48862a7ad5:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:36.175580+00:00'
+            dates_found: 1
+            age_days: 0
+          foundation.vodafone.com-f459de0bd8:
+            freshness_score: 1.0
+            newest_date: '2026-02-13T05:20:45.124755+00:00'
+            dates_found: 1
+            age_days: 0
+      authority:
+        boost: 0.03
+        per_source:
+          www.vodafone.com-e30d18960f:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          vodafone.com-716e3c386e:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-4ce27bb5b6:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-dd73e6359c:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          www.vodafone.com-48862a7ad5:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (vodafone.com)
+            is_third_party: false
+          foundation.vodafone.com-f459de0bd8:
+            authority_type: first_party
+            authority_score: 0.5
+            authority_reason: Company's own domain (foundation.vodafone.com)
+            is_third_party: false
+      contradictions:
+        has_contradictions: false
+        contradiction_count: 0
+        contradictions: []
+        confidence_penalty: -0.0
+- kpi_id: ops_ai_publications
+  pillar: People & Operations
+  type: quant
+  score: 5.0
+  confidence: 0.7
+  rationale: Matched 27 keyword mentions.
+  citations:
+  - source_id: vodafone.com-716e3c386e
+    url: https://vodafone.com
+    quote: '[skip to main content](https://www.vodafone.com/#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # EVERYONE. _CONNECTED_
+      Connectivity p'
+  - source_id: vodafone.com-a532b7808f
+    url: https://vodafone.com/news
+    quote: '[skip to main content](https://www.vodafone.com/news#maincontent) Captions
+      Your browser does not support the video tag. 00:00 / 00:00 1080p HD - 1080p
+      HD - 720p HD - 360p 1x - 0.5x - 1x - 1.25x - 1.5x - 2x # _NEWS_ Main Content
+      ## LATEST ##'
+  details:
+    count: 27
+    keywords:
+    - research
+    - paper
+    - publication
+    - conference
+    - arxiv
+pillar_scores:
+- pillar: Strategy & Governance
+  score: 3.95
+  confidence: 0.7
+  kpis:
+  - strat_ai_vision
+  - strat_ai_governance
+  - strat_responsible_ai_mentions
+  - strat_ai_case_studies
+  - strat_ai_announcement_recency
+  - ops_ai_compliance
+- pillar: Product & Delivery
+  score: 3.77
+  confidence: 0.95
+  kpis:
+  - prod_ai_product_depth
+  - prod_ai_use_cases
+  - prod_ai_features_count
+  - prod_ai_pricing_signal
+  - prod_ai_quality
+  - prod_ai_support
+- pillar: People & Operations
+  score: 3.55
+  confidence: 0.85
+  kpis:
+  - people_ai_hiring_volume
+  - people_ai_team_org
+  - people_ai_training
+  - ops_data_infra
+  - ops_ai_partnerships
+  - ops_ai_publications
+overall_score: 3.75
+missing_evidence:
+- strat_responsible_ai_mentions
+- strat_ai_case_studies
+debug_log:
+- '[fetch] firecrawl ok: https://vodafone.com'
+- '[fetch] firecrawl ok: https://vodafone.com/about'
+- '[fetch] firecrawl ok: https://vodafone.com/company'
+- '[fetch] firecrawl ok: https://vodafone.com/product'
+- '[fetch] firecrawl ok: https://vodafone.com/products'
+- '[fetch] firecrawl ok: https://vodafone.com/solutions'
+- '[fetch] firecrawl ok: https://vodafone.com/pricing'
+- '[fetch] firecrawl ok: https://vodafone.com/careers'
+- '[fetch] firecrawl ok: https://vodafone.com/jobs'
+- '[fetch] firecrawl ok: https://vodafone.com/press'
+- '[fetch] firecrawl ok: https://vodafone.com/news'
+- '[fetch] firecrawl ok: https://vodafone.com/blog'
+- '[fetch] firecrawl ok: https://vodafone.com/investors'
+- '[fetch] firecrawl ok: https://vodafone.com/investor-relations'
+- '[fetch] firecrawl ok: https://vodafone.com/annual-report'
+- '[fetch] firecrawl ok: https://vodafone.com/sustainability'
+- '[fetch] firecrawl ok: https://vodafone.com/responsible-ai'
+- '[fetch] firecrawl ok: https://vodafone.com/ai'
+- '[fetch] firecrawl ok: https://vodafone.com/security'
+- '[fetch] firecrawl ok: https://vodafone.com/privacy'
+- '[fetch] firecrawl ok: https://www.vodafone.com/about-vodafone/what-we-do/innovation/artificial-intelligence'
+- '[fetch] firecrawl ok: https://www.vodafone.com/~/media/Files/V/vodafone/corp/documents/investors/vodafone-artificial-intelligence-framework.pdf'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-fast-forward-predictions'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-and-zinkworks-partner-to-create-ai-platform-to-simplify-and-accelerate-launch-of-new-mobile-network-apps-for-customers'
+- '[fetch] firecrawl ok: https://www.vodafone.com/our-company/megatrends'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/technology/vodafone-cto-shares-thoughts-on-ai'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/corporate-and-financial/vodafone-2026-fast-forward'
+- '[fetch] firecrawl ok: https://www.vodafone.com/our-company/our-strategic-priorities'
+- '[fetch] firecrawl ok: https://www.vodafone.com/news/newsroom/public-policy/how-europe-can-get-digital-sovereignty-right'
+- '[fetch] firecrawl ok: https://foundation.vodafone.com/news/vodafone-foundation/vodafone-foundation-research-highlights-the-emergence-of-a-new-ai-skills-gap-in-europe'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
+- '[llm] response parsed'
