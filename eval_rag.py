@@ -45,22 +45,23 @@ import requests
 # HELPER: Call the LLM 
 # ==============================================================================
 
-def _call_llm(prompt: str, system_msg: str = "You are a strict JSON generator.") -> Optional[dict]:
+def _call_llm(prompt: str, system_msg: str = "You are a strict JSON generator.", verbose: bool = True) -> Optional[dict]:
     """
     Send a question to the AI (GPT-4o-mini) and get a JSON answer back.
     This is a self-contained helper used only within this evaluation file.
     It does not touch or modify the main scoring system.
-    Retries up to 3 times with exponential backoff on 429 rate-limit errors.
+    In pipeline mode (verbose=False): skips immediately on 429 — no waiting.
+    In standalone mode (verbose=True): retries twice with short backoff.
     """
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        # If no API key is set, we cannot run LLM-based checks
-        print("  [Note] No OpenAI API key found — skipping LLM-based checks.")
+        if verbose:
+            print("  [Note] No OpenAI API key found — skipping LLM-based checks.")
         return None
 
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    max_retries = 4
-    backoff = 30  # seconds — start at 30s, double each retry (30 → 60 → 120 → 240)
+    max_retries = 2 if verbose else 1  # pipeline: try once and move on
+    backoff = 5  # seconds — only used in verbose/standalone mode
 
     for attempt in range(max_retries):
         try:
@@ -73,32 +74,37 @@ def _call_llm(prompt: str, system_msg: str = "You are a strict JSON generator.")
                         {"role": "system", "content": system_msg},
                         {"role": "user", "content": prompt},
                     ],
-                    "temperature": 0.1,  # Low temperature = more consistent, less creative answers
+                    "temperature": 0.1,
                 },
                 timeout=30,
             )
             if response.status_code == 429:
+                if not verbose:
+                    return None  # pipeline: skip immediately, don't block
                 wait = backoff * (2 ** attempt)
-                print(f"  [Rate limit] 429 received — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
+                print(f"  [Rate limit] 429 — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
                 time.sleep(wait)
                 continue
             response.raise_for_status()
             content = response.json()["choices"][0]["message"]["content"]
-            # Pull out the JSON block from the response text
             start = content.find("{")
             end = content.rfind("}")
             if start != -1 and end != -1:
                 return json.loads(content[start:end + 1])
         except Exception as exc:
             if "429" in str(exc):
+                if not verbose:
+                    return None  # pipeline: skip immediately
                 wait = backoff * (2 ** attempt)
-                print(f"  [Rate limit] 429 received — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
+                print(f"  [Rate limit] 429 — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
                 time.sleep(wait)
                 continue
-            print(f"  [Warning] LLM call failed: {exc}")
+            if verbose:
+                print(f"  [Warning] LLM call failed: {exc}")
             return None
 
-    print(f"  [Warning] LLM call failed after {max_retries} retries (rate limit).")
+    if verbose:
+        print(f"  [Warning] LLM call failed after {max_retries} retries (rate limit).")
     return None
 
 
@@ -300,6 +306,7 @@ def evaluate_llm_as_judge(
     question: str,
     answer: str,
     contexts: List[str],
+    verbose: bool = True,
 ) -> Dict[str, Any]:
     """
     A second AI reads the question, the evidence, and the generated answer,
@@ -337,7 +344,7 @@ def evaluate_llm_as_judge(
         f"ANSWER TO REVIEW:\n{answer}\n"
     )
 
-    result = _call_llm(prompt, system_msg="You are a strict JSON generator and impartial reviewer.")
+    result = _call_llm(prompt, system_msg="You are a strict JSON generator and impartial reviewer.", verbose=verbose)
 
     if result:
         return {
@@ -544,6 +551,7 @@ def evaluate_hallucination(
     contexts: List[str],
     hallucination_threshold: float = 0.4,
     use_llm: bool = True,
+    verbose: bool = True,
 ) -> Dict[str, Any]:
     """
     Checks whether the AI's answer contains claims that are NOT supported
@@ -615,7 +623,7 @@ def evaluate_hallucination(
             f"EVIDENCE:\n{evidence_block}\n\n"
             f"ANSWER:\n{answer}\n"
         )
-        result = _call_llm(prompt)
+        result = _call_llm(prompt, verbose=verbose)
         if result:
             llm_score = float(result.get("hallucination_score", heuristic_score))
             llm_flagged_claims = result.get("unsupported_claims", [])
@@ -1068,7 +1076,7 @@ def evaluate_single_kpi(
 
     # --- 2. LLM as a Judge ---
     if run_llm_judge:
-        judge_result = evaluate_llm_as_judge(question, answer, contexts)
+        judge_result = evaluate_llm_as_judge(question, answer, contexts, verbose=verbose)
     else:
         judge_result = {"llm_used": False, "feedback": "Skipped."}
     results["llm_judge"] = judge_result
@@ -1094,6 +1102,7 @@ def evaluate_single_kpi(
         answer, contexts,
         hallucination_threshold=hallucination_threshold,
         use_llm=run_llm_judge,
+        verbose=verbose,
     )
     results["hallucination"] = hallucination_result
     if verbose:

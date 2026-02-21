@@ -31,4 +31,5 @@ def score_kpis_node(state: Dict) -> Dict:
     return {
         "kpi_results": results,
         "missing_evidence": missing,
+        "kpi_definitions": [kpi.model_dump() for kpi in kpis],  # passed to evaluate_rag_node for ground truth lookup
     }
