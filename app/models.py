@@ -62,6 +62,68 @@ class AggregatedKPIResult(BaseModel):
     kpis: List[str] = Field(default_factory=list)
 
 
+# code change for RAG Eval by SN
+
+class RagKpiEval(BaseModel):
+    """
+    Stores all 9 RAG evaluation check results for a single KPI.
+    Each field maps to one of the checks in eval_rag.py.
+    None means that check was skipped or unavailable for this KPI.
+    """
+    kpi_id: str
+    # The Score-5 rubric text used as the ideal-answer benchmark
+    ground_truth_used: Optional[str] = None
+
+    # Check 1 — RAGAS core metrics (faithfulness, relevancy, precision, recall)
+    ragas_faithfulness: Optional[float] = None
+    ragas_answer_relevancy: Optional[float] = None
+    ragas_context_precision: Optional[float] = None
+    ragas_context_recall: Optional[float] = None
+
+    # Check 2 — LLM as a Judge (1-5 scale; feedback is a one-sentence verdict)
+    llm_judge_overall: Optional[int] = None
+    llm_judge_feedback: Optional[str] = None
+
+    # Check 3 — Recall@k (fraction of relevant sources in top 3 results)
+    recall_at_3: Optional[float] = None
+
+    # Check 4 — F1 score (word-level overlap between answer and evidence)
+    f1: Optional[float] = None
+
+    # Check 5 — Hallucination (fraction of answer not backed by evidence; flagged if above threshold)
+    hallucination_score: Optional[float] = None
+    hallucination_flagged: bool = False
+
+    # Check 6 — MMR diversity (how varied the retrieved sources are; higher = less repetition)
+    mmr_diversity_score: Optional[float] = None
+
+    # Checks 7, 8, 9 — Ground-truth-based metrics (compared against Score-5 rubric)
+    factual_correctness: Optional[float] = None   # Claim-level accuracy vs ideal answer
+    noise_sensitivity: Optional[float] = None     # Impact of low-quality sources (lower = better)
+    semantic_similarity: Optional[float] = None   # Meaning-level match to ideal answer
+
+
+class RagEvaluationReport(BaseModel):
+    """
+    Batch-level RAG evaluation summary across all rubric KPIs in a report.
+    This is the top-level object written into the final YAML under 'rag_evaluation'.
+    """
+    # How many rubric KPIs were evaluated (quant KPIs are skipped)
+    evaluated_kpi_count: int
+    # How many KPIs were flagged due to high hallucination score
+    flagged_kpi_count: int
+    # List of KPI IDs that were flagged — for easy reference
+    flagged_kpi_ids: List[str] = Field(default_factory=list)
+    # Plain-English verdict for executives — no jargon
+    overall_verdict: str
+    # 2-3 line human-readable summary of evidence quality and retrieval performance
+    summary: Optional[str] = None
+    # Per-KPI detailed results
+    per_kpi: List[RagKpiEval] = Field(default_factory=list)
+
+# code change end for RAG Eval by SN
+
+
 class ReportArtifact(BaseModel):
     run_id: str
     company_name: str
@@ -73,3 +135,7 @@ class ReportArtifact(BaseModel):
     overall_score: float
     missing_evidence: List[str]
     debug_log: Optional[List[str]] = None
+    # code change for RAG Eval by SN
+    # Optional RAG evaluation section — populated when eval_rag node runs
+    rag_evaluation: Optional[RagEvaluationReport] = None
+    # code change end for RAG Eval by SN

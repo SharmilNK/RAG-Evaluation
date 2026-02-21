@@ -8,6 +8,9 @@ import yaml
 
 from app.debug_log import get_debug
 from app.models import AggregatedKPIResult, KPIDriverResult, ReportArtifact
+# code change for RAG Eval by SN
+from app.models import RagEvaluationReport
+# code change end for RAG Eval by SN
 
 
 def _aggregate_by_pillar(results: List[KPIDriverResult]) -> List[AggregatedKPIResult]:
@@ -55,6 +58,14 @@ def aggregate_report_node(state: Dict) -> Dict:
     pillar_scores = _aggregate_by_pillar(kpi_results)
     overall_score = _overall_score(pillar_scores)
 
+    # code change for RAG Eval by SN
+    # Read the RAG evaluation result from state (populated by evaluate_rag_node).
+    # If the node did not run or returned nothing, this will be None and the
+    # rag_evaluation section will simply be absent from the YAML report.
+    rag_eval_dict = state.get("rag_evaluation")
+    rag_evaluation = RagEvaluationReport(**rag_eval_dict) if rag_eval_dict else None
+    # code change end for RAG Eval by SN
+
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,
@@ -66,6 +77,10 @@ def aggregate_report_node(state: Dict) -> Dict:
         overall_score=overall_score,
         missing_evidence=state.get("missing_evidence", []),
         debug_log=get_debug() if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"} else None,
+        # code change for RAG Eval by SN
+        # Include RAG evaluation in the final report (None if node was skipped)
+        rag_evaluation=rag_evaluation,
+        # code change end for RAG Eval by SN
     )
 
     output_dir = os.path.join(os.path.dirname(__file__), "..", "output")
