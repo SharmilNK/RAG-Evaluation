@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from app.snapshots import build_snapshot, find_previous_snapshot_for_domain, load_snapshot, diff_snapshots
+
 import json
 import os
 import threading
@@ -453,10 +455,10 @@ kpi_results = report_data.get("kpi_results", [])
 missing_evidence = report_data.get("missing_evidence", [])
 debug_log = report_data.get("debug_log", []) or []
 
-tab_kpi, tab_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
-    ["KPI Scores", "Source Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
+# FIX 1: number of tab variables must match number of tab labels
+tab_kpi, tab_diff, tab_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
+    ["KPI Scores", "Run Diffs", "Source Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
 )
-
 
 # ============================================================================
 # TAB: KPI Scores
@@ -485,21 +487,18 @@ with tab_kpi:
             is_missing = kpi_id in missing_evidence
 
             with st.expander(
-                f"{'🔴' if is_missing else '📊'} **{kpi_id}** — Score: **{score:.1f}**/5 — Confidence: {conf:.0%} — _{ktype}_"
+                f"{'🔴' if is_missing else '📊'} {kpi_id}  Score: {score:.1f}/5  Confidence: {conf:.0%}  {ktype}"
             ):
                 st.progress(min(score / 5.0, 1.0))
+                st.markdown(f"Rationale: {rationale}")
 
-                st.markdown(f"**Rationale:** {rationale}")
-
-                # --- v2: Source evaluation breakdown ---
+                # v2: Source evaluation breakdown
                 if source_eval:
                     st.markdown("---")
-                    st.markdown("**Source Evaluation Breakdown:**")
+                    st.markdown("Source Evaluation Breakdown")
 
-                    # Metric cards row
                     m1, m2, m3, m4 = st.columns(4)
 
-                    # Corroboration
                     corr = source_eval.get("semantic_corroboration", {})
                     corr_score = corr.get("corroboration_score", 0)
                     corr_claims = len(corr.get("corroborated_claims", []))
@@ -508,11 +507,10 @@ with tab_kpi:
                             f'<div class="eval-metric">'
                             f'<div class="eval-value" style="color:{score_color(corr_score, 1.0)}">{corr_score:.0%}</div>'
                             f'<div class="eval-label">Corroboration<br>{corr_claims} matched claims</div>'
-                            f'</div>',
+                            f"</div>",
                             unsafe_allow_html=True,
                         )
 
-                    # Freshness
                     fresh = source_eval.get("freshness", {})
                     fresh_boost = fresh.get("boost", 0)
                     with m2:
@@ -520,11 +518,10 @@ with tab_kpi:
                             f'<div class="eval-metric">'
                             f'<div class="eval-value" style="color:{boost_color(fresh_boost)}">{fresh_boost:+.3f}</div>'
                             f'<div class="eval-label">Freshness Boost</div>'
-                            f'</div>',
+                            f"</div>",
                             unsafe_allow_html=True,
                         )
 
-                    # Authority
                     auth = source_eval.get("authority", {})
                     auth_boost = auth.get("boost", 0)
                     with m3:
@@ -532,11 +529,10 @@ with tab_kpi:
                             f'<div class="eval-metric">'
                             f'<div class="eval-value" style="color:{boost_color(auth_boost)}">{auth_boost:+.3f}</div>'
                             f'<div class="eval-label">Authority Boost</div>'
-                            f'</div>',
+                            f"</div>",
                             unsafe_allow_html=True,
                         )
 
-                    # Contradictions
                     contrad = source_eval.get("contradictions", {})
                     contrad_count = contrad.get("contradiction_count", 0)
                     contrad_penalty = contrad.get("confidence_penalty", 0)
@@ -546,42 +542,38 @@ with tab_kpi:
                             f'<div class="eval-metric">'
                             f'<div class="eval-value" style="color:{contrad_color}">{contrad_count}</div>'
                             f'<div class="eval-label">Contradictions<br>Penalty: {contrad_penalty:+.3f}</div>'
-                            f'</div>',
+                            f"</div>",
                             unsafe_allow_html=True,
                         )
 
-                    # Show corroborated claims if any
                     if corr.get("corroborated_claims"):
                         with st.popover("View Corroborated Claims"):
                             for claim in corr["corroborated_claims"][:5]:
                                 st.markdown(
-                                    f"**{claim.get('source_a', '')}:** _{claim.get('claim_a', '')[:120]}_\n\n"
-                                    f"**{claim.get('source_b', '')}:** _{claim.get('claim_b', '')[:120]}_\n\n"
-                                    f"Similarity: **{claim.get('similarity', 0):.0%}**"
+                                    f"{claim.get('source_a', '')}: {claim.get('claim_a', '')[:120]}\n\n"
+                                    f"{claim.get('source_b', '')}: {claim.get('claim_b', '')[:120]}\n\n"
+                                    f"Similarity: {claim.get('similarity', 0):.0%}"
                                 )
                                 st.markdown("---")
 
-                    # Show contradictions if any
                     if contrad.get("contradictions"):
                         with st.popover("View Contradictions"):
                             for c in contrad["contradictions"]:
                                 st.markdown(
                                     f'<div class="contradiction-card">'
-                                    f'<strong>{c.get("source_a", "")}</strong>: "{c.get("claim_a", "")}"<br>'
-                                    f'<strong>{c.get("source_b", "")}</strong>: "{c.get("claim_b", "")}"'
-                                    f'</div>',
+                                    f'{c.get("source_a", "")}: "{c.get("claim_a", "")}"<br>'
+                                    f'{c.get("source_b", "")}: "{c.get("claim_b", "")}"'
+                                    f"</div>",
                                     unsafe_allow_html=True,
                                 )
 
-                # Citations
                 if citations:
-                    st.markdown("**Citations:**")
+                    st.markdown("Citations")
                     for c in citations:
                         url = c.get("url", "")
                         quote = c.get("quote", "")[:200]
-                        st.markdown(f"- [{c.get('source_id', 'source')}]({url}): _{quote}_")
+                        st.markdown(f"- [{c.get('source_id', 'source')}]({url}): {quote}")
 
-                # Full details JSON
                 if details:
                     with st.popover("Full Details JSON"):
                         st.json(details)
@@ -589,9 +581,42 @@ with tab_kpi:
     if missing_evidence:
         st.markdown("---")
         st.markdown("### Missing Evidence")
-        st.warning(f"The following KPIs had no evidence found: **{', '.join(missing_evidence)}**")
+        st.warning(f"The following KPIs had no evidence found: {', '.join(missing_evidence)}")
 
+# ============================================================================
+# TAB: Run Diffs
+# ============================================================================
+with tab_diff:
+    st.markdown("### Run to run diffs")
 
+    current_snap = build_snapshot(report_data, report_path="")
+    prev_path = find_previous_snapshot_for_domain(domain, exclude_run_id=run_id)
+
+    if not prev_path:
+        st.info("No previous snapshot found for this domain yet. Run it again with a new run id to see diffs.")
+    else:
+        prev_snap = load_snapshot(str(prev_path))
+        d = diff_snapshots(prev_snap, current_snap)
+
+        st.write(
+            f"Overall score: {d['overall_old']:.2f} to {d['overall_new']:.2f}  delta {d['overall_delta']:+.2f}"
+        )
+
+        st.markdown("#### Biggest score changes")
+        for r in (d.get("top_score_changes") or [])[:10]:
+            st.write(
+                f"{r.get('kpi_id','')}: score {r.get('score_delta',0):+.2f}  conf {r.get('confidence_delta',0):+.2f}"
+            )
+
+        st.markdown("#### Biggest confidence changes")
+        for r in (d.get("top_confidence_changes") or [])[:10]:
+            st.write(
+                f"{r.get('kpi_id','')}: conf {r.get('confidence_delta',0):+.2f}  score {r.get('score_delta',0):+.2f}"
+            )
+
+        with st.expander("Show full diff json"):
+            st.json(d)
+            
 # ============================================================================
 # TAB: Source Evaluation (NEW — v2 deep dive)
 # ============================================================================
