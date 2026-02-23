@@ -1,6 +1,6 @@
-from app.snapshots import build_snapshot, write_snapshot
-
 from __future__ import annotations
+
+from app.snapshots import build_snapshot, write_snapshot
 
 import os
 from datetime import datetime, timezone
