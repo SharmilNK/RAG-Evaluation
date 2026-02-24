@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.snapshots import build_snapshot, write_snapshot
+
 import os
 from datetime import datetime, timezone
 from typing import Dict, List
@@ -91,4 +93,7 @@ def aggregate_report_node(state: Dict) -> Dict:
     with open(output_path, "w", encoding="utf-8") as handle:
         yaml.safe_dump(report.model_dump(), handle, sort_keys=False)
 
-    return {"report_path": output_path, "overall_score": overall_score}
+    snapshot = build_snapshot(report.model_dump(), report_path=output_path)
+    snapshot_path = write_snapshot(snapshot)
+
+    return {"report_path": output_path, "overall_score": overall_score, "snapshot_path": snapshot_path}
