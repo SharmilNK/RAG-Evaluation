@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.snapshots import build_snapshot, find_previous_snapshot_for_domain, load_snapshot, diff_snapshots
+from app.kpi_catalog import load_kpi_catalog
 
 import json
 import os
@@ -12,6 +13,7 @@ import uuid
 from collections import defaultdict
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 import yaml
@@ -25,6 +27,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Preload KPI catalog so we can show friendly KPI names/questions in the dashboard.
+_KPI_DEFS = {k.kpi_id: k for k in load_kpi_catalog() or []}
 
 # ---------------------------------------------------------------------------
 # Custom CSS
@@ -428,23 +433,52 @@ for i, ps in enumerate(pillar_scores):
 # Row 2 — Pillar bar chart
 # ---------------------------------------------------------------------------
 st.markdown("---")
-st.markdown("### Pillar Comparison")
 
-bar_data = []
-for ps in pillar_scores:
-    bar_data.append({"Pillar": ps["pillar"], "Score": ps["score"], "Confidence": ps.get("confidence", 0)})
-
-if bar_data:
-    df_pillars = pd.DataFrame(bar_data)
+# If only a few KPIs were scored (e.g. fast run with 3 KPIs),
+# show a KPI-level comparison instead of only pillar-level.
+kpi_results = report_data.get("kpi_results", [])
+if len(kpi_results) <= 3 and kpi_results:
+    st.markdown("### KPI Comparison")
+    kpi_rows = []
+    for k in kpi_results:
+        kpi_id = str(k.get("kpi_id"))
+        kpi_def = _KPI_DEFS.get(kpi_id)
+        label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+        kpi_rows.append(
+            {
+                "KPI": label,
+                "Pillar": k.get("pillar", ""),
+                "Score": k.get("score", 0),
+                "Confidence": k.get("confidence", 0),
+            }
+        )
+    df_kpis = pd.DataFrame(kpi_rows)
     col_chart, col_table = st.columns([2, 1])
     with col_chart:
-        st.bar_chart(df_pillars, x="Pillar", y="Score", color="Pillar", horizontal=False)
+        st.bar_chart(df_kpis, x="KPI", y="Score", color="Pillar", horizontal=False)
     with col_table:
         st.dataframe(
-            df_pillars.style.format({"Score": "{:.2f}", "Confidence": "{:.0%}"}),
+            df_kpis.style.format({"Score": "{:.2f}", "Confidence": "{:.0%}"}),
             hide_index=True,
             use_container_width=True,
         )
+else:
+    st.markdown("### Pillar Comparison")
+    bar_data = []
+    for ps in pillar_scores:
+        bar_data.append({"Pillar": ps["pillar"], "Score": ps["score"], "Confidence": ps.get("confidence", 0)})
+
+    if bar_data:
+        df_pillars = pd.DataFrame(bar_data)
+        col_chart, col_table = st.columns([2, 1])
+        with col_chart:
+            st.bar_chart(df_pillars, x="Pillar", y="Score", color="Pillar", horizontal=False)
+        with col_table:
+            st.dataframe(
+                df_pillars.style.format({"Score": "{:.2f}", "Confidence": "{:.0%}"}),
+                hide_index=True,
+                use_container_width=True,
+            )
 
 # ---------------------------------------------------------------------------
 # Row 3 — Tabs
@@ -456,8 +490,8 @@ missing_evidence = report_data.get("missing_evidence", [])
 debug_log = report_data.get("debug_log", []) or []
 
 # FIX 1: number of tab variables must match number of tab labels
-tab_kpi, tab_diff, tab_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
-    ["KPI Scores", "Run Diffs", "Source Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
+tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
+    ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
 )
 
 # ============================================================================
@@ -475,7 +509,9 @@ with tab_kpi:
         st.markdown(f"#### <span style='color:{pcolor}'>{pillar_name}</span>", unsafe_allow_html=True)
 
         for kpi in kpis:
-            kpi_id = kpi["kpi_id"]
+            kpi_id = str(kpi["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            kpi_label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
             score = kpi["score"]
             conf = kpi.get("confidence", 0)
             ktype = kpi.get("type", "")
@@ -487,9 +523,11 @@ with tab_kpi:
             is_missing = kpi_id in missing_evidence
 
             with st.expander(
-                f"{'🔴' if is_missing else '📊'} {kpi_id}  Score: {score:.1f}/5  Confidence: {conf:.0%}  {ktype}"
+                f"{'🔴' if is_missing else '📊'} {kpi_label}  Score: {score:.1f}/5  Confidence: {conf:.0%}  {ktype}"
             ):
                 st.progress(min(score / 5.0, 1.0))
+                if kpi_def and getattr(kpi_def, "question", None):
+                    st.markdown(f"**Question:** {kpi_def.question}")
                 st.markdown(f"Rationale: {rationale}")
 
                 # v2: Source evaluation breakdown
@@ -869,6 +907,345 @@ with tab_eval:
 
         if impact_rows:
             st.dataframe(pd.DataFrame(impact_rows), use_container_width=True, hide_index=True)
+
+
+# ============================================================================
+# TAB: RAG Evaluation
+# ============================================================================
+def _rag_metric_summary(metric: str, value) -> str:
+    """One-line human-readable summary for a RAG evaluation metric."""
+    if value is None:
+        return "Not available"
+    if metric == "ragas_faithfulness":
+        return "Answer well grounded in evidence" if value >= 0.6 else "Answer poorly grounded in evidence" if value >= 0.2 else "Answer barely grounded in evidence"
+    if metric == "ragas_answer_relevancy":
+        return "Answer addresses the question" if value >= 0.5 else "Answer partly addresses the question" if value >= 0.2 else "Answer does not address the question"
+    if metric == "ragas_context_precision":
+        return "Retrieved sources are on-topic" if value >= 0.4 else "Retrieved sources partly on-topic" if value >= 0.1 else "Retrieved sources mostly off-topic"
+    if metric == "ragas_context_recall":
+        return "Evidence covers the expected content" if value >= 0.5 else "Evidence partly covers expected content" if value >= 0.2 else "Evidence misses expected content"
+    if metric == "llm_judge_overall":
+        return f"AI reviewer rated {int(value)}/5" if value is not None else "LLM judge unavailable"
+    if metric == "recall_at_3":
+        return "Key info in top results" if value >= 0.5 else "Key info not in top results" if value >= 0.1 else "Key info missing from top results"
+    if metric == "f1":
+        return "Answer matches reference well" if value >= 0.4 else "Answer partly matches reference" if value >= 0.15 else "Answer does not match reference"
+    if metric == "hallucination_score":
+        return "Low risk of unsupported content" if value <= 0.3 else "Some unsupported content" if value <= 0.6 else "High risk of unsupported content (flagged)"
+    if metric == "mmr_diversity_score":
+        # Values can be slightly above 1 due to approximations; treat 1.0+ as "extremely diverse"
+        if value >= 0.9:
+            return "Sources are extremely diverse"
+        if value >= 0.6:
+            return "Sources are diverse"
+        if value >= 0.3:
+            return "Sources have moderate diversity"
+        return "Sources are repetitive"
+    if metric == "factual_correctness":
+        return "Claims align with ideal answer" if value >= 0.5 else "Claims partly align" if value >= 0.2 else "Claims do not align with ideal"
+    if metric == "noise_sensitivity":
+        return "Not misled by low-quality sources" if value <= 0.2 else "Slightly affected by noise" if value <= 0.5 else "Noticeably misled by poor sources"
+    if metric == "semantic_similarity":
+        return "Meaning matches ideal answer" if value >= 0.6 else "Meaning partly matches" if value >= 0.4 else "Meaning diverges from ideal"
+    return str(value)
+
+
+with tab_rag_eval:
+    st.markdown("### RAG Evaluation")
+    rag = report_data.get("rag_evaluation") or {}
+    if not rag:
+        st.info("No RAG evaluation data in this report. Run a pipeline with RAG evaluation enabled.")
+    else:
+        # --- Overall summary and score at top ---
+        eval_count = rag.get("evaluated_kpi_count", 0)
+        flagged_count = rag.get("flagged_kpi_count", 0)
+        verdict = rag.get("overall_verdict", "")
+        summary = rag.get("summary", "")
+
+        st.markdown("#### Overall Summary")
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            st.metric("KPIs evaluated", eval_count)
+        with c2:
+            st.metric("Flagged for review", flagged_count)
+        with c3:
+            pct = (flagged_count / eval_count * 100) if eval_count else 0
+            st.metric("Flagged %", f"{pct:.0f}%")
+        st.markdown(f"**Verdict:** {verdict}")
+        if summary:
+            st.caption(summary)
+        st.markdown("---")
+
+        # --- Pillar-level aggregate RAG quality (0–1) ---
+        per_kpi_raw = rag.get("per_kpi", []) or []
+        if per_kpi_raw:
+            # Map kpi_id -> pillar from main KPI results
+            pillar_by_kpi: dict[str, str] = {str(k["kpi_id"]): k.get("pillar", "") for k in kpi_results}
+
+            # Metrics where higher is better
+            good_metrics = [
+                "ragas_faithfulness",
+                "ragas_answer_relevancy",
+                "ragas_context_precision",
+                "ragas_context_recall",
+                "semantic_similarity",
+            ]
+            # Metrics where lower is better (we invert as 1 - value)
+            inverted_metrics = [
+                "hallucination_score",
+                "noise_sensitivity",
+            ]
+
+            pillar_scores_rag: dict[str, list[float]] = defaultdict(list)
+
+            for item in per_kpi_raw:
+                kpi_id = str(item.get("kpi_id", ""))
+                pillar = pillar_by_kpi.get(kpi_id)
+                if not pillar:
+                    continue
+
+                values: list[float] = []
+                for key in good_metrics:
+                    v = item.get(key)
+                    if isinstance(v, (int, float)):
+                        values.append(float(v))
+                for key in inverted_metrics:
+                    v = item.get(key)
+                    if isinstance(v, (int, float)):
+                        values.append(max(0.0, min(1.0, 1.0 - float(v))))
+
+                if not values:
+                    continue
+
+                kpi_rag_score = sum(values) / len(values)
+                pillar_scores_rag[pillar].append(kpi_rag_score)
+
+            if pillar_scores_rag:
+                bar_rows = []
+                for pillar, vals in pillar_scores_rag.items():
+                    score = sum(vals) / len(vals)
+                    if score >= 0.7:
+                        meaning = "High-quality, well-grounded answers; strong RAG performance"
+                    elif score >= 0.4:
+                        meaning = "Mixed quality; some answers are reliable, others need review"
+                    else:
+                        meaning = "Low RAG quality; most answers require manual review"
+                    bar_rows.append({"Pillar": pillar, "RAG score": score, "Meaning": meaning})
+
+                df_rag_pillars = pd.DataFrame(bar_rows)
+                st.markdown("#### Pillar-level RAG Quality")
+                col_chart, col_table = st.columns([2, 1])
+                with col_chart:
+                    st.bar_chart(df_rag_pillars, x="Pillar", y="RAG score", color="Pillar", horizontal=False)
+                with col_table:
+                    st.dataframe(
+                        df_rag_pillars.sort_values("RAG score", ascending=False).style.format({"RAG score": "{:.2f}"}),
+                        hide_index=True,
+                        use_container_width=True,
+                    )
+                st.markdown("---")
+
+        # --- First 7 unique KPIs: reorganised by metric into compact tables ---
+        per_kpi_all = rag.get("per_kpi", []) or []
+
+        # Deduplicate by KPI ID and keep only the first 7 unique KPIs
+        seen_kpis = set()
+        per_kpi = []
+        for item in per_kpi_all:
+            kpi_id = item.get("kpi_id")
+            if not kpi_id or kpi_id in seen_kpis:
+                continue
+            seen_kpis.add(kpi_id)
+            per_kpi.append(item)
+            if len(per_kpi) >= 7:
+                break
+
+        if not per_kpi:
+            st.info("No per-KPI RAG evaluation data.")
+        else:
+            st.markdown("#### KPI-level RAG Scores (first 7 KPIs)")
+            kpi_id_to_pillar = {str(k["kpi_id"]): k.get("pillar", "") for k in kpi_results}
+
+            # Metrics to display as sections: name and the key used in rag_evaluation
+            metrics = [
+                ("ragas_faithfulness", "Faithfulness"),
+                ("ragas_answer_relevancy", "Answer relevance"),
+                ("ragas_context_precision", "Context precision"),
+                ("ragas_context_recall", "Context recall"),
+                ("semantic_similarity", "Semantic similarity"),
+                ("f1", "F1"),
+                ("recall_at_3", "Recall@3"),
+                ("hallucination_score", "Hallucination score"),
+                ("mmr_diversity_score", "MMR diversity"),
+                ("factual_correctness", "Factual correctness"),
+                ("noise_sensitivity", "Noise sensitivity"),
+            ]
+
+            for key, label in metrics:
+                rows = []
+                for item in per_kpi:
+                    kpi_id = str(item.get("kpi_id", ""))
+                    val = item.get(key)
+                    if val is None:
+                        continue
+
+                    pillar = kpi_id_to_pillar.get(kpi_id, "")
+                    kpi_def = _KPI_DEFS.get(kpi_id)
+                    driver = None
+                    if kpi_def:
+                        driver = getattr(kpi_def, "question", None) or getattr(kpi_def, "name", None)
+                    driver = driver or kpi_id
+
+                    meaning = _rag_metric_summary(key, val)
+                    score_str = f"{float(val):.3f}" if isinstance(val, (int, float)) else str(val)
+
+                    rows.append(
+                        {
+                            "KPI Category": pillar or "—",
+                            "KPI Driver": driver,
+                            "Score": score_str,
+                            "What the score means": meaning,
+                        }
+                    )
+
+                if not rows:
+                    continue
+
+                st.markdown(f"##### {label}")
+                df = pd.DataFrame(rows)
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.markdown("---")
+
+        # --- Cross-company RAG comparison (up to 3 reports) ---
+        st.markdown("#### Cross-Company RAG Comparison (up to 3 reports)")
+
+        # Helper: compute average RAG metrics from a report dict
+        def _rag_summary(r: dict) -> dict | None:
+            rag_block = r.get("rag_evaluation") or {}
+            rows = rag_block.get("per_kpi") or []
+            if not rows:
+                return None
+
+            def _avg(field: str) -> float:
+                vals = [row.get(field) for row in rows if row.get(field) is not None]
+                return float(sum(vals) / len(vals)) if vals else 0.0
+
+            return {
+                "faithfulness": _avg("ragas_faithfulness"),
+                "answer_relevancy": _avg("ragas_answer_relevancy"),
+                "context_precision": _avg("ragas_context_precision"),
+                "context_recall": _avg("ragas_context_recall"),
+                "semantic_similarity": _avg("semantic_similarity"),
+                "f1": _avg("f1"),
+                "recall_at_3": _avg("recall_at_3"),
+                "hallucination_score": _avg("hallucination_score"),
+                "mmr_diversity_score": _avg("mmr_diversity_score"),
+                "factual_correctness": _avg("factual_correctness"),
+                "noise_sensitivity": _avg("noise_sensitivity"),
+            }
+
+        # Build list of available reports, grouped by company (one latest per company)
+        all_reports = list_reports()
+        if all_reports:
+            latest_by_company: dict[str, tuple[float, Path]] = {}
+            for p in all_reports:
+                try:
+                    data = load_report(str(p))
+                except Exception:
+                    continue
+                company = data.get("company_name", "Unknown")
+                mtime = p.stat().st_mtime
+                prev = latest_by_company.get(company)
+                if not prev or mtime > prev[0]:
+                    latest_by_company[company] = (mtime, p)
+
+            options = {company: entry[1] for company, entry in latest_by_company.items()}
+
+            # Preselect the current report if present
+            default_labels = [lbl for lbl, p in options.items() if str(p) == report_path] if "report_path" in locals() else []
+            selected = st.multiselect(
+                "Select up to 3 companies",
+                list(options.keys()),
+                default=default_labels[:1],
+                max_selections=3,
+            )
+
+            if selected:
+                categories = [
+                    "faithfulness",
+                    "answer_relevancy",
+                    "context_precision",
+                    "context_recall",
+                    "semantic_similarity",
+                    "f1",
+                    "recall_at_3",
+                    "hallucination_score",
+                    "mmr_diversity_score",
+                    "factual_correctness",
+                    "noise_sensitivity",
+                ]
+
+                # Compact radar chart so labels and legend stay outside the data area
+                fig, ax = plt.subplots(subplot_kw=dict(polar=True), figsize=(2.3, 2.3))
+                angles = [n / float(len(categories)) * 2 * 3.14159265 for n in range(len(categories))]
+                angles += angles[:1]  # close the loop
+
+                for label in selected:
+                    p = options[label]
+                    try:
+                        data = load_report(str(p))
+                    except Exception:
+                        continue
+                    summary = _rag_summary(data)
+                    if not summary:
+                        continue
+                    values = [summary[c] for c in categories]
+                    values += values[:1]
+                    ax.plot(angles, values, linewidth=1.5, label=label)
+                    ax.fill(angles, values, alpha=0.1)
+
+                ax.set_xticks(angles[:-1])
+                labels = [
+                    "Faithfulness",
+                    "Answer relevance",
+                    "Context precision",
+                    "Context recall",
+                    "Semantic similarity",
+                    "F1",
+                    "Recall@3",
+                    "Hallucination score",
+                    "MMR diversity",
+                    "Factual correctness",
+                    "Noise sensitivity",
+                ]
+                ax.set_xticklabels(
+                    [
+                        "\n".join(lbl.split(" ", 1)) if " " in lbl else lbl
+                        for lbl in labels
+                    ],
+                    fontsize=3,
+                )
+                # Push labels slightly outside the circle to avoid overlap
+                for lbl in ax.get_xticklabels():
+                    x, y = lbl.get_position()
+                    lbl.set_position((x, y + 0.15))
+                ax.set_yticklabels([])
+                ax.set_ylim(0, 1)
+                ax.set_title("RAG Quality Comparison", fontsize=9, pad=10)
+                # Place legend under the chart so it never obscures lines
+                ax.legend(
+                    loc="upper center",
+                    bbox_to_anchor=(0.5, -0.15),
+                    ncol=max(1, len(selected)),
+                    fontsize=6,
+                    frameon=True,
+                )
+                fig.subplots_adjust(top=0.78, bottom=0.28, left=0.05, right=0.95)
+
+                # Render chart in a narrow column so the visual footprint matches roughly the green box
+                chart_col, _ = st.columns([1, 2])
+                with chart_col:
+                    st.pyplot(fig, clear_figure=True)
 
 
 # ============================================================================

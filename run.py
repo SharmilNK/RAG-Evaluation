@@ -2,13 +2,17 @@ from __future__ import annotations
 
 import argparse
 import uuid
+from pathlib import Path
 
 from dotenv import load_dotenv
 from app.graphs.orchestrator import build_orchestrator_graph
 
+# Load .env from project root (where run.py lives) so it works regardless of cwd
+_env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(_env_path)
+
 
 def main() -> None:
-    load_dotenv()
     parser = argparse.ArgumentParser(description="Run Vitelis v0.2 pipeline")
     parser.add_argument("--company-name", required=True, help="Company name")
     parser.add_argument("--company-domain", required=True, help="Company domain (e.g., vodafone.com)")

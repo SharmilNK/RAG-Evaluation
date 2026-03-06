@@ -13,6 +13,7 @@ def score_kpis_node(state: Dict) -> Dict:
     sources: List[Dict] = state.get("sources", [])
 
     collection = build_collection(run_id)
+    # Load the full KPI catalog so all rubric KPIs are scored and evaluated.
     kpis = load_kpi_catalog()
 
     results = []
