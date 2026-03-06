@@ -83,9 +83,14 @@ def _llm_score(prompt: str) -> Optional[dict]:
                     add_debug(f"[llm] 429 received; retrying in {wait_time:.1f}s")
                 time.sleep(wait_time)
                 continue
+            if response.status_code != 200:
+                print(f"[KPI scoring] OpenAI API returned {response.status_code}; using heuristic fallback.")
+                return None
             response.raise_for_status()
             content = response.json()["choices"][0]["message"]["content"]
             data = _extract_json(content)
+            if not data:
+                print("[KPI scoring] LLM response had no valid JSON; using heuristic fallback.")
             if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
                 add_debug("[llm] response parsed" if data else "[llm] response missing JSON")
             return data
@@ -96,6 +101,7 @@ def _llm_score(prompt: str) -> Optional[dict]:
                     add_debug(f"[llm] request failed; retrying in {wait_time:.1f}s ({exc})")
                 time.sleep(wait_time)
                 continue
+            print(f"[KPI scoring] LLM call failed after retries ({exc!s}); using heuristic fallback.")
             if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
                 add_debug(f"[llm] request failed; using fallback ({exc})")
             return None

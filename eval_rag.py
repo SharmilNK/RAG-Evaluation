@@ -27,6 +27,39 @@ Ground truth strategy:
 How to use:
     from eval_rag import run_all_evaluations
     run_all_evaluations(kpi_results, sources, kpi_definitions)
+
+Where RAG report scores come from (when LLM/ragas is not used):
+----------------------------------------------------------------
+These metrics appear in report YAML under rag_evaluation. When the OpenAI API
+is unavailable (e.g. 429) or ragas is not installed, values come from local
+fallbacks in this file — no LLM is called.
+
+  • ragas_context_precision
+    Fallback: evaluate_ragas() local approximation (lines ~253–268).
+    Formula: For each retrieved context chunk, (question_tokens ∩ chunk_tokens) / len(chunk_tokens);
+             then average over chunks. Low = retrieved text shares few words with the question.
+
+  • ragas_context_recall
+    Fallback: same block. Formula: (ground_truth_tokens ∩ context_tokens) / len(ground_truth_tokens).
+    Ground truth = Score-5 rubric text from kpis.yaml. Fraction of "ideal" words found in evidence.
+
+  • hallucination_score / hallucination_flagged
+    Fallback: evaluate_hallucination() heuristic (lines ~585–633). Always runs first.
+    Formula: Split answer into sentences;              if <20% of a sentence's words appear in evidence,
+             count as "unsupported". heuristic_score = unsupported_sentences / total_sentences.
+    If LLM layer is skipped (no key or _call_llm fails), final_score = heuristic_score.
+    hallucination_flagged = (final_score > threshold), default threshold 0.4.
+
+  • mmr_diversity_score
+    No LLM. evaluate_mmr() (lines ~702–819) uses only _simple_embedding() (hash-based 64-d vector)
+    and _cosine_similarity(). Formula: MMR re-ranks chunks; diversity_score = 1.0 - avg_redundancy,
+    where avg_redundancy is mean pairwise cosine similarity of selected chunks. High = diverse sources.
+
+  • semantic_similarity
+    No LLM in fallback. evaluate_ragas_with_ground_truth() local path (lines ~965–973).
+    Formula: answer_vec = _simple_embedding(answer), gt_vec = _simple_embedding(ground_truth);
+             raw = cosine_similarity(answer_vec, gt_vec); semantic_similarity = (raw + 1) / 2 (scale to 0–1).
+    Measures hash-based similarity between answer and Score-5 rubric text.
 """
 
 from __future__ import annotations

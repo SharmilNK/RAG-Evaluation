@@ -55,14 +55,12 @@ def discover_urls_node(state: Dict) -> Dict:
     company_domain = state["company_domain"]
 
     # First, try to load URLs from a pre-exported sources file (if available).
-    # This allows runs (e.g. for Orange S.A) that are restricted to a fixed URL set.
-    # Use all URLs from the export file so RAG evaluation has the richest evidence.
+    # No cap: use all URLs from export for full evaluation.
     urls = _urls_from_export(company_name=company_name, max_urls=None)
 
-    # If no export exists, fall back to the original discovery logic.
+    # If no export exists, fall back to live discovery (no cap).
     if not urls:
-        # When falling back to live discovery, cap to 30 discovered URLs.
-        urls = discover_urls(company_name=company_name, domain=company_domain, max_urls=30)
+        urls = discover_urls(company_name=company_name, domain=company_domain, max_urls=5000)
 
     return {
         "target_urls": urls,

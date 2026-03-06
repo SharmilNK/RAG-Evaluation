@@ -13,6 +13,9 @@ load_dotenv(_env_path)
 
 
 def main() -> None:
+    import os
+    key_set = bool(os.getenv("OPENAI_API_KEY"))
+    print(f"[Pipeline] OPENAI_API_KEY loaded: {'Yes' if key_set else 'No'} (.env path: {_env_path})")
     parser = argparse.ArgumentParser(description="Run Vitelis v0.2 pipeline")
     parser.add_argument("--company-name", required=True, help="Company name")
     parser.add_argument("--company-domain", required=True, help="Company domain (e.g., vodafone.com)")
