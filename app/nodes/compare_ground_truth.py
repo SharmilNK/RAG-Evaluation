@@ -71,6 +71,7 @@ def compare_with_ground_truth(
                 kpi_id=kpi.get("kpi_id", ""),
                 kpi_name=display_name,
                 pipeline_score=float(kpi.get("score", 0)),
+                pipeline_confidence=float(kpi.get("confidence", 0.0)),
                 pipeline_rationale=str(kpi.get("rationale", "")),
                 pipeline_sources=pipeline_sources,
                 ground_truth_name=best_gt_name,

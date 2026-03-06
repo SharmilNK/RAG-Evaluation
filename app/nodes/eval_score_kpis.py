@@ -11,6 +11,7 @@ from typing import Dict, List
 
 from app.kpi_catalog import load_kpi_catalog
 from app.kpi_scoring import score_rubric_kpi
+from app.source_eval import calculate_source_reuse_penalty
 from app.vectorstore import build_collection
 
 KPIS_47_PATH = "app/kpis_47.yaml"
@@ -52,6 +53,18 @@ def eval_score_kpis_node(state: Dict) -> Dict:
         results.append(result_dict)
         if missing_flag:
             missing.append(kpi.kpi_id)
+
+    # Apply cross-KPI source reuse penalty — sources cited in >25% of KPIs
+    # indicate a narrow evidence base; penalise affected KPIs' confidence.
+    reuse_penalties = calculate_source_reuse_penalty(results)
+    for result in results:
+        kpi_id = result.get("kpi_id", "")
+        if kpi_id in reuse_penalties:
+            info = reuse_penalties[kpi_id]
+            result["confidence"] = round(
+                max(0.0, min(1.0, result["confidence"] + info["penalty"])), 3
+            )
+            result.setdefault("details", {})["source_reuse"] = info
 
     return {
         "kpi_results": results,

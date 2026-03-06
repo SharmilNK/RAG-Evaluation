@@ -24,6 +24,7 @@ from app.source_eval import (
     calculate_freshness_boost,
     calculate_authority_boost,
     detect_contradictions,
+    detect_source_independence,
 )
 
 
@@ -243,6 +244,7 @@ def calculate_enhanced_confidence(
 
     Components (v2 — new):
     - Semantic corroboration boost (0 to +0.15) — claim-level agreement
+    - Source independence check — reduces corroboration for syndicated duplicates
     - Freshness boost/penalty (-0.15 to +0.10) — recency of evidence
     - Authority boost (0 to +0.15) — 3rd-party validation
     - Contradiction penalty (0 to -0.20) — conflicting evidence
@@ -278,8 +280,14 @@ def calculate_enhanced_confidence(
     semantic_corr = detect_semantic_corroboration(full_evidences)
     corroboration_max = float(os.getenv("VITELIS_CORROBORATION_BOOST_MAX", "0.15"))
     corr_boost = semantic_corr["corroboration_score"] * corroboration_max
-    confidence += corr_boost
     eval_details["semantic_corroboration"] = semantic_corr
+
+    # --- v2: Source independence check — reduce corroboration for near-duplicate sources ---
+    independence = detect_source_independence(full_evidences)
+    corr_boost = max(0.0, corr_boost + independence["corroboration_penalty"])
+    eval_details["source_independence"] = independence
+
+    confidence += corr_boost
 
     # --- v2: Freshness boost/penalty (uses full text for date parsing) ---
     freshness_boost, freshness_per_source = calculate_freshness_boost(full_evidences)

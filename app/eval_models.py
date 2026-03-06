@@ -9,6 +9,7 @@ class KPIGroundTruthComparison(BaseModel):
     kpi_id: str
     kpi_name: str
     pipeline_score: float
+    pipeline_confidence: float = 0.0  # LLM/enhanced confidence score 0.0-1.0
     pipeline_rationale: str
     pipeline_sources: List[str] = Field(default_factory=list)  # URLs cited by pipeline
     ground_truth_name: str            # matched data point name from raw_data_points.json
