@@ -516,8 +516,13 @@ missing_evidence = report_data.get("missing_evidence", [])
 debug_log = report_data.get("debug_log", []) or []
 
 # FIX 1: number of tab variables must match number of tab labels
+<<<<<<< HEAD
 tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_custom_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
     ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "🧪 Custom Eval", "Sources", "Citations", "Raw Report", "Debug Log"]
+=======
+tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
+    ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
+>>>>>>> c0fadd9 (Add RAG EVAL)
 )
 
 # ============================================================================
@@ -1284,6 +1289,7 @@ with tab_rag_eval:
 
 
 # ============================================================================
+<<<<<<< HEAD
 # TAB: Custom Eval
 # Displays all 10-feature extension metrics: score split, scoring distribution,
 # quality gates, score attribution, retrieval metrics (Hit Rate / MRR / nDCG),
@@ -1948,6 +1954,8 @@ with tab_custom_eval:
 
 
 # ============================================================================
+=======
+>>>>>>> c0fadd9 (Add RAG EVAL)
 # TAB: Sources
 # ============================================================================
 with tab_sources:

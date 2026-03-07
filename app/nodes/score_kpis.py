@@ -117,6 +117,7 @@ def score_kpis_node(state: Dict) -> Dict:
 
     flags = _get_feature_flags()
     collection = build_collection(run_id)
+    # Load full KPI catalog (column N in CSV = complete list of drivers; expect 80 KPIs).
     kpis = load_kpi_catalog()
     requested_kpi_ids = {
         str(k).strip() for k in (state.get("kpi_ids") or []) if str(k).strip()
