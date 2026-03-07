@@ -27,6 +27,39 @@ Ground truth strategy:
 How to use:
     from eval_rag import run_all_evaluations
     run_all_evaluations(kpi_results, sources, kpi_definitions)
+
+Where RAG report scores come from (when LLM/ragas is not used):
+----------------------------------------------------------------
+These metrics appear in report YAML under rag_evaluation. When the OpenAI API
+is unavailable (e.g. 429) or ragas is not installed, values come from local
+fallbacks in this file — no LLM is called.
+
+  • ragas_context_precision
+    Fallback: evaluate_ragas() local approximation (lines ~253–268).
+    Formula: For each retrieved context chunk, (question_tokens ∩ chunk_tokens) / len(chunk_tokens);
+             then average over chunks. Low = retrieved text shares few words with the question.
+
+  • ragas_context_recall
+    Fallback: same block. Formula: (ground_truth_tokens ∩ context_tokens) / len(ground_truth_tokens).
+    Ground truth = Score-5 rubric text from kpis.yaml. Fraction of "ideal" words found in evidence.
+
+  • hallucination_score / hallucination_flagged
+    Fallback: evaluate_hallucination() heuristic (lines ~585–633). Always runs first.
+    Formula: Split answer into sentences;              if <20% of a sentence's words appear in evidence,
+             count as "unsupported". heuristic_score = unsupported_sentences / total_sentences.
+    If LLM layer is skipped (no key or _call_llm fails), final_score = heuristic_score.
+    hallucination_flagged = (final_score > threshold), default threshold 0.4.
+
+  • mmr_diversity_score
+    No LLM. evaluate_mmr() (lines ~702–819) uses only _simple_embedding() (hash-based 64-d vector)
+    and _cosine_similarity(). Formula: MMR re-ranks chunks; diversity_score = 1.0 - avg_redundancy,
+    where avg_redundancy is mean pairwise cosine similarity of selected chunks. High = diverse sources.
+
+  • semantic_similarity
+    No LLM in fallback. evaluate_ragas_with_ground_truth() local path (lines ~965–973).
+    Formula: answer_vec = _simple_embedding(answer), gt_vec = _simple_embedding(ground_truth);
+             raw = cosine_similarity(answer_vec, gt_vec); semantic_similarity = (raw + 1) / 2 (scale to 0–1).
+    Measures hash-based similarity between answer and Score-5 rubric text.
 """
 
 from __future__ import annotations
@@ -42,17 +75,88 @@ import requests
 
 
 # ==============================================================================
-# HELPER: Call the LLM 
+# HELPER: Call the LLM (OpenAI or Gemini)
 # ==============================================================================
+
+def _extract_json_from_response(text: str) -> Optional[dict]:
+    """Parse first JSON object from LLM response text."""
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            return json.loads(text[start : end + 1])
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+def _call_llm_gemini(prompt: str, system_msg: str, verbose: bool) -> Optional[dict]:
+    """Call Google AI Studio (Gemini) REST API for LLM judge / JSON tasks."""
+    api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    full_prompt = f"{system_msg}\n\n{prompt}" if system_msg else prompt
+    max_retries = 3
+    backoff = 5
+    for attempt in range(max_retries):
+        try:
+            resp = requests.post(
+                url,
+                json={
+                    "contents": [{"parts": [{"text": full_prompt}]}],
+                    "generationConfig": {"temperature": 0.1},
+                },
+                timeout=60,
+            )
+            if resp.status_code == 429:
+                wait = backoff * (2**attempt)
+                if verbose:
+                    print(f"  [Rate limit] Gemini 429 — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait)
+                continue
+            if resp.status_code != 200:
+                return None
+            data = resp.json()
+            candidates = data.get("candidates") or []
+            if not candidates:
+                return None
+            parts = candidates[0].get("content", {}).get("parts") or []
+            if not parts:
+                return None
+            text = parts[0].get("text", "").strip()
+            result = _extract_json_from_response(text) if text else None
+            if result:
+                return result
+        except Exception as exc:
+            if verbose:
+                print(f"  [Gemini] Attempt {attempt + 1}/{max_retries} failed: {exc}")
+            if attempt < max_retries - 1:
+                wait = backoff * (2**attempt)
+                time.sleep(wait)
+    return None
+
 
 def _call_llm(prompt: str, system_msg: str = "You are a strict JSON generator.", verbose: bool = True) -> Optional[dict]:
     """
-    Send a question to the AI (GPT-4o-mini) and get a JSON answer back.
-    This is a self-contained helper used only within this evaluation file.
-    It does not touch or modify the main scoring system.
+    Send a question to the AI and get a JSON answer back.
+    Uses Gemini if GOOGLE_API_KEY/GEMINI_API_KEY and VITELIS_LLM_PROVIDER=gemini;
+    otherwise uses OpenAI (GPT-4o-mini).
     In pipeline mode (verbose=False): skips immediately on 429 — no waiting.
     In standalone mode (verbose=True): retries twice with short backoff.
     """
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    use_gemini = provider in ("gemini", "google") or (google_key and provider != "openai")
+
+    if use_gemini and google_key:
+        result = _call_llm_gemini(prompt, system_msg, verbose)
+        if result is not None:
+            return result
+        if verbose:
+            print("  [Note] Gemini judge call failed; trying OpenAI if key set.")
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         if verbose:

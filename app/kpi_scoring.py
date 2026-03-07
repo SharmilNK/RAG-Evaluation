@@ -44,8 +44,50 @@ def _extract_json(text: str) -> Optional[dict]:
         return None
 
 
+def _llm_score_gemini(prompt: str, api_key: str) -> Optional[dict]:
+    """Call Google AI Studio (Gemini) REST API. Returns parsed JSON or None."""
+    model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    full_prompt = "You are a strict JSON generator. Return only valid JSON.\n\n" + prompt
+    try:
+        resp = requests.post(
+            url,
+            json={
+                "contents": [{"parts": [{"text": full_prompt}]}],
+                "generationConfig": {"temperature": 0.2},
+            },
+            timeout=60,
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        candidates = data.get("candidates") or []
+        if not candidates:
+            return None
+        parts = candidates[0].get("content", {}).get("parts") or []
+        if not parts:
+            return None
+        text = parts[0].get("text", "").strip()
+        return _extract_json(text) if text else None
+    except Exception:
+        return None
+
+
 def _llm_score(prompt: str) -> Optional[dict]:
     global _LAST_LLM_CALL_AT
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+
+    # Prefer Gemini if configured (e.g. free student API from Google AI Studio)
+    if provider in ("gemini", "google") or (google_key and provider != "openai"):
+        if google_key:
+            data = _llm_score_gemini(prompt, google_key)
+            if data is not None:
+                return data
+            print("[KPI scoring] Gemini API call failed; using heuristic fallback.")
+        elif os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
+            add_debug("[llm] GOOGLE_API_KEY/GEMINI_API_KEY not set; trying OpenAI")
+    # OpenAI
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
@@ -83,9 +125,14 @@ def _llm_score(prompt: str) -> Optional[dict]:
                     add_debug(f"[llm] 429 received; retrying in {wait_time:.1f}s")
                 time.sleep(wait_time)
                 continue
+            if response.status_code != 200:
+                print(f"[KPI scoring] OpenAI API returned {response.status_code}; using heuristic fallback.")
+                return None
             response.raise_for_status()
             content = response.json()["choices"][0]["message"]["content"]
             data = _extract_json(content)
+            if not data:
+                print("[KPI scoring] LLM response had no valid JSON; using heuristic fallback.")
             if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
                 add_debug("[llm] response parsed" if data else "[llm] response missing JSON")
             return data
@@ -96,12 +143,53 @@ def _llm_score(prompt: str) -> Optional[dict]:
                     add_debug(f"[llm] request failed; retrying in {wait_time:.1f}s ({exc})")
                 time.sleep(wait_time)
                 continue
+            print(f"[KPI scoring] LLM call failed after retries ({exc!s}); using heuristic fallback.")
             if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
                 add_debug(f"[llm] request failed; using fallback ({exc})")
             return None
 
 
-def _fallback_rubric_score(text_blob: str) -> Tuple[int, float, str]:
+def _score5_from_rubric(rubric: Optional[List[str]]) -> Optional[str]:
+    """Extract the Score-5 (Quality Criteria = High) description from the rubric."""
+    if not rubric:
+        return None
+    for line in rubric:
+        stripped = line.strip()
+        if stripped.startswith("5:"):
+            return stripped[2:].strip()
+    return None
+
+
+def _fallback_rubric_score(
+    text_blob: str,
+    rubric: Optional[List[str]] = None,
+) -> Tuple[int, float, str]:
+    """
+    Score 1-5 when LLM is unavailable.
+    If rubric has Score-5 text, use evidence overlap with that ideal; else use keyword hints.
+    """
+    ideal_5 = _score5_from_rubric(rubric) if rubric else None
+    if ideal_5 and text_blob:
+        # Rubric-aware: how much does evidence overlap with "ideal (5)" description?
+        ideal_tokens = set(re.findall(r"\b\w{3,}\b", ideal_5.lower()))
+        evidence_tokens = set(re.findall(r"\b\w{3,}\b", text_blob.lower()))
+        if ideal_tokens:
+            overlap = len(ideal_tokens & evidence_tokens) / len(ideal_tokens)
+            if overlap >= 0.35:
+                score = 5
+            elif overlap >= 0.22:
+                score = 4
+            elif overlap >= 0.12:
+                score = 3
+            elif overlap >= 0.05:
+                score = 2
+            else:
+                score = 1
+            confidence = 0.35 + min(0.25, overlap)
+            rationale = "Heuristic fallback: evidence overlap with Quality Criteria (5=High)."
+            return score, round(confidence, 2), rationale
+
+    # Legacy: positive/negative keyword counts when no rubric or no ideal_5
     score = 3
     for word in POSITIVE_HINTS:
         if word in text_blob:
@@ -324,28 +412,38 @@ def score_rubric_kpi(
         )
 
     rubric = "\n".join(kpi.rubric or [])
+    ideal_5 = _score5_from_rubric(kpi.rubric)
 
-    # Handle both evidence formats: (meta, doc) or (meta, doc, score)
+    # Send full chunk (500 chars) so LLM has full context; avoid truncation.
+    char_limit = 500
     if evidences and len(evidences[0]) == 3:
         evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:300]}"
+            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
             for meta, doc, _ in evidences
         )
     else:
         evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:300]}"
+            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
             for meta, doc in evidences
         )
 
-    prompt = (
-        "Score the KPI from 1-5 using the rubric and evidence. "
-        "Return strict JSON: {kpi_id, score, confidence, rationale, citations}. "
-        "Citations must include source_id, url, quote.\n\n"
-        f"KPI: {kpi.name}\n"
-        f"Question: {kpi.question}\n"
-        f"Rubric:\n{rubric}\n\n"
-        f"Evidence:\n{evidence_block}\n"
-    )
+    ideal_line = f"\nIdeal (5 = High): \"{ideal_5}\"\nScore how close the evidence supports this level (1 = not at all, 5 = fully).\n" if ideal_5 else ""
+
+    prompt = f"""
+    You are a Business Analyst. Your task is to audit the following context using 
+    the KPI Drivers.
+    Score the KPI from 1-5 using the rubric and evidence.
+    Return strict JSON: {{"kpi_id": "...", "score": 1-5, "confidence": 0-1, "rationale": "...", "citations": [{{"source_id": "...", "url": "...", "quote": "..."}}]}}.
+    Citations must include source_id, url, quote.
+
+    KPI: {kpi.name}
+    Question: {kpi.question}
+    Rubric:
+    {rubric}
+    {ideal_line}
+    Evidence:
+    {evidence_block}
+    """
 
     llm_data: Optional[dict] = None
     try:
@@ -411,7 +509,7 @@ def score_rubric_kpi(
             missing_flag,
         )
 
-    score, confidence, rationale = _fallback_rubric_score(evidence_text)
+    score, confidence, rationale = _fallback_rubric_score(evidence_text, rubric=kpi.rubric)
 
     # Calculate enhanced confidence for fallback path too (v2: tuple return)
     final_confidence, eval_details = calculate_enhanced_confidence(

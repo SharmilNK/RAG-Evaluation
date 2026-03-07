@@ -135,6 +135,8 @@ class ReportArtifact(BaseModel):
     overall_score: float
     missing_evidence: List[str]
     debug_log: Optional[List[str]] = None
+    # KPI definitions (question = column N) so dashboard can show "KPI Driver" text
+    kpi_definitions: Optional[List[Dict]] = None
     # code change for RAG Eval by SN
     # Optional RAG evaluation section — populated when eval_rag node runs
     rag_evaluation: Optional[RagEvaluationReport] = None
