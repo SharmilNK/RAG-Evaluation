@@ -75,17 +75,88 @@ import requests
 
 
 # ==============================================================================
-# HELPER: Call the LLM 
+# HELPER: Call the LLM (OpenAI or Gemini)
 # ==============================================================================
+
+def _extract_json_from_response(text: str) -> Optional[dict]:
+    """Parse first JSON object from LLM response text."""
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            return json.loads(text[start : end + 1])
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+def _call_llm_gemini(prompt: str, system_msg: str, verbose: bool) -> Optional[dict]:
+    """Call Google AI Studio (Gemini) REST API for LLM judge / JSON tasks."""
+    api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    full_prompt = f"{system_msg}\n\n{prompt}" if system_msg else prompt
+    max_retries = 3
+    backoff = 5
+    for attempt in range(max_retries):
+        try:
+            resp = requests.post(
+                url,
+                json={
+                    "contents": [{"parts": [{"text": full_prompt}]}],
+                    "generationConfig": {"temperature": 0.1},
+                },
+                timeout=60,
+            )
+            if resp.status_code == 429:
+                wait = backoff * (2**attempt)
+                if verbose:
+                    print(f"  [Rate limit] Gemini 429 — waiting {wait}s before retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait)
+                continue
+            if resp.status_code != 200:
+                return None
+            data = resp.json()
+            candidates = data.get("candidates") or []
+            if not candidates:
+                return None
+            parts = candidates[0].get("content", {}).get("parts") or []
+            if not parts:
+                return None
+            text = parts[0].get("text", "").strip()
+            result = _extract_json_from_response(text) if text else None
+            if result:
+                return result
+        except Exception as exc:
+            if verbose:
+                print(f"  [Gemini] Attempt {attempt + 1}/{max_retries} failed: {exc}")
+            if attempt < max_retries - 1:
+                wait = backoff * (2**attempt)
+                time.sleep(wait)
+    return None
+
 
 def _call_llm(prompt: str, system_msg: str = "You are a strict JSON generator.", verbose: bool = True) -> Optional[dict]:
     """
-    Send a question to the AI (GPT-4o-mini) and get a JSON answer back.
-    This is a self-contained helper used only within this evaluation file.
-    It does not touch or modify the main scoring system.
+    Send a question to the AI and get a JSON answer back.
+    Uses Gemini if GOOGLE_API_KEY/GEMINI_API_KEY and VITELIS_LLM_PROVIDER=gemini;
+    otherwise uses OpenAI (GPT-4o-mini).
     In pipeline mode (verbose=False): skips immediately on 429 — no waiting.
     In standalone mode (verbose=True): retries twice with short backoff.
     """
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    use_gemini = provider in ("gemini", "google") or (google_key and provider != "openai")
+
+    if use_gemini and google_key:
+        result = _call_llm_gemini(prompt, system_msg, verbose)
+        if result is not None:
+            return result
+        if verbose:
+            print("  [Note] Gemini judge call failed; trying OpenAI if key set.")
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         if verbose:

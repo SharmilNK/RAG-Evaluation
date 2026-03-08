@@ -68,6 +68,8 @@ def aggregate_report_node(state: Dict) -> Dict:
     rag_evaluation = RagEvaluationReport(**rag_eval_dict) if rag_eval_dict else None
     # code change end for RAG Eval by SN
 
+    kpi_definitions = state.get("kpi_definitions", [])
+
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,
@@ -79,6 +81,7 @@ def aggregate_report_node(state: Dict) -> Dict:
         overall_score=overall_score,
         missing_evidence=state.get("missing_evidence", []),
         debug_log=get_debug() if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"} else None,
+        kpi_definitions=kpi_definitions if kpi_definitions else None,
         # code change for RAG Eval by SN
         # Include RAG evaluation in the final report (None if node was skipped)
         rag_evaluation=rag_evaluation,

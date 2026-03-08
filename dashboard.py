@@ -957,18 +957,23 @@ with tab_rag_eval:
         st.info("No RAG evaluation data in this report. Run a pipeline with RAG evaluation enabled.")
     else:
         # --- Overall summary and score at top ---
-        eval_count = rag.get("evaluated_kpi_count", 0)
-        flagged_count = rag.get("flagged_kpi_count", 0)
+        # Derive counts from actual data (no hardcoding)
+        per_kpi_list = rag.get("per_kpi", []) or []
+        eval_count = len(per_kpi_list)
+        flagged_count = len(rag.get("flagged_kpi_ids", []) or [])
         verdict = rag.get("overall_verdict", "")
         summary = rag.get("summary", "")
 
         st.markdown("#### Overall Summary")
-        c1, c2, c3 = st.columns(3)
+        total_kpis = len(report_data.get("kpi_results", []) or [])
+        c1, c2, c3, c4 = st.columns(4)
         with c1:
-            st.metric("KPIs evaluated", eval_count)
+            st.metric("Total KPIs in report", total_kpis)
         with c2:
-            st.metric("Flagged for review", flagged_count)
+            st.metric("RAG evaluated", eval_count)
         with c3:
+            st.metric("Flagged for review", flagged_count)
+        with c4:
             pct = (flagged_count / eval_count * 100) if eval_count else 0
             st.metric("Flagged %", f"{pct:.0f}%")
         st.markdown(f"**Verdict:** {verdict}")
@@ -1065,6 +1070,18 @@ with tab_rag_eval:
         else:
             st.markdown("#### KPI-level RAG Scores (first 7 KPIs)")
             kpi_id_to_pillar = {str(k["kpi_id"]): k.get("pillar", "") for k in kpi_results}
+            # KPI Driver = question from column N: prefer report's kpi_definitions, then catalog
+            kpi_id_to_question: dict[str, str] = {}
+            for defn in report_data.get("kpi_definitions", []) or []:
+                kid = defn.get("kpi_id")
+                q = defn.get("question") or defn.get("name")
+                if kid and q:
+                    kpi_id_to_question[str(kid)] = str(q)
+            for kid, kpi_def in _KPI_DEFS.items():
+                if kid not in kpi_id_to_question:
+                    q = getattr(kpi_def, "question", None) or getattr(kpi_def, "name", None)
+                    if q:
+                        kpi_id_to_question[kid] = str(q)
 
             # Metrics to display as sections: name and the key used in rag_evaluation
             metrics = [
@@ -1090,11 +1107,7 @@ with tab_rag_eval:
                         continue
 
                     pillar = kpi_id_to_pillar.get(kpi_id, "")
-                    kpi_def = _KPI_DEFS.get(kpi_id)
-                    driver = None
-                    if kpi_def:
-                        driver = getattr(kpi_def, "question", None) or getattr(kpi_def, "name", None)
-                    driver = driver or kpi_id
+                    driver = kpi_id_to_question.get(kpi_id) or kpi_id
 
                     meaning = _rag_metric_summary(key, val)
                     score_str = f"{float(val):.3f}" if isinstance(val, (int, float)) else str(val)
@@ -1119,7 +1132,8 @@ with tab_rag_eval:
         # --- Cross-company RAG comparison (up to 3 reports) ---
         st.markdown("#### Cross-Company RAG Comparison (up to 3 reports)")
 
-        # Helper: compute average RAG metrics from a report dict
+        # Helper: compute average RAG metrics from a report (same 7 metrics for radar).
+        # Do not invert noise or hallucination: use raw values (higher = worse).
         def _rag_summary(r: dict) -> dict | None:
             rag_block = r.get("rag_evaluation") or {}
             rows = rag_block.get("per_kpi") or []
@@ -1136,12 +1150,8 @@ with tab_rag_eval:
                 "context_precision": _avg("ragas_context_precision"),
                 "context_recall": _avg("ragas_context_recall"),
                 "semantic_similarity": _avg("semantic_similarity"),
-                "f1": _avg("f1"),
-                "recall_at_3": _avg("recall_at_3"),
-                "hallucination_score": _avg("hallucination_score"),
-                "mmr_diversity_score": _avg("mmr_diversity_score"),
-                "factual_correctness": _avg("factual_correctness"),
-                "noise_sensitivity": _avg("noise_sensitivity"),
+                "noise": _avg("noise_sensitivity"),  # raw: higher = worse
+                "hallucination": _avg("hallucination_score"),  # raw: higher = worse
             }
 
         # Build list of available reports, grouped by company (one latest per company)
@@ -1171,18 +1181,25 @@ with tab_rag_eval:
             )
 
             if selected:
+                # Same 7 metrics: faithfulness, answer relevance, context precision, context recall,
+                # semantic similarity, noise (raw), hallucination (raw). For noise/hallucination higher = worse.
                 categories = [
                     "faithfulness",
                     "answer_relevancy",
                     "context_precision",
                     "context_recall",
                     "semantic_similarity",
-                    "f1",
-                    "recall_at_3",
-                    "hallucination_score",
-                    "mmr_diversity_score",
-                    "factual_correctness",
-                    "noise_sensitivity",
+                    "noise",
+                    "hallucination",
+                ]
+                axis_labels = [
+                    "Faithfulness",
+                    "Answer relevance",
+                    "Context precision",
+                    "Context recall",
+                    "Semantic similarity",
+                    "Noise",
+                    "Hallucination",
                 ]
 
                 # Compact radar chart so labels and legend stay outside the data area
@@ -1201,23 +1218,15 @@ with tab_rag_eval:
                         continue
                     values = [summary[c] for c in categories]
                     values += values[:1]
+                    values = [max(0.0, min(1.0, v)) for v in values]
+                    # So all-zero companies (e.g. no evidence) still show: use a tiny radius so the line is visible
+                    if max(values) == 0.0:
+                        values = [0.02] * len(values)
                     ax.plot(angles, values, linewidth=1.5, label=label)
                     ax.fill(angles, values, alpha=0.1)
 
                 ax.set_xticks(angles[:-1])
-                labels = [
-                    "Faithfulness",
-                    "Answer relevance",
-                    "Context precision",
-                    "Context recall",
-                    "Semantic similarity",
-                    "F1",
-                    "Recall@3",
-                    "Hallucination score",
-                    "MMR diversity",
-                    "Factual correctness",
-                    "Noise sensitivity",
-                ]
+                labels = axis_labels
                 ax.set_xticklabels(
                     [
                         "\n".join(lbl.split(" ", 1)) if " " in lbl else lbl

@@ -53,14 +53,17 @@ def _urls_from_export(company_name: str, max_urls: int | None = None) -> List[st
 def discover_urls_node(state: Dict) -> Dict:
     company_name = state["company_name"]
     company_domain = state["company_domain"]
+    # 0 = use all URLs from export; otherwise cap at N (default 80).
+    max_urls = state.get("max_urls", 80)
+    cap_export = None if max_urls == 0 else max_urls
+    cap_live = 100 if max_urls == 0 else max_urls
 
     # First, try to load URLs from a pre-exported sources file (if available).
-    # No cap: use all URLs from export for full evaluation.
-    urls = _urls_from_export(company_name=company_name, max_urls=None)
+    urls = _urls_from_export(company_name=company_name, max_urls=cap_export)
 
-    # If no export exists, fall back to live discovery (no cap).
+    # If no export exists, fall back to live discovery.
     if not urls:
-        urls = discover_urls(company_name=company_name, domain=company_domain, max_urls=5000)
+        urls = discover_urls(company_name=company_name, domain=company_domain, max_urls=cap_live)
 
     return {
         "target_urls": urls,
