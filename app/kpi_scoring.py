@@ -12,13 +12,11 @@ import requests
 from app.debug_log import add_debug
 from app.models import Citation, KPIDefinition, KPIDriverResult
 from app.vectorstore import retrieve_evidence
+from app.reranker import rerank
 from app.tier_weighting import (
-    retrieve_evidence_weighted,
     calculate_tier_quality,
     get_tier_distribution,
 )
-from app.corroboration import detect_corroboration
-from app.dynamic_retrieval import determine_optimal_k
 from app.source_eval import (
     detect_semantic_corroboration,
     calculate_freshness_boost,
@@ -330,37 +328,25 @@ def calculate_enhanced_confidence(
 def score_rubric_kpi(
     kpi: KPIDefinition,
     collection,
-    k: int = 6,
+    k: int = 10,
+    top_n: int = 3,
     company_domain: str = "",
     full_sources: Optional[List[Dict]] = None,
 ) -> Tuple[KPIDriverResult, bool]:
-    # Determine optimal k (dynamic tuning if enabled)
-    k_used = determine_optimal_k(kpi, default_k=k)
+    # --- Stage 1: Retrieve top-k by cosine similarity (pure semantic) ---
+    evidences = retrieve_evidence(collection, kpi.question, k=k)
 
-    # Retrieve evidence with tier weighting (if enabled)
-    tier_weighting_enabled = os.getenv("VITELIS_ENABLE_TIER_WEIGHTING", "true").lower() in {"1", "true"}
+    # --- Stage 2: Cross-encoder rerank to top-n ---
+    evidences = rerank(kpi.question, evidences, top_n=top_n)
 
-    if tier_weighting_enabled:
-        evidences = retrieve_evidence_weighted(collection, kpi.question, k=k_used)
-    else:
-        # Fall back to standard retrieval
-        evidences_basic = retrieve_evidence(collection, kpi.question, k=k_used)
-        # Convert to format expected by new functions: add dummy score
-        evidences = [(meta, doc, 0.5) for meta, doc in evidences_basic]
+    k_used = k  # Track original retrieval depth for reporting
 
-    # Extract text for fallback scoring (handle both formats)
-    if evidences and len(evidences[0]) == 3:
-        evidence_text = " ".join(doc for _, doc, _ in evidences).lower()
-        citations = _build_citations([(meta, doc) for meta, doc, _ in evidences])
-    else:
-        evidence_text = " ".join(doc for _, doc in evidences).lower()
-        citations = _build_citations(evidences)
+    # Extract text for fallback scoring
+    evidence_text = " ".join(doc for _, doc, _ in evidences).lower()
+    citations = _build_citations([(meta, doc) for meta, doc, _ in evidences])
 
-    # Detect cross-source corroboration (if enabled)
-    corroboration_enabled = os.getenv("VITELIS_ENABLE_CORROBORATION", "true").lower() in {"1", "true"}
+    # Corroboration is computed in calculate_enhanced_confidence via source_eval
     corroboration = 0.0
-    if corroboration_enabled and evidences:
-        corroboration = detect_corroboration(evidences, min_sources=2)
 
     if not evidences:
         return (
@@ -372,7 +358,7 @@ def score_rubric_kpi(
                 confidence=0.2,
                 rationale="No evidence retrieved for this KPI.",
                 citations=[],
-                details={"llm_used": False},
+                details={"llm_used": False, "k_used": k_used, "top_n": top_n},
             ),
             True,
         )
@@ -380,18 +366,12 @@ def score_rubric_kpi(
     rubric = "\n".join(kpi.rubric or [])
     ideal_5 = _score5_from_rubric(kpi.rubric)
 
-    # Send full chunk (500 chars) so LLM has full context; avoid truncation.
-    char_limit = 500
-    if evidences and len(evidences[0]) == 3:
-        evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
-            for meta, doc, _ in evidences
-        )
-    else:
-        evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
-            for meta, doc in evidences
-        )
+    # Chunks are now ~1000 chars (semantic), send full text to LLM
+    char_limit = 1000
+    evidence_block = "\n".join(
+        f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
+        for meta, doc, _ in evidences
+    )
 
     ideal_line = f"\nIdeal (5 = High): \"{ideal_5}\"\nScore how close the evidence supports this level (1 = not at all, 5 = fully).\n" if ideal_5 else ""
 
@@ -453,11 +433,12 @@ def score_rubric_kpi(
 
         details = {
             "llm_used": True,
+            "retrieval_pipeline": "openai-embed → top-10 → cross-encoder-rerank → top-3",
             "tier_distribution": tier_distribution,
             "corroboration_score": eval_details.get("semantic_corroboration", {}).get("corroboration_score", corroboration),
             "unique_sources": unique_sources,
             "k_used": k_used,
-            # v2: Full source evaluation breakdown
+            "top_n_reranked": top_n,
             "source_evaluation": eval_details,
         }
 
@@ -493,10 +474,12 @@ def score_rubric_kpi(
 
     details = {
         "llm_used": False,
+        "retrieval_pipeline": "openai-embed → top-10 → cross-encoder-rerank → top-3",
         "tier_distribution": tier_distribution,
         "corroboration_score": eval_details.get("semantic_corroboration", {}).get("corroboration_score", corroboration),
         "unique_sources": unique_sources,
         "k_used": k_used,
+        "top_n_reranked": top_n,
         "source_evaluation": eval_details,
     }
 

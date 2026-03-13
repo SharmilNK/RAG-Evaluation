@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import os
 from typing import Dict, List
 
 from app.vectorstore import build_collection, chunk_text
+from app.debug_log import add_debug
 
-# ChromaDB's default max batch size — stay safely below it.
-_CHROMA_BATCH = 4000
+# Batch size for ChromaDB adds — keep small to manage OpenAI embedding API calls
+_BATCH_SIZE = 100
 
 
 def eval_index_sources_node(state: Dict) -> Dict:
-    """Identical to index_sources_node but upserts in batches to avoid ChromaDB
-    batch-size limits when sources contain very long content."""
+    """Index sources into ChromaDB with semantic chunking + OpenAI embeddings.
+
+    Uses batched adds to avoid ChromaDB batch-size limits and to manage
+    OpenAI embedding API rate limits when sources contain very long content.
+    """
     run_id = state["run_id"]
     sources: List[Dict] = state.get("sources", [])
 
@@ -37,10 +42,14 @@ def eval_index_sources_node(state: Dict) -> Dict:
                 }
             )
 
-    for start in range(0, len(ids), _CHROMA_BATCH):
-        batch_ids = ids[start : start + _CHROMA_BATCH]
-        batch_docs = docs[start : start + _CHROMA_BATCH]
-        batch_meta = metadatas[start : start + _CHROMA_BATCH]
-        collection.add(ids=batch_ids, documents=batch_docs, metadatas=batch_meta)
+    for start in range(0, len(ids), _BATCH_SIZE):
+        end = start + _BATCH_SIZE
+        collection.add(
+            ids=ids[start:end],
+            documents=docs[start:end],
+            metadatas=metadatas[start:end],
+        )
+        if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
+            add_debug(f"[eval_index] indexed chunks {start}–{min(end, len(ids))} of {len(ids)}")
 
     return {"collection_id": f"collection_{run_id}"}
