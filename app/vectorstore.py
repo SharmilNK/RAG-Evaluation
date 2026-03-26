@@ -251,6 +251,9 @@ def index_sources(collection, sources: List[dict]) -> None:
 
     for source in sources:
         chunks = chunk_text(source["text"])
+        # Tag tier-1 sources as "primary" so score_extensions can build a
+        # baseline_score from the frozen reference corpus (Feature 1 & 9).
+        source_type = "primary" if source.get("tier", 3) == 1 else "secondary"
         for idx, chunk in enumerate(chunks):
             chunk_id = f"{source['source_id']}::chunk_{idx}"
             ids.append(chunk_id)
@@ -258,11 +261,13 @@ def index_sources(collection, sources: List[dict]) -> None:
             metadatas.append(
                 {
                     "source_id": source["source_id"],
+                    "chunk_id": chunk_id,  # stored for retrieval metrics lookup
                     "url": source["url"],
                     "title": source.get("title", ""),
                     "domain": source.get("domain", ""),
                     "retrieved_at": source.get("retrieved_at", ""),
                     "tier": source["tier"],
+                    "source_type": source_type,  # "primary" | "secondary"
                 }
             )
 
