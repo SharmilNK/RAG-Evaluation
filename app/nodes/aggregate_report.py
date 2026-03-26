@@ -70,6 +70,10 @@ def aggregate_report_node(state: Dict) -> Dict:
 
     kpi_definitions = state.get("kpi_definitions", [])
 
+    # Feature 9: surface the collection fingerprint at report level so every
+    # generated report is traceable to the exact ChromaDB snapshot it used.
+    chromadb_snapshot_id: str = state.get("chromadb_snapshot_id", "")
+
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,
@@ -86,6 +90,8 @@ def aggregate_report_node(state: Dict) -> Dict:
         # Include RAG evaluation in the final report (None if node was skipped)
         rag_evaluation=rag_evaluation,
         # code change end for RAG Eval by SN
+        # Feature 9: collection fingerprint — makes report traceable to source data
+        chromadb_snapshot_id=chromadb_snapshot_id if chromadb_snapshot_id else None,
     )
 
     output_dir = os.path.join(os.path.dirname(__file__), "..", "output")

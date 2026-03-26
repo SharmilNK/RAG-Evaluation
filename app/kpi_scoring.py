@@ -43,7 +43,17 @@ def _extract_json(text: str) -> Optional[dict]:
         return None
 
 
-def _llm_score(prompt: str) -> Optional[dict]:
+def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
+    """Call the OpenAI chat API and return parsed JSON, or None on failure.
+
+    Args:
+        prompt: Full user prompt string.
+        temperature: Sampling temperature (default 0.2 for deterministic scoring;
+            pass a higher value from score_extensions for statistical runs).
+
+    Returns:
+        Parsed dict from the LLM JSON response, or None on any failure.
+    """
     global _LAST_LLM_CALL_AT
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -70,7 +80,7 @@ def _llm_score(prompt: str) -> Optional[dict]:
                         {"role": "system", "content": "You are a strict JSON generator."},
                         {"role": "user", "content": prompt},
                     ],
-                    "temperature": 0.2,
+                    "temperature": temperature,
                 },
                 timeout=30,
             )
@@ -325,6 +335,54 @@ def calculate_enhanced_confidence(
     return round(max(0.0, min(1.0, confidence)), 2), eval_details
 
 
+def build_rubric_prompt(
+    kpi: KPIDefinition,
+    evidences: List[Tuple[dict, str, float]],
+) -> Tuple[str, str]:
+    """
+    Build the system and user prompt strings for a rubric KPI scoring call.
+
+    Exposed so callers can compute a prompt hash (Feature 10) and run
+    statistical scoring (Feature 2) without duplicating prompt logic.
+
+    Args:
+        kpi: KPIDefinition with name, question, and rubric fields.
+        evidences: List of (metadata, document, score) tuples to embed
+            as evidence in the prompt.
+
+    Returns:
+        Tuple of (system_prompt, user_prompt) strings.
+    """
+    rubric = "\n".join(kpi.rubric or [])
+    ideal_5 = _score5_from_rubric(kpi.rubric)
+    char_limit = 1000
+    evidence_block = "\n".join(
+        f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
+        for meta, doc, _ in evidences
+    )
+    ideal_line = (
+        f'\nIdeal (5 = High): "{ideal_5}"\n'
+        "Score how close the evidence supports this level (1 = not at all, 5 = fully).\n"
+        if ideal_5
+        else ""
+    )
+    system_prompt = "You are a strict JSON generator."
+    user_prompt = (
+        f"You are a Business Analyst. Your task is to audit the following context using \n"
+        f"the KPI Drivers.\n"
+        f"Score the KPI from 1-5 using the rubric and evidence.\n"
+        f'Return strict JSON: {{"kpi_id": "...", "score": 1-5, "confidence": 0-1, "rationale": "...", '
+        f'"citations": [{{"source_id": "...", "url": "...", "quote": "..."}}]}}.\n'
+        f"Citations must include source_id, url, quote.\n\n"
+        f"KPI: {kpi.name}\n"
+        f"Question: {kpi.question}\n"
+        f"Rubric:\n{rubric}\n"
+        f"{ideal_line}"
+        f"Evidence:\n{evidence_block}\n"
+    )
+    return system_prompt, user_prompt
+
+
 def score_rubric_kpi(
     kpi: KPIDefinition,
     collection,
@@ -363,33 +421,7 @@ def score_rubric_kpi(
             True,
         )
 
-    rubric = "\n".join(kpi.rubric or [])
-    ideal_5 = _score5_from_rubric(kpi.rubric)
-
-    # Chunks are now ~1000 chars (semantic), send full text to LLM
-    char_limit = 1000
-    evidence_block = "\n".join(
-        f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
-        for meta, doc, _ in evidences
-    )
-
-    ideal_line = f"\nIdeal (5 = High): \"{ideal_5}\"\nScore how close the evidence supports this level (1 = not at all, 5 = fully).\n" if ideal_5 else ""
-
-    prompt = f"""
-    You are a Business Analyst. Your task is to audit the following context using 
-    the KPI Drivers.
-    Score the KPI from 1-5 using the rubric and evidence.
-    Return strict JSON: {{"kpi_id": "...", "score": 1-5, "confidence": 0-1, "rationale": "...", "citations": [{{"source_id": "...", "url": "...", "quote": "..."}}]}}.
-    Citations must include source_id, url, quote.
-
-    KPI: {kpi.name}
-    Question: {kpi.question}
-    Rubric:
-    {rubric}
-    {ideal_line}
-    Evidence:
-    {evidence_block}
-    """
+    _system_prompt, prompt = build_rubric_prompt(kpi, evidences)
 
     llm_data: Optional[dict] = None
     try:
