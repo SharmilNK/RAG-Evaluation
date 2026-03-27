@@ -45,6 +45,7 @@ from app.score_extensions import (
     apply_quality_gates,
     compute_bertscore,
     compute_chromadb_snapshot_id,
+    compute_live_score_source_attribution,
     compute_prompt_hash,
     compute_score_attribution,
     compute_score_split,
@@ -241,6 +242,21 @@ def score_kpis_node(state: Dict) -> Dict:
                     "live_raw_scores": score_split.get("live_raw_scores", []),
                 }
                 result_dict["scoring_distribution"] = scoring_distribution
+
+                # ── Feature 1b: which secondary source drove the delta ─────
+                try:
+                    src_attr = compute_live_score_source_attribution(
+                        kpi_name=kpi.name,
+                        rubric="\n".join(kpi.rubric or []),
+                        baseline_evidences=baseline_evidences,
+                        live_evidences=live_evidences,
+                        baseline_score=score_split.get("baseline_score"),
+                        config=flags,
+                    )
+                    if src_attr:
+                        result_dict["live_score_source_attribution"] = src_attr
+                except Exception:
+                    pass
             except Exception:
                 pass
             end_span(split_span, metadata={"score_split": score_split})

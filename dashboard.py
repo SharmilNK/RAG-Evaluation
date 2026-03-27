@@ -1404,6 +1404,67 @@ with tab_custom_eval:
         else:
             st.info("No score split data available yet.")
 
+        # ── Live-score source attribution ─────────────────────────────────
+        attr_kpis = [k for k in ce_kpis if k.get("live_score_source_attribution")]
+        if attr_kpis:
+            st.markdown("##### Which secondary source drove the live-score delta?")
+            st.caption(
+                "For each KPI where live_score ≠ baseline_score, the table below shows "
+                "which secondary-tier source had the highest marginal contribution to that "
+                "change. Marginal delta = score(baseline + this source) − baseline_score."
+            )
+            src_rows = []
+            for k in ce_kpis:
+                kpi_id = str(k["kpi_id"])
+                kpi_def = _KPI_DEFS.get(kpi_id)
+                label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+                lssa = k.get("live_score_source_attribution") or {}
+                top = lssa.get("top_contributor") or {}
+                all_c = lssa.get("all_contributions") or []
+                if not top:
+                    continue
+                delta_str = _fmt(top.get("marginal_delta"), 3)
+                direction = top.get("direction", "")
+                if direction == "positive":
+                    delta_str = f"▲ {delta_str}"
+                elif direction == "negative":
+                    delta_str = f"▼ {delta_str}"
+                src_rows.append({
+                    "KPI": label,
+                    "Top Source URL": top.get("source_url", "—") or "—",
+                    "Source Type": top.get("source_type", "—"),
+                    "Source ID": top.get("source_id", "—") or "—",
+                    "Chunk ID": (top.get("chunk_id", "—") or "—")[:40],
+                    "Marginal Δ": delta_str,
+                    "Candidates": len(all_c),
+                })
+            if src_rows:
+                st.dataframe(pd.DataFrame(src_rows), use_container_width=True, hide_index=True)
+
+            # Per-KPI expander with full ranked list
+            for k in attr_kpis:
+                kpi_id = str(k["kpi_id"])
+                kpi_def = _KPI_DEFS.get(kpi_id)
+                label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+                lssa = k.get("live_score_source_attribution") or {}
+                all_c = lssa.get("all_contributions") or []
+                if not all_c:
+                    continue
+                with st.expander(f"All secondary sources — {label}"):
+                    cand_rows = []
+                    for i, c in enumerate(all_c, 1):
+                        d = c.get("marginal_delta", 0)
+                        d_str = f"▲ {d:.3f}" if d > 0 else (f"▼ {d:.3f}" if d < 0 else f"= {d:.3f}")
+                        cand_rows.append({
+                            "Rank": i,
+                            "Source URL": c.get("source_url", "—") or "—",
+                            "Source Type": c.get("source_type", "—"),
+                            "Source ID": c.get("source_id", "—") or "—",
+                            "Chunk ID": (c.get("chunk_id", "—") or "—")[:40],
+                            "Marginal Δ": d_str,
+                        })
+                    st.dataframe(pd.DataFrame(cand_rows), use_container_width=True, hide_index=True)
+
         st.markdown("---")
 
         # ─────────────────────────────────────────────────────────────────

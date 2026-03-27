@@ -61,6 +61,8 @@ class KPIDriverResult(BaseModel):
     baseline_score: Optional[float] = None
     live_score: Optional[float] = None
     score_split_delta: Optional[float] = None
+    # Which secondary source drove the delta (marginal contribution analysis).
+    live_score_source_attribution: Optional[Dict[str, object]] = None
 
     # ── Feature 2: Scoring distribution (N=5 runs) ───────────────────────
     # Stored under key "scoring_distribution" for LangFuse metadata parity.
