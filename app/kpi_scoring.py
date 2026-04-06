@@ -109,7 +109,7 @@ def _llm_score(prompt: str) -> Optional[dict]:
     # OpenAI
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
         if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
             add_debug("[llm] provider set to Gemini but GEMINI/GOOGLE key missing; using fallback scoring")
         return None
@@ -174,7 +174,7 @@ def _llm_score(prompt: str) -> Optional[dict]:
                 print(f"[KPI scoring] {provider_name} API returned {response.status_code}; using heuristic fallback.")
 =======
                 print(f"[KPI scoring] OpenAI API returned {response.status_code}; using heuristic fallback.")
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
                 return None
             response.raise_for_status()
             if use_gemini and google_key:
@@ -548,7 +548,7 @@ def score_rubric_kpi(
     Evidence:
     {evidence_block}
     """
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
 
     llm_data: Optional[dict] = None
     try:

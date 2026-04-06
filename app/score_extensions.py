@@ -381,6 +381,105 @@ def compute_score_split(
 
 
 # ===========================================================================
+# Feature 1b — Live-score source attribution (marginal contribution)
+# ===========================================================================
+
+def compute_live_score_source_attribution(
+    kpi_name: str,
+    rubric: str,
+    baseline_evidences: List[Tuple[dict, str, float]],
+    live_evidences: List[Tuple[dict, str, float]],
+    baseline_score: Optional[float],
+    config: Optional[Dict[str, Any]] = None,
+) -> Optional[Dict[str, Any]]:
+    """
+    Identify which secondary source drove the live_score away from baseline_score.
+
+    For every chunk in live_evidences that is NOT primary-tier, we run one
+    deterministic LLM call scoring ``baseline_evidences + [that_chunk]`` and
+    compute marginal_delta = that_score − baseline_score.  The chunk with the
+    largest |marginal_delta| is the top contributor.
+
+    This uses temperature=0 and a single run to keep cost low (we only need
+    relative ranking, not statistical estimates).
+
+    Args:
+        kpi_name: KPI name string inserted into the scoring prompt.
+        rubric: Rubric text inserted into the scoring prompt.
+        baseline_evidences: Primary-tier chunks (the frozen reference corpus).
+        live_evidences: All retrieved chunks (primary + secondary).
+        baseline_score: The pre-computed baseline mean score used as origin for
+            the marginal delta calculation.  If None the function returns None.
+        config: Feature flags dict.
+
+    Returns:
+        Dict with:
+          top_contributor  — {chunk_id, source_url, source_type, source_id,
+                               marginal_delta, direction}
+          all_contributions — ranked list of the same dict per secondary chunk
+        or None if there are no secondary chunks, baseline_score is absent, or
+        all LLM calls fail.
+
+    Side effects:
+        Makes one HTTP request per secondary chunk in live_evidences.
+    """
+    if baseline_score is None:
+        return None
+
+    # Identify secondary (non-primary) chunks
+    secondary: List[Tuple[dict, str, float]] = [
+        (meta, doc, sim)
+        for meta, doc, sim in live_evidences
+        if not (
+            isinstance(meta, dict)
+            and (meta.get("source_type") == "primary" or meta.get("tier") == 1)
+        )
+    ]
+
+    if not secondary:
+        return None
+
+    prompt_tmpl = (
+        "You are a Business Analyst scoring a KPI.\n"
+        "KPI: {kpi_name}\n"
+        "Rubric:\n{rubric}\n"
+        "Evidence:\n{evidence_block}\n"
+        "Return strict JSON: {{\"score\": 1-5}}"
+    )
+
+    contributions: List[Dict[str, Any]] = []
+    for meta, doc, sim in secondary:
+        combined = list(baseline_evidences) + [(meta, doc, sim)]
+        prompt = prompt_tmpl.format(
+            kpi_name=kpi_name,
+            rubric=rubric,
+            evidence_block=_build_evidence_block(combined),
+        )
+        score_val = _call_llm_once(prompt, temperature=0.0)
+        if score_val is None:
+            continue
+
+        marginal_delta = round(score_val - baseline_score, 4)
+        contributions.append({
+            "chunk_id": meta.get("chunk_id", "") if isinstance(meta, dict) else "",
+            "source_id": meta.get("source_id", "") if isinstance(meta, dict) else "",
+            "source_url": meta.get("url", "") if isinstance(meta, dict) else "",
+            "source_type": meta.get("source_type", "secondary") if isinstance(meta, dict) else "secondary",
+            "marginal_delta": marginal_delta,
+            "direction": "positive" if marginal_delta > 0 else ("negative" if marginal_delta < 0 else "neutral"),
+        })
+
+    if not contributions:
+        return None
+
+    contributions.sort(key=lambda x: abs(x["marginal_delta"]), reverse=True)
+    return {
+        "top_contributor": contributions[0],
+        "all_contributions": contributions,
+    }
+
+
+# ===========================================================================
 # Feature 3 — Quality Gates
 # ===========================================================================
 

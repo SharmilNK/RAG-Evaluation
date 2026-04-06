@@ -81,7 +81,7 @@ def aggregate_report_node(state: Dict) -> Dict:
     chromadb_snapshot_id: str = state.get("chromadb_snapshot_id", "")
 
 =======
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,

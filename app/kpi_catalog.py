@@ -75,7 +75,7 @@ def _load_kpis_from_csv() -> List[KPIDefinition]:
       - kpi_id: slug from RDP Reference / row number / question
 =======
       - kpi_id: slug from column N (KPI Drivers) so each row has a unique id
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
       - name:  'Definition (KPI)' (fallback to question)
       - pillar: 'KPI Category'
       - type:  'rubric'
@@ -130,7 +130,7 @@ def _load_kpis_from_csv() -> List[KPIDefinition]:
             slug = _slugify(base_id)
             # Append row index so every row gets a unique id even if slug would collide
             kpi_id = f"{slug}_{idx}" if slug else f"kpi_{idx}"
->>>>>>> origin/main
+>>>>>>> c0fadd9 (Add RAG EVAL)
 
             # Build rubric from quality criteria columns (1–5)
             rubric_texts = []
