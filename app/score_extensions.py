@@ -28,6 +28,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import statistics
 import time
 from typing import Any, Dict, List, Optional, Tuple
@@ -141,6 +142,11 @@ def _call_llm_once(prompt: str, temperature: float) -> Optional[float]:
         Makes one HTTP request to the OpenAI chat completions endpoint.
         Respects VITELIS_OPENAI_MIN_DELAY between calls.
     """
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    if provider in {"gemini", "google"}:
+        # Keep extension scoring fast/stable in Gemini mode by skipping OpenAI-only path.
+        return None
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None
@@ -174,6 +180,28 @@ def _call_llm_once(prompt: str, temperature: float) -> Optional[float]:
         return float(data["score"])
     except Exception:
         return None
+
+
+def _heuristic_score_from_prompt(prompt: str) -> float:
+    """Cheap local fallback score from rubric/evidence token overlap (1-5)."""
+    rubric_match = re.search(r"Rubric:\n(.*?)\nEvidence:\n", prompt, re.DOTALL)
+    evidence_match = re.search(r"Evidence:\n(.*)$", prompt, re.DOTALL)
+    rubric = (rubric_match.group(1) if rubric_match else "").lower()
+    evidence = (evidence_match.group(1) if evidence_match else "").lower()
+    rubric_tokens = set(re.findall(r"\b\w{4,}\b", rubric))
+    evidence_tokens = set(re.findall(r"\b\w{4,}\b", evidence))
+    if not rubric_tokens or not evidence_tokens:
+        return 3.0
+    overlap = len(rubric_tokens & evidence_tokens) / len(rubric_tokens)
+    if overlap >= 0.35:
+        return 5.0
+    if overlap >= 0.22:
+        return 4.0
+    if overlap >= 0.12:
+        return 3.0
+    if overlap >= 0.05:
+        return 2.0
+    return 1.0
 
 
 def run_scoring_with_stats(
@@ -210,7 +238,13 @@ def run_scoring_with_stats(
             scores.append(val)
 
     if not scores:
-        return {"raw_scores": [], "mean": None, "std": None, "successful_runs": 0}
+        h = _heuristic_score_from_prompt(prompt)
+        return {
+            "raw_scores": [h] * max(1, n_runs),
+            "mean": round(h, 4),
+            "std": 0.0,
+            "successful_runs": 0,
+        }
 
     mean_val = statistics.mean(scores)
     std_val = statistics.stdev(scores) if len(scores) > 1 else 0.0
@@ -252,19 +286,16 @@ def retrieve_baseline_evidence(
         Issues a filtered query against the ChromaDB collection.
     """
     try:
-        results = collection.query(
-            query_texts=[query],
-            n_results=k,
+        # Route through vectorstore.retrieve_evidence so hybrid retrieval (BM25+RRF)
+        # can be applied consistently even for baseline-only evidence.
+        from app.vectorstore import retrieve_evidence
+
+        return retrieve_evidence(
+            collection,
+            query,
+            k=k,
             where={"$or": [{"source_type": {"$eq": "primary"}}, {"tier": {"$eq": 1}}]},
         )
-        metas = results.get("metadatas", [[]])[0] or []
-        docs = results.get("documents", [[]])[0] or []
-        dists = results.get("distances", [[]])[0] or []
-
-        return [
-            (meta, doc, max(0.0, 1.0 - dist / 2.0))
-            for meta, doc, dist in zip(metas, docs, dists)
-        ]
     except Exception:
         return []
 
@@ -622,7 +653,8 @@ def compute_score_attribution(
         return None  # First run for this (company, KPI) pair
 
     delta = round(new_mean_score - prev_score, 4)
-    if abs(delta) <= 0.2:
+    threshold = float(os.getenv("VITELIS_ATTRIBUTION_DELTA_THRESHOLD", "0.2"))
+    if abs(delta) <= threshold:
         return None  # Within tolerance — no attribution needed
 
     # Determine root cause

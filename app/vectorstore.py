@@ -2,7 +2,7 @@
 Vector store module — v2
 ========================
 - Semantic chunking: sentence-aware splitting with configurable overlap
-- OpenAI embeddings: text-embedding-3-small (1536-dim)
+- Embeddings: OpenAI (default) or local SentenceTransformer fallback
 - Pure cosine similarity retrieval (no tier boosting at retrieval time)
 """
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import re
 import time
-from typing import Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import chromadb
 import numpy as np
@@ -132,6 +132,46 @@ class OpenAIEmbeddingFunction:
         raise RuntimeError("OpenAI embedding API: exhausted retries")
 
 
+class LocalEmbeddingFunction:
+    """Dependency-free local embedding backend.
+
+    Uses a simple hashed bag-of-words embedding so indexing/retrieval can run
+    without external APIs or heavyweight ML runtime dependencies.
+    """
+
+    MODEL = "hash-bow-256d"
+    DIMENSIONS = 256
+
+    def _embed_text(self, text: str) -> List[float]:
+        tokens = re.findall(r"\b\w+\b", (text or "").lower())
+        vec = np.zeros(self.DIMENSIONS, dtype=np.float32)
+        for tok in tokens:
+            h = hash(tok)
+            idx = abs(h) % self.DIMENSIONS
+            vec[idx] += 1.0 if h >= 0 else -1.0
+        norm = np.linalg.norm(vec)
+        if norm > 0:
+            vec = vec / norm
+        return vec.tolist()
+
+    def __call__(self, input: Iterable[str]) -> List[List[float]]:
+        return self.embed_documents(list(input))
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return [self._embed_text(t) for t in texts]
+
+    def embed_query(self, input: str | List[str]) -> List[List[float]]:
+        if isinstance(input, list):
+            return self.embed_documents(input)
+        return self.embed_documents([input])
+
+    def name(self) -> str:
+        return f"local-{self.MODEL}"
+
+    def get_config(self) -> dict:
+        return {"model": self.name()}
+
+
 # ============================================================================
 # SEMANTIC CHUNKING
 # ============================================================================
@@ -230,11 +270,14 @@ def chunk_text(
 # ============================================================================
 
 def build_collection(run_id: str):
-    """Create or open a ChromaDB collection with OpenAI embeddings."""
+    """Create or open a ChromaDB collection with configured embeddings."""
     persist_dir = os.path.join(os.path.dirname(__file__), "data", f"chroma_{run_id}")
     os.makedirs(persist_dir, exist_ok=True)
     client = chromadb.PersistentClient(path=persist_dir)
-    embedding_fn = OpenAIEmbeddingFunction()
+    provider = (os.getenv("VITELIS_EMBED_PROVIDER") or "").strip().lower()
+    llm_provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    use_local = provider == "local" or (llm_provider in {"gemini", "google"} and provider != "openai")
+    embedding_fn = LocalEmbeddingFunction() if use_local else OpenAIEmbeddingFunction()
     collection = client.get_or_create_collection(
         "sources",
         embedding_function=embedding_fn,
@@ -288,6 +331,7 @@ def retrieve_evidence(
     collection,
     query: str,
     k: int = 10,
+    where: Optional[Dict[str, Any]] = None,
 ) -> List[Tuple[dict, str, float]]:
     """
     Retrieve top-k chunks by pure cosine similarity.
@@ -298,7 +342,167 @@ def retrieve_evidence(
     if not query.strip():
         return []
 
-    results = collection.query(query_texts=[query], n_results=k)
+    mode = (os.getenv("VITELIS_RETRIEVAL_MODE") or "semantic").strip().lower()
+    semantic_top_k = int(os.getenv("VITELIS_SEMANTIC_TOP_K", str(k)) or k)
+    bm25_top_k = int(os.getenv("VITELIS_BM25_TOP_K", str(k)) or k)
+    rrf_k = int(os.getenv("VITELIS_RRF_K", "60") or 60)
+    fused_k = int(os.getenv("VITELIS_RRF_FUSED_K", str(max(k, semantic_top_k + bm25_top_k))) or k)
+
+    if mode in {"hybrid_rrf", "hybrid", "rrf"}:
+        # Hybrid: semantic + BM25, fuse with Reciprocal Rank Fusion (RRF)
+        semantic_rows = _semantic_retrieve(collection, query, k=semantic_top_k, where=where)
+        bm25_rows = _bm25_retrieve(collection, query, k=bm25_top_k, where=where)
+        fused = _rrf_fuse(
+            semantic=semantic_rows,
+            bm25=bm25_rows,
+            k=rrf_k,
+        )
+        # Return top fused_k candidates; score is fused score (reranker will re-score anyway)
+        return [(meta, doc, float(score)) for (_cid, meta, doc, score) in fused[:fused_k]]
+
+    # Default: semantic-only retrieval (existing behavior)
+    rows = _semantic_retrieve(collection, query, k=k, where=where)
+    return [(meta, doc, float(score)) for (_cid, meta, doc, score) in rows]
+
+
+# ============================================================================
+# HYBRID RETRIEVAL: Semantic + BM25 + RRF
+# ============================================================================
+
+_BM25_CACHE: Dict[int, Dict[str, Any]] = {}
+
+
+def _tokenize(text: str) -> List[str]:
+    return re.findall(r"\b\w+\b", (text or "").lower())
+
+
+def _meta_matches_where(meta: Dict[str, Any], where: Optional[Dict[str, Any]]) -> bool:
+    """
+    Minimal matcher for the subset of Chroma 'where' queries we use:
+      - {"field": {"$eq": value}}
+      - {"$or": [<where>, <where>, ...]}
+    """
+    if not where:
+        return True
+    if "$or" in where and isinstance(where["$or"], list):
+        return any(_meta_matches_where(meta, w) for w in where["$or"])
+    for key, cond in where.items():
+        if not isinstance(cond, dict) or "$eq" not in cond:
+            return False
+        if meta.get(key) != cond["$eq"]:
+            return False
+    return True
+
+
+def _semantic_retrieve(
+    collection,
+    query: str,
+    k: int,
+    where: Optional[Dict[str, Any]] = None,
+) -> List[Tuple[str, dict, str, float]]:
+    results = collection.query(query_texts=[query], n_results=k, where=where)
+    ids = results.get("ids", [[]])[0] or []
+    metadatas = results.get("metadatas", [[]])[0] or []
+    documents = results.get("documents", [[]])[0] or []
+    distances = results.get("distances", [[]])[0] or []
+
+    rows: List[Tuple[str, dict, str, float]] = []
+    for cid, metadata, document, distance in zip(ids, metadatas, documents, distances):
+        meta = metadata if isinstance(metadata, dict) else {}
+        # Chroma cosine distance in [0,2] -> similarity [0,1]
+        similarity = max(0.0, 1.0 - (float(distance) / 2.0))
+        rows.append((str(cid), meta, str(document), float(similarity)))
+    return rows
+
+
+def _get_bm25_index(collection) -> Optional[Dict[str, Any]]:
+    """
+    Build or reuse a BM25 index for a given Chroma collection.
+    Cached per-process using id(collection).
+    """
+    key = id(collection)
+    cached = _BM25_CACHE.get(key)
+    if cached:
+        return cached
+
+    try:
+        from rank_bm25 import BM25Okapi  # type: ignore
+    except Exception:
+        return None
+
+    try:
+        result = collection.get(include=["documents", "metadatas"])
+        ids: List[str] = result.get("ids", []) or []
+        docs: List[str] = result.get("documents", []) or []
+        metas: List[Any] = result.get("metadatas", []) or []
+        meta_dicts: List[dict] = [m if isinstance(m, dict) else {} for m in metas]
+
+        tokenized = [_tokenize(d) for d in docs]
+        bm25 = BM25Okapi(tokenized)
+        cached = {"ids": ids, "docs": docs, "metas": meta_dicts, "bm25": bm25}
+        _BM25_CACHE[key] = cached
+        return cached
+    except Exception:
+        return None
+
+
+def _bm25_retrieve(
+    collection,
+    query: str,
+    k: int,
+    where: Optional[Dict[str, Any]] = None,
+) -> List[Tuple[str, dict, str, float]]:
+    idx = _get_bm25_index(collection)
+    if not idx:
+        return []
+
+    bm25 = idx["bm25"]
+    q_tokens = _tokenize(query)
+    if not q_tokens:
+        return []
+
+    scores = bm25.get_scores(q_tokens)
+    # Rank all docs; then filter by 'where' and take top-k.
+    ranked = sorted(enumerate(scores), key=lambda x: float(x[1]), reverse=True)
+    rows: List[Tuple[str, dict, str, float]] = []
+    for i, score in ranked:
+        meta = idx["metas"][i]
+        if where and not _meta_matches_where(meta, where):
+            continue
+        rows.append((str(idx["ids"][i]), meta, str(idx["docs"][i]), float(score)))
+        if len(rows) >= k:
+            break
+    return rows
+
+
+def _rrf_fuse(
+    *,
+    semantic: List[Tuple[str, dict, str, float]],
+    bm25: List[Tuple[str, dict, str, float]],
+    k: int = 60,
+) -> List[Tuple[str, dict, str, float]]:
+    """
+    Reciprocal Rank Fusion over two ranked lists.
+
+    FusedScore(doc) = sum(1 / (k + rank_s(doc))) over lists where doc appears.
+    rank is 1-based.
+    """
+    scores: Dict[str, float] = {}
+    meta_by_id: Dict[str, dict] = {}
+    doc_by_id: Dict[str, str] = {}
+
+    def _add(list_rows: List[Tuple[str, dict, str, float]]) -> None:
+        for rank, (cid, meta, doc, _score) in enumerate(list_rows, start=1):
+            scores[cid] = scores.get(cid, 0.0) + (1.0 / (k + rank))
+            meta_by_id.setdefault(cid, meta)
+            doc_by_id.setdefault(cid, doc)
+
+    _add(semantic)
+    _add(bm25)
+
+    fused = [(cid, meta_by_id[cid], doc_by_id[cid], s) for cid, s in scores.items()]
+    fused.sort(key=lambda x: x[3], reverse=True)
+    return fused
 
     metadatas = results.get("metadatas", [[]])[0]
     documents = results.get("documents", [[]])[0]

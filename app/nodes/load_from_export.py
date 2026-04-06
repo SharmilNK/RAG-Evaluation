@@ -56,6 +56,12 @@ def load_from_export_node(state: Dict) -> Dict:
     sources: List[Dict] = []
     seen_ids: set = set()
 
+    max_urls_raw = state.get("max_urls", 0)
+    try:
+        max_urls = int(max_urls_raw or 0)
+    except (TypeError, ValueError):
+        max_urls = 0
+
     for entry in raw_entries:
         url = (entry.get("url") or "").strip()
         content = (entry.get("content") or "").strip()
@@ -86,6 +92,8 @@ def load_from_export_node(state: Dict) -> Dict:
             "retrieved_at": retrieved_at,
             "tier": tier,
         })
+        if max_urls > 0 and len(sources) >= max_urls:
+            break
 
     target_urls = [s["url"] for s in sources]
     company_domain = _dominant_domain(sources)

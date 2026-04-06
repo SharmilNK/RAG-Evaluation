@@ -309,50 +309,60 @@ def evaluate_ragas(
         A dictionary of scores, each between 0 and 1 (1 = best possible).
     """
 
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    ragas_disabled = os.getenv("VITELIS_RAGAS_DISABLED", "").lower() in {"1", "true", "yes"}
+    if provider in {"gemini", "google"} and not google_key:
+        ragas_disabled = True
+
     # --- Attempt to use the ragas library (pip install ragas) ---
-    try:
-        from ragas import evaluate as ragas_evaluate
-        from ragas.metrics import (
-            faithfulness,
-            answer_relevancy,
-            context_precision,
-            context_recall,
-        )
-        from datasets import Dataset
-
-        # Build the dataset in the format ragas expects
-        data = {
-            "question": [question],
-            "answer": [answer],
-            "contexts": [contexts],
-        }
-        if ground_truth:
-            data["ground_truth"] = [ground_truth]
-
-        dataset = Dataset.from_dict(data)
-
-        # Choose which metrics to run based on what data we have
-        metrics = [faithfulness, answer_relevancy, context_precision]
-        if ground_truth:
-            metrics.append(context_recall)
-
-        # Run the ragas evaluation
-        result = ragas_evaluate(dataset, metrics=metrics)
-        scores = result.to_pandas().iloc[0].to_dict()
-
-        return {
-            "method": "ragas_library",
-            "faithfulness": round(float(scores.get("faithfulness", 0)), 3),
-            "answer_relevancy": round(float(scores.get("answer_relevancy", 0)), 3),
-            "context_precision": round(float(scores.get("context_precision", 0)), 3),
-            "context_recall": round(float(scores.get("context_recall", 0)), 3) if ground_truth else None,
-        }
-
-    except ImportError:
-        # ragas not installed — run a lightweight local approximation instead
+    if ragas_disabled:
+        # Force local approximation path below (no external LLM calls).
         pass
-    except Exception as exc:
-        print(f"  [Warning] ragas library failed ({exc}), falling back to local approximation.")
+    else:
+        try:
+            from ragas import evaluate as ragas_evaluate
+            from ragas.metrics import (
+                faithfulness,
+                answer_relevancy,
+                context_precision,
+                context_recall,
+            )
+            from datasets import Dataset
+
+            # Build the dataset in the format ragas expects
+            data = {
+                "question": [question],
+                "answer": [answer],
+                "contexts": [contexts],
+            }
+            if ground_truth:
+                data["ground_truth"] = [ground_truth]
+
+            dataset = Dataset.from_dict(data)
+
+            # Choose which metrics to run based on what data we have
+            metrics = [faithfulness, answer_relevancy, context_precision]
+            if ground_truth:
+                metrics.append(context_recall)
+
+            # Run the ragas evaluation
+            result = ragas_evaluate(dataset, metrics=metrics)
+            scores = result.to_pandas().iloc[0].to_dict()
+
+            return {
+                "method": "ragas_library",
+                "faithfulness": round(float(scores.get("faithfulness", 0)), 3),
+                "answer_relevancy": round(float(scores.get("answer_relevancy", 0)), 3),
+                "context_precision": round(float(scores.get("context_precision", 0)), 3),
+                "context_recall": round(float(scores.get("context_recall", 0)), 3) if ground_truth else None,
+            }
+
+        except ImportError:
+            # ragas not installed — run a lightweight local approximation instead
+            pass
+        except Exception as exc:
+            print(f"  [Warning] ragas library failed ({exc}), falling back to local approximation.")
 
     # --- Lightweight local fallback (no ragas library needed) ---
     # Faithfulness: what fraction of the answer's words appear in the evidence?
@@ -991,47 +1001,54 @@ def evaluate_ragas_with_ground_truth(
         Dictionary with scores for all three checks (0-1 scale each).
     """
 
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    ragas_disabled = os.getenv("VITELIS_RAGAS_DISABLED", "").lower() in {"1", "true", "yes"}
+    if provider in {"gemini", "google"} and not google_key:
+        ragas_disabled = True
+
     # --- Attempt to use the ragas library ---
-    try:
-        from ragas import evaluate as ragas_evaluate
-        from ragas.metrics import (
-            FactualCorrectness,
-            NoiseSensitivity,
-            SemanticSimilarity,
-        )
-        from datasets import Dataset
+    if not ragas_disabled:
+        try:
+            from ragas import evaluate as ragas_evaluate
+            from ragas.metrics import (
+                FactualCorrectness,
+                NoiseSensitivity,
+                SemanticSimilarity,
+            )
+            from datasets import Dataset
 
-        # Build the dataset ragas expects
-        dataset = Dataset.from_dict({
-            "question": [question],
-            "answer": [answer],
-            "contexts": [contexts],
-            "ground_truth": [ground_truth],
-        })
+            # Build the dataset ragas expects
+            dataset = Dataset.from_dict({
+                "question": [question],
+                "answer": [answer],
+                "contexts": [contexts],
+                "ground_truth": [ground_truth],
+            })
 
-        # Run all three metrics together in one call (more efficient)
-        result = ragas_evaluate(
-            dataset,
-            metrics=[FactualCorrectness(), NoiseSensitivity(), SemanticSimilarity()],
-        )
-        scores = result.to_pandas().iloc[0].to_dict()
+            # Run all three metrics together in one call (more efficient)
+            result = ragas_evaluate(
+                dataset,
+                metrics=[FactualCorrectness(), NoiseSensitivity(), SemanticSimilarity()],
+            )
+            scores = result.to_pandas().iloc[0].to_dict()
 
-        return {
-            "method": "ragas_library",
-            "ground_truth_used": ground_truth[:150],
-            # Check 7: Factual correctness — claim-level accuracy vs ideal answer
-            "factual_correctness": round(float(scores.get("factual_correctness", 0)), 3),
-            # Check 8: Noise sensitivity — lower is better
-            "noise_sensitivity": round(float(scores.get("noise_sensitivity", 0)), 3),
-            # Check 9: Semantic similarity — meaning-level match to ideal answer
-            "semantic_similarity": round(float(scores.get("semantic_similarity", 0)), 3),
-        }
+            return {
+                "method": "ragas_library",
+                "ground_truth_used": ground_truth[:150],
+                # Check 7: Factual correctness — claim-level accuracy vs ideal answer
+                "factual_correctness": round(float(scores.get("factual_correctness", 0)), 3),
+                # Check 8: Noise sensitivity — lower is better
+                "noise_sensitivity": round(float(scores.get("noise_sensitivity", 0)), 3),
+                # Check 9: Semantic similarity — meaning-level match to ideal answer
+                "semantic_similarity": round(float(scores.get("semantic_similarity", 0)), 3),
+            }
 
-    except ImportError:
-        # ragas not installed — fall back to local approximations below
-        pass
-    except Exception as exc:
-        print(f"  [Warning] ragas ground-truth metrics failed ({exc}), using local approximation.")
+        except ImportError:
+            # ragas not installed — fall back to local approximations below
+            pass
+        except Exception as exc:
+            print(f"  [Warning] ragas ground-truth metrics failed ({exc}), using local approximation.")
 
     # --- Local fallback approximations (no ragas library needed) ---
 

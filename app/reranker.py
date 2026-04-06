@@ -68,7 +68,14 @@ def rerank(
         # Nothing to rerank — already at or below top_n
         return evidences
 
-    model = _get_cross_encoder()
+    try:
+        model = _get_cross_encoder()
+    except Exception as exc:
+        # Graceful fallback for environments without a compatible torch runtime.
+        if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
+            add_debug(f"[reranker] cross-encoder unavailable, using retrieval order fallback ({exc})")
+        ranked = sorted(evidences, key=lambda x: x[2], reverse=True)
+        return ranked[:top_n]
 
     # Build (query, document) pairs for the cross-encoder
     pairs = [(query, doc) for _, doc, _ in evidences]

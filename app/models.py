@@ -82,6 +82,7 @@ class KPIDriverResult(BaseModel):
     chromadb_snapshot_id: Optional[str] = None
     prompt_hash: Optional[str] = None
     mlflow_run_id: Optional[str] = None
+    langfuse_trace_id: Optional[str] = None
 
 
 class AggregatedKPIResult(BaseModel):

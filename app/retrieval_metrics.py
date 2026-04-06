@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import math
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import yaml  # already in requirements.txt (pyyaml)
@@ -57,7 +58,17 @@ def _load_golden_chunks() -> Dict[str, Any]:
         return _golden_cache or {}
 
     _golden_load_attempted = True
-    path = os.getenv("GOLDEN_CHUNKS_PATH", "")
+    path = (os.getenv("GOLDEN_CHUNKS_PATH") or "").strip()
+    if not path:
+        # Default to repo-level golden_chunks.yaml so the feature works out-of-box.
+        # Expected layout: <repo>/app/retrieval_metrics.py → <repo>/golden_chunks.yaml
+        try:
+            repo_root = Path(__file__).resolve().parents[1]
+            candidate = repo_root / "golden_chunks.yaml"
+            if candidate.exists():
+                path = str(candidate)
+        except Exception:
+            path = ""
     if not path:
         _golden_cache = {}
         return {}

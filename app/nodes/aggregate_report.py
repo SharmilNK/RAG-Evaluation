@@ -26,7 +26,12 @@ def _aggregate_by_pillar(results: List[KPIDriverResult]) -> List[AggregatedKPIRe
         if total_weight == 0:
             score = 0.0
         else:
-            score = sum(item.score * item.confidence for item in items) / total_weight
+            # Use the statistical mean score (live_score) when available so the report
+            # reflects mean ± σ rather than a single-point estimate.
+            def _effective_score(x: KPIDriverResult) -> float:
+                return float(x.live_score) if x.live_score is not None else float(x.score)
+
+            score = sum(_effective_score(item) * item.confidence for item in items) / total_weight
         confidence = sum(item.confidence for item in items) / len(items)
         aggregated.append(
             AggregatedKPIResult(

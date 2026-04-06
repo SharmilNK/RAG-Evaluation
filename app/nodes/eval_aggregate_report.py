@@ -15,6 +15,7 @@ import yaml
 from app.models import AggregatedKPIResult, KPIDriverResult, RagEvaluationReport, ReportArtifact
 from app.nodes.compare_ground_truth import compare_with_ground_truth
 from app.nodes.load_ground_truth import load_ground_truth
+from app.mlflow_logger import log_pipeline_run
 
 
 def _aggregate_by_pillar(results: List[KPIDriverResult]) -> List[AggregatedKPIResult]:
@@ -26,7 +27,12 @@ def _aggregate_by_pillar(results: List[KPIDriverResult]) -> List[AggregatedKPIRe
     for pillar, items in pillar_map.items():
         total_weight = sum(item.confidence for item in items)
         score = (
-            sum(item.score * item.confidence for item in items) / total_weight
+            sum(
+                (float(item.live_score) if item.live_score is not None else float(item.score))
+                * item.confidence
+                for item in items
+            )
+            / total_weight
             if total_weight > 0
             else 0.0
         )
@@ -97,6 +103,25 @@ def eval_aggregate_report_node(state: Dict) -> Dict:
         yaml.safe_dump(report.model_dump(), f, sort_keys=False)
 
     print(f"[eval_aggregate] Report written: {report_path}")
+
+    # ── 1b. MLflow pipeline summary run (optional) ─────────────────────── #
+    try:
+        # Prefer the run-level Chroma snapshot if present; else leave empty.
+        snapshot_id = str(state.get("chromadb_snapshot_id") or "")
+        log_pipeline_run(
+            run_id=run_id,
+            company_id=company_domain or company_name,
+            overall_score=float(overall_score),
+            kpi_count=len(kpi_results),
+            chromadb_snapshot_id=snapshot_id,
+            # We don't currently keep a single "run trace" id in state; KPI traces are stored per KPI.
+            langfuse_trace_id=None,
+            extra_metrics={
+                "url_count": float(url_count),
+            },
+        )
+    except Exception:
+        pass
 
     # ── 2. Ground-truth comparison ────────────────────────────────────── #
     eval_report_path = None

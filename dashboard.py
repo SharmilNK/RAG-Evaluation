@@ -1436,8 +1436,6 @@ with tab_custom_eval:
             gate_meta = k.get("quality_gates") or {}
             range_display = gate_meta.get("score_range_display", "")
             blocked = gate_meta.get("blocked", False)
-            suppress_structural = gate_meta.get("suppress_structural_score", False)
-
             gate_rows.append({
                 "KPI": label,
                 "Faithfulness": _gate_badge(f_pass, f_reason),
@@ -1446,7 +1444,6 @@ with tab_custom_eval:
                 "Bleed": _gate_badge(b_pass, b_reason),
                 "Score Display": range_display or _fmt(k.get("live_score") or k.get("score"), 2),
                 "Hard Block": "🚫" if blocked else "✓",
-                "Suppress Struct.": "⚠️" if suppress_structural else "—",
             })
 
         if gate_rows:
@@ -1457,7 +1454,7 @@ with tab_custom_eval:
                 df_gates.to_html(
                     escape=False,
                     index=False,
-                    columns=["KPI"] + html_cols + ["Score Display", "Hard Block", "Suppress Struct."],
+                    columns=["KPI"] + html_cols + ["Score Display", "Hard Block"],
                 ),
                 unsafe_allow_html=True,
             )
@@ -1701,7 +1698,8 @@ with tab_custom_eval:
             ph = k.get("prompt_hash")
             sid = k.get("chromadb_snapshot_id")
             mlid = k.get("mlflow_run_id")
-            if not any([ph, sid, mlid]):
+            lfid = k.get("langfuse_trace_id")
+            if not any([ph, sid, mlid, lfid]):
                 continue
             kpi_id = str(k["kpi_id"])
             kpi_def = _KPI_DEFS.get(kpi_id)
@@ -1711,6 +1709,7 @@ with tab_custom_eval:
                 "Prompt Hash": (ph or "")[:16] + "…" if ph else "—",
                 "Snapshot ID": (sid or "")[:16] + "…" if sid else "—",
                 "MLflow Run ID": (mlid or "")[:16] + "…" if mlid else "—",
+                "Langfuse Trace ID": (lfid or "")[:16] + "…" if lfid else "—",
             })
 
         if trace_rows:
@@ -1725,7 +1724,8 @@ with tab_custom_eval:
                         st.code(
                             f"prompt_hash:          {kpi_r.get('prompt_hash') or '—'}\n"
                             f"chromadb_snapshot_id: {kpi_r.get('chromadb_snapshot_id') or '—'}\n"
-                            f"mlflow_run_id:        {kpi_r.get('mlflow_run_id') or '—'}"
+                            f"mlflow_run_id:        {kpi_r.get('mlflow_run_id') or '—'}\n"
+                            f"langfuse_trace_id:    {kpi_r.get('langfuse_trace_id') or '—'}"
                         )
         else:
             st.info("No traceability data found. Traceability IDs are populated on rubric KPIs.")
@@ -1878,7 +1878,7 @@ with tab_custom_eval:
                     "baseline_score", "live_score", "score_split_delta",
                     "scoring_distribution", "quality_gates", "score_attribution",
                     "bertscore_f1", "cot_eval", "prompt_hash",
-                    "chromadb_snapshot_id", "mlflow_run_id",
+                    "chromadb_snapshot_id", "mlflow_run_id", "langfuse_trace_id",
                 ]
                 raw_payload = {k2: k.get(k2) for k2 in raw_keys if k.get(k2) is not None}
                 if raw_payload:
