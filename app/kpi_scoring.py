@@ -11,6 +11,7 @@ import requests
 
 from app.debug_log import add_debug
 from app.models import Citation, KPIDefinition, KPIDriverResult
+from app.score_extensions import compute_prompt_hash
 from app.vectorstore import retrieve_evidence
 from app.reranker import rerank
 from app.tier_weighting import (
@@ -44,7 +45,7 @@ def _extract_json(text: str) -> Optional[dict]:
 
 
 def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
-    """Call the OpenAI chat API and return parsed JSON, or None on failure.
+    """Call the configured LLM provider and return parsed JSON, or None on failure.
 
     Args:
         prompt: Full user prompt string.
@@ -55,12 +56,14 @@ def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
         Parsed dict from the LLM JSON response, or None on any failure.
     """
     global _LAST_LLM_CALL_AT
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    use_gemini = provider in {"gemini", "google"} or (google_key and provider != "openai")
+    if provider in {"gemini", "google"} and not google_key:
         if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
-            add_debug("[llm] missing OPENAI_API_KEY; using fallback")
+            add_debug("[llm] provider set to Gemini but GEMINI/GOOGLE key missing; using fallback scoring")
         return None
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
     max_retries = int(os.getenv("VITELIS_OPENAI_MAX_RETRIES", "3"))
     base_backoff = float(os.getenv("VITELIS_OPENAI_BACKOFF", "1.5"))
     min_delay = float(os.getenv("VITELIS_OPENAI_MIN_DELAY", "5.0"))
@@ -71,19 +74,43 @@ def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
             if elapsed < min_delay:
                 time.sleep(min_delay - elapsed)
         try:
-            response = requests.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "model": model,
-                    "messages": [
-                        {"role": "system", "content": "You are a strict JSON generator."},
-                        {"role": "user", "content": prompt},
-                    ],
-                    "temperature": temperature,
-                },
-                timeout=30,
-            )
+            if use_gemini and google_key:
+                model_candidates = []
+                configured = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+                for m in [configured, "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"]:
+                    if m and m not in model_candidates:
+                        model_candidates.append(m)
+                response = None
+                for model in model_candidates:
+                    response = requests.post(
+                        f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={google_key}",
+                        json={
+                            "contents": [{"parts": [{"text": prompt}]}],
+                            "generationConfig": {"temperature": temperature},
+                        },
+                        timeout=60,
+                    )
+                    if response.status_code != 404:
+                        break
+            else:
+                if not openai_key:
+                    if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
+                        add_debug("[llm] missing OpenAI/Gemini key; using fallback")
+                    return None
+                model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+                response = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {openai_key}"},
+                    json={
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": "You are a strict JSON generator."},
+                            {"role": "user", "content": prompt},
+                        ],
+                        "temperature": temperature,
+                    },
+                    timeout=30,
+                )
             _LAST_LLM_CALL_AT = time.time()
             if response.status_code == 429 and attempt < max_retries:
                 retry_after = response.headers.get("Retry-After")
@@ -93,10 +120,15 @@ def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
                 time.sleep(wait_time)
                 continue
             if response.status_code != 200:
-                print(f"[KPI scoring] OpenAI API returned {response.status_code}; using heuristic fallback.")
+                provider_name = "Gemini" if (use_gemini and google_key) else "OpenAI"
+                print(f"[KPI scoring] {provider_name} API returned {response.status_code}; using heuristic fallback.")
                 return None
             response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
+            if use_gemini and google_key:
+                parts = response.json().get("candidates", [{}])[0].get("content", {}).get("parts", [])
+                content = parts[0].get("text", "") if parts else ""
+            else:
+                content = response.json()["choices"][0]["message"]["content"]
             data = _extract_json(content)
             if not data:
                 print("[KPI scoring] LLM response had no valid JSON; using heuristic fallback.")
@@ -421,7 +453,13 @@ def score_rubric_kpi(
             True,
         )
 
-    _system_prompt, prompt = build_rubric_prompt(kpi, evidences)
+    system_prompt, prompt = build_rubric_prompt(kpi, evidences)
+    # Feature 10: Prompt hash (compute before LLM call so it's a true pre-call fingerprint)
+    prompt_hash = ""
+    try:
+        prompt_hash = compute_prompt_hash(system_prompt, prompt)
+    except Exception:
+        prompt_hash = ""
 
     llm_data: Optional[dict] = None
     try:
@@ -472,6 +510,7 @@ def score_rubric_kpi(
             "k_used": k_used,
             "top_n_reranked": top_n,
             "source_evaluation": eval_details,
+            "prompt_hash": prompt_hash or None,
         }
 
         return (
@@ -484,6 +523,7 @@ def score_rubric_kpi(
                 rationale=rationale or "LLM scoring with evidence.",
                 citations=parsed_citations or citations,
                 details=details,
+                prompt_hash=prompt_hash or None,
             ),
             missing_flag,
         )

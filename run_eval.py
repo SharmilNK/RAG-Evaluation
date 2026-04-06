@@ -23,6 +23,11 @@ import os
 import sys
 import uuid
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env from project root (where run_eval.py lives) so provider keys are picked up.
+_env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(_env_path)
 
 
 def _find_company_folders(root: str = ".") -> list[str]:
@@ -38,7 +43,12 @@ def _find_company_folders(root: str = ".") -> list[str]:
     return folders
 
 
-def _run_company(company_folder: str) -> dict:
+def _run_company(
+    company_folder: str,
+    max_urls: int = 0,
+    kpi_limit: int = 0,
+    kpi_ids: list[str] | None = None,
+) -> dict:
     """Run the eval pipeline for a single company folder. Returns a summary dict."""
     from app.graphs.eval_orchestrator import build_eval_graph
 
@@ -57,6 +67,9 @@ def _run_company(company_folder: str) -> dict:
         "run_id": run_id,
         "company_name": company_name,
         "company_folder": company_folder,
+        "max_urls": max_urls,
+        "kpi_limit": kpi_limit,
+        "kpi_ids": kpi_ids or [],
     })
 
     summary = {
@@ -116,7 +129,39 @@ def main() -> None:
         action="store_true",
         help="Run evaluation for all detected company folders",
     )
+    parser.add_argument(
+        "--max-urls",
+        type=int,
+        default=0,
+        metavar="N",
+        help="Max sources to load per company from export (0 = all)",
+    )
+    parser.add_argument(
+        "--kpi-limit",
+        type=int,
+        default=0,
+        metavar="N",
+        help="Limit number of KPIs scored per run (0 = all)",
+    )
+    parser.add_argument(
+        "--kpi-ids",
+        default="",
+        metavar="ID1,ID2,...",
+        help="Comma-separated KPI IDs to run (applied before --kpi-limit)",
+    )
     args = parser.parse_args()
+    kpi_ids = [x.strip() for x in str(args.kpi_ids or "").split(",") if x.strip()]
+
+    openai_key = bool(os.getenv("OPENAI_API_KEY"))
+    google_key = bool(os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"))
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    use_gemini = provider in ("gemini", "google") or (google_key and provider != "openai")
+    print(
+        f"[Eval Pipeline] OPENAI_API_KEY: {'Yes' if openai_key else 'No'}  |  "
+        f"Google/Gemini: {'Yes' if google_key else 'No'}  |  "
+        f"KPI LLM: {'Gemini' if use_gemini and google_key else 'OpenAI' if openai_key else 'None'} "
+        f"(.env: {_env_path})"
+    )
 
     if args.all:
         folders = _find_company_folders()
@@ -133,7 +178,12 @@ def main() -> None:
     summaries = []
     for folder in folders:
         try:
-            summary = _run_company(folder)
+            summary = _run_company(
+                folder,
+                max_urls=args.max_urls,
+                kpi_limit=args.kpi_limit,
+                kpi_ids=kpi_ids,
+            )
             summaries.append(summary)
         except Exception as exc:
             print(f"\nERROR processing '{folder}': {exc}")

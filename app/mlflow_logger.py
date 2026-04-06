@@ -23,7 +23,21 @@ from __future__ import annotations
 
 import os
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
+
+
+def _as_float(value: Any) -> Optional[float]:
+    """Best-effort conversion of a value to float for MLflow metrics."""
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return float(int(value))
+    if isinstance(value, (int, float)):
+        return float(value)
+    try:
+        return float(str(value).strip())
+    except Exception:
+        return None
 
 
 def _get_mlflow() -> Optional[Any]:
@@ -51,6 +65,7 @@ def log_kpi_run(
     ragas_config: Dict[str, Any],
     langfuse_trace_id: Optional[str] = None,
     extra_params: Optional[Dict[str, Any]] = None,
+    extra_metrics: Optional[Dict[str, Any]] = None,
 ) -> Optional[str]:
     """
     Log all KPI evaluation metadata to an MLflow run.
@@ -72,6 +87,8 @@ def log_kpi_run(
             logged as a separate MLflow param prefixed with "ragas_".
         langfuse_trace_id: LangFuse trace ID for cross-referencing (optional).
         extra_params: Any additional key-value pairs to log as MLflow params.
+        extra_metrics: Any additional key-value pairs to log as MLflow metrics
+            (values must be numeric or convertible to float).
 
     Returns:
         MLflow run ID string on success, or None if MLflow is unavailable
@@ -134,6 +151,17 @@ def log_kpi_run(
                     except Exception:
                         pass
 
+            # ── Extra metrics (numeric) ────────────────────────────────────
+            if extra_metrics:
+                for key, val in (extra_metrics or {}).items():
+                    try:
+                        fval = _as_float(val)
+                        if fval is None:
+                            continue
+                        mlflow.log_metric(str(key)[:50], fval)
+                    except Exception:
+                        pass
+
             # ── Tags ──────────────────────────────────────────────────────
             mlflow.set_tag("environment", env_tag)
             mlflow.set_tag("company_id", company_id)
@@ -152,6 +180,7 @@ def log_pipeline_run(
     kpi_count: int,
     chromadb_snapshot_id: str,
     langfuse_trace_id: Optional[str] = None,
+    extra_metrics: Optional[Dict[str, Any]] = None,
 ) -> Optional[str]:
     """
     Log a top-level pipeline run summary to MLflow.
@@ -165,6 +194,7 @@ def log_pipeline_run(
         kpi_count: Number of KPIs evaluated.
         chromadb_snapshot_id: Collection fingerprint for this run.
         langfuse_trace_id: LangFuse trace ID for cross-referencing.
+        extra_metrics: Additional numeric metrics to log alongside overall_score.
 
     Returns:
         MLflow run ID string or None on failure.
@@ -201,6 +231,15 @@ def log_pipeline_run(
                 datetime.now(timezone.utc).isoformat(),
             )
             mlflow.log_metric("overall_score", overall_score)
+            if extra_metrics:
+                for key, val in (extra_metrics or {}).items():
+                    try:
+                        fval = _as_float(val)
+                        if fval is None:
+                            continue
+                        mlflow.log_metric(str(key)[:50], fval)
+                    except Exception:
+                        pass
 
             if langfuse_trace_id:
                 mlflow.log_param("langfuse_trace_id", langfuse_trace_id)

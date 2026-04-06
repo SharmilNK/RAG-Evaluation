@@ -29,6 +29,9 @@ class EvalOrchestratorState(TypedDict, total=False):
     company_name: str
     company_domain: str      # derived from sources by load_from_export_node
     company_folder: str      # e.g. "Orange S.A" — set by run_eval.py
+    max_urls: int            # optional cap for load_from_export_node
+    kpi_limit: int           # optional cap for eval_score_kpis_node
+    kpi_ids: List[str]       # optional explicit KPI IDs to score
 
     # Source pipeline
     target_urls: List[str]

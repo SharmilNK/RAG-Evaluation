@@ -767,6 +767,11 @@ def _llm_contradiction_check(source_claims: Dict[str, Dict[str, Any]]) -> Option
     """
     global _CONTRA_LAST_CALL_AT
 
+    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
+    if provider in {"gemini", "google"}:
+        # In Gemini mode, skip OpenAI-only contradiction checker and use regex fallback.
+        return None
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         return None

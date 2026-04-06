@@ -118,6 +118,29 @@ def score_kpis_node(state: Dict) -> Dict:
     flags = _get_feature_flags()
     collection = build_collection(run_id)
     kpis = load_kpi_catalog()
+    requested_kpi_ids = {
+        str(k).strip() for k in (state.get("kpi_ids") or []) if str(k).strip()
+    }
+    if requested_kpi_ids:
+        kpis = [k for k in kpis if str(k.kpi_id) in requested_kpi_ids]
+    # Some CSV catalogs can contain duplicate rows with the same KPI ID.
+    # Keep first occurrence to ensure deterministic one-pass scoring per KPI.
+    deduped_kpis = []
+    seen_kpi_ids = set()
+    for k in kpis:
+        kid = str(k.kpi_id)
+        if kid in seen_kpi_ids:
+            continue
+        seen_kpi_ids.add(kid)
+        deduped_kpis.append(k)
+    kpis = deduped_kpis
+    kpi_limit_raw = state.get("kpi_limit", os.getenv("VITELIS_KPI_LIMIT", "0"))
+    try:
+        kpi_limit = int(kpi_limit_raw or 0)
+    except (TypeError, ValueError):
+        kpi_limit = 0
+    if kpi_limit > 0:
+        kpis = kpis[:kpi_limit]
 
     # ── Feature 9: Snapshot ID (computed once for the whole run) ──────────
     snapshot_id = ""
@@ -175,6 +198,7 @@ def score_kpis_node(state: Dict) -> Dict:
 
         # Store traceability IDs on all KPI types
         result_dict["chromadb_snapshot_id"] = snapshot_id
+        result_dict["langfuse_trace_id"] = kpi_trace_id
 
         # Extensions are only run for rubric KPIs (quant KPIs have no LLM prompt)
         if kpi.type != "rubric":
@@ -203,16 +227,20 @@ def score_kpis_node(state: Dict) -> Dict:
             pass
 
         # ── Feature 6: Retrieval metrics → LangFuse scores ───────────────
+        retrieval_metrics: Dict[str, Optional[float]] = {}
         if flags.get("retrieval_metrics_enabled", True):
             try:
-                metrics = compute_all_retrieval_metrics(kpi.kpi_id, live_evidences)
+                retrieval_metrics = compute_all_retrieval_metrics(kpi.kpi_id, live_evidences)
+                result_dict.setdefault("details", {})["retrieval_metrics"] = retrieval_metrics
                 if kpi_trace_id:
-                    if metrics.get("hit_rate") is not None:
-                        log_score_to_trace(kpi_trace_id, "retrieval_hit_rate", metrics["hit_rate"])
-                    if metrics.get("mrr") is not None:
-                        log_score_to_trace(kpi_trace_id, "retrieval_mrr", metrics["mrr"])
-                    if metrics.get("ndcg") is not None:
-                        log_score_to_trace(kpi_trace_id, "retrieval_ndcg", metrics["ndcg"])
+                    if retrieval_metrics.get("hit_rate") is not None:
+                        log_score_to_trace(
+                            kpi_trace_id, "retrieval_hit_rate", retrieval_metrics["hit_rate"]
+                        )
+                    if retrieval_metrics.get("mrr") is not None:
+                        log_score_to_trace(kpi_trace_id, "retrieval_mrr", retrieval_metrics["mrr"])
+                    if retrieval_metrics.get("ndcg") is not None:
+                        log_score_to_trace(kpi_trace_id, "retrieval_ndcg", retrieval_metrics["ndcg"])
             except Exception:
                 pass
 
@@ -370,6 +398,18 @@ def score_kpis_node(state: Dict) -> Dict:
                         "live_score": score_split.get("live_score"),
                         "live_std": score_split.get("live_std"),
                         "bertscore_f1": result_dict.get("bertscore_f1"),
+                    },
+                    extra_metrics={
+                        "score": result_dict.get("score"),
+                        "confidence": result_dict.get("confidence"),
+                        "baseline_score": score_split.get("baseline_score"),
+                        "live_score": score_split.get("live_score"),
+                        "score_split_delta": score_split.get("delta"),
+                        "live_std": score_split.get("live_std"),
+                        "bertscore_f1": result_dict.get("bertscore_f1"),
+                        "retrieval_hit_rate": retrieval_metrics.get("hit_rate"),
+                        "retrieval_mrr": retrieval_metrics.get("mrr"),
+                        "retrieval_ndcg": retrieval_metrics.get("ndcg"),
                     },
                 )
                 if mlflow_run_id:

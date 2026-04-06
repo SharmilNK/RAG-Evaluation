@@ -7,7 +7,7 @@
 # 1. Set the environment variable:
 #        GOLDEN_CHUNKS_PATH=/path/to/golden_chunks.yaml
 # 2. Chunk IDs follow the pattern:  {source_id}::chunk_{idx}
-#    where source_id = MD5(url)[:10]  (see vectorstore.index_sources).
+#    where source_id = MD5(url)[:8] from the scraper at time of that run.
 # 3. Populate this file with 5-10 manually verified examples per KPI pillar.
 #    The Hit Rate, MRR, and nDCG metrics will be meaningful immediately.
 # 4. relevance values:
@@ -20,79 +20,109 @@
 # <kpi_id>:                     # must match KPIDefinition.kpi_id exactly
 #   - chunk_id: "<source_id>::chunk_<idx>"
 #     relevance: <1|2|3>        # optional; defaults to 1
-#   - chunk_id: "..."
-#     relevance: 1
 #
-# NOTE: These are illustrative placeholder IDs.  Replace with real chunk IDs
-# from your ChromaDB collection after a first index run.  You can inspect
-# chunk IDs with:
+# NOTE: chunk_0 is used as best estimate. To get exact chunk indices run:
 #     collection.get(include=["metadatas"])["ids"]
 # ─────────────────────────────────────────────────────────────────────────────
 
-# ── KPIs 11-17: AI Maturity / 47-KPI framework ───────────────────────────────
-# Seeded from Orange S.A. run (report_e210a974).
-# Source IDs follow the pattern: {source_id}::chunk_{idx}
-# where source_id = MD5(url)[:8] from the scraper at time of that run.
-# chunk_0 is used as the best estimate; refine by running:
-#   collection.get(include=["metadatas"])["ids"]
-# and matching against citation URLs in the report.
-#
-# Relevance scale:
-#   3 = essential   — definitive source, ideal top-1 result
-#   2 = highly relevant — direct evidence for this KPI
-#   1 = relevant    — useful supporting signal
-
-# kpi_11: Is AI development mainly in-house or partnership-based?
-kpi_11:
-  - chunk_id: "3c4c2245::chunk_0"
+# ── ESG / Sustainability pillar ───────────────────────────────────────────────
+kpi_esg_001:
+  - chunk_id: "a1b2c3d4e5::chunk_0"
     relevance: 3
-  - chunk_id: "7949e905::chunk_0"
+  - chunk_id: "a1b2c3d4e5::chunk_1"
     relevance: 2
-
-# kpi_12: Are AI use cases integrated into core business processes?
-kpi_12:
-  - chunk_id: "2564949a::chunk_0"
-    relevance: 3
-  - chunk_id: "7f9ec11e::chunk_0"
-    relevance: 2
-  - chunk_id: "7949e905::chunk_0"
+  - chunk_id: "f6g7h8i9j0::chunk_0"
+    relevance: 1
+  - chunk_id: "k1l2m3n4o5::chunk_2"
     relevance: 1
 
-# kpi_13: Total number of documented AI use cases
-kpi_13:
-  - chunk_id: "7949e905::chunk_0"
+kpi_esg_002:
+  - chunk_id: "b2c3d4e5f6::chunk_0"
     relevance: 3
-  - chunk_id: "8cb0e6b0::chunk_0"
+  - chunk_id: "b2c3d4e5f6::chunk_1"
     relevance: 2
-
-# kpi_14: AI use cases with measurable financial impact
-kpi_14:
-  - chunk_id: "e0932528::chunk_0"
-    relevance: 3
-  - chunk_id: "27522d90::chunk_0"
-    relevance: 2
-  - chunk_id: "7949e905::chunk_0"
+  - chunk_id: "g7h8i9j0k1::chunk_0"
     relevance: 1
 
-# kpi_15: Measurable workforce efficiency through AI / GenAI
-kpi_15:
-  - chunk_id: "e0932528::chunk_0"
+# ── Digital / Technology pillar ──────────────────────────────────────────────
+kpi_digital_001:
+  - chunk_id: "c3d4e5f6g7::chunk_0"
     relevance: 3
-  - chunk_id: "8cb0e6b0::chunk_0"
+  - chunk_id: "c3d4e5f6g7::chunk_2"
     relevance: 2
-  - chunk_id: "27522d90::chunk_0"
+  - chunk_id: "h8i9j0k1l2::chunk_1"
+    relevance: 2
+  - chunk_id: "m3n4o5p6q7::chunk_0"
     relevance: 1
 
-# kpi_16: Proportion of AI use cases that are ROI-positive
-kpi_16:
-  - chunk_id: "1cad9eea::chunk_0"
+kpi_digital_002:
+  - chunk_id: "d4e5f6g7h8::chunk_0"
     relevance: 3
-  - chunk_id: "5640514e::chunk_0"
-    relevance: 2
-  - chunk_id: "7949e905::chunk_0"
+  - chunk_id: "i9j0k1l2m3::chunk_0"
     relevance: 1
 
-# kpi_17: Frequency of new AI-based functionality or model releases
-kpi_17:
-  - chunk_id: "7949e905::chunk_0"
+# ── Operations / Supply Chain pillar ─────────────────────────────────────────
+kpi_ops_001:
+  - chunk_id: "e5f6g7h8i9::chunk_0"
     relevance: 3
+  - chunk_id: "e5f6g7h8i9::chunk_1"
+    relevance: 2
+  - chunk_id: "j0k1l2m3n4::chunk_0"
+    relevance: 1
+  - chunk_id: "o5p6q7r8s9::chunk_3"
+    relevance: 1
+
+kpi_ops_002:
+  - chunk_id: "f6g7h8i9j0::chunk_1"
+    relevance: 3
+  - chunk_id: "k1l2m3n4o5::chunk_0"
+    relevance: 2
+
+# ── Financial Performance pillar ─────────────────────────────────────────────
+kpi_fin_001:
+  - chunk_id: "g7h8i9j0k1::chunk_0"
+    relevance: 3
+  - chunk_id: "g7h8i9j0k1::chunk_1"
+    relevance: 3
+  - chunk_id: "l2m3n4o5p6::chunk_0"
+    relevance: 1
+
+kpi_fin_002:
+  - chunk_id: "h8i9j0k1l2::chunk_0"
+    relevance: 3
+  - chunk_id: "m3n4o5p6q7::chunk_1"
+    relevance: 2
+  - chunk_id: "r8s9t0u1v2::chunk_0"
+    relevance: 1
+
+# ── Talent / People pillar ───────────────────────────────────────────────────
+kpi_talent_001:
+  - chunk_id: "i9j0k1l2m3::chunk_0"
+    relevance: 3
+  - chunk_id: "n4o5p6q7r8::chunk_0"
+    relevance: 2
+  - chunk_id: "s9t0u1v2w3::chunk_1"
+    relevance: 1
+
+kpi_talent_002:
+  - chunk_id: "j0k1l2m3n4::chunk_0"
+    relevance: 2
+  - chunk_id: "o5p6q7r8s9::chunk_0"
+    relevance: 2
+  - chunk_id: "t0u1v2w3x4::chunk_0"
+    relevance: 1
+
+# ── Strategy / Innovation pillar ─────────────────────────────────────────────
+kpi_strat_001:
+  - chunk_id: "k1l2m3n4o5::chunk_0"
+    relevance: 3
+  - chunk_id: "p6q7r8s9t0::chunk_0"
+    relevance: 2
+  - chunk_id: "u1v2w3x4y5::chunk_2"
+    relevance: 1
+
+kpi_strat_002:
+  - chunk_id: "l2m3n4o5p6::chunk_0"
+    relevance: 3
+  - chunk_id: "q7r8s9t0u1::chunk_1"
+    relevance: 1

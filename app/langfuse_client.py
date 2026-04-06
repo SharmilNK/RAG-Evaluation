@@ -94,7 +94,23 @@ def create_trace(
     if not client:
         return None
     try:
-        return client.trace(name=name, metadata=metadata or {}, tags=tags or [])
+        # Langfuse SDK v2 API
+        if hasattr(client, "trace"):
+            return client.trace(name=name, metadata=metadata or {}, tags=tags or [])
+
+        # Langfuse SDK v3 API (no .trace method)
+        trace_id = client.create_trace_id()
+        obs = None
+        try:
+            obs = client.start_observation(
+                trace_context={"trace_id": trace_id},
+                name=name,
+                as_type="chain",
+                metadata={"metadata": metadata or {}, "tags": tags or []},
+            )
+        except Exception:
+            obs = None
+        return {"id": trace_id, "observation": obs}
     except Exception:
         return None
 
@@ -111,6 +127,9 @@ def get_trace_id(trace: Optional[Any]) -> Optional[str]:
     """
     if trace is None:
         return None
+    if isinstance(trace, dict):
+        trace_id = trace.get("id")
+        return str(trace_id) if trace_id else None
     try:
         return str(trace.id)
     except Exception:
@@ -139,12 +158,21 @@ def log_score_to_trace(
     if not client:
         return
     try:
-        client.score(
-            trace_id=trace_id,
-            name=name,
-            value=value,
-            comment=comment,
-        )
+        if hasattr(client, "score"):
+            client.score(
+                trace_id=trace_id,
+                name=name,
+                value=value,
+                comment=comment,
+            )
+            return
+        if hasattr(client, "create_score"):
+            client.create_score(
+                trace_id=trace_id,
+                name=name,
+                value=value,
+                comment=comment,
+            )
     except Exception:
         pass
 
@@ -192,6 +220,25 @@ def create_span_on_trace(
     if not trace:
         return None
     try:
+        # SDK v3 shim: trace is our dict wrapper
+        if isinstance(trace, dict):
+            client = get_langfuse_client()
+            trace_id = trace.get("id")
+            parent_obs = trace.get("observation")
+            if not client or not trace_id:
+                return None
+            trace_context: Dict[str, Any] = {"trace_id": trace_id}
+            parent_id = getattr(parent_obs, "id", None)
+            if parent_id:
+                trace_context["parent_observation_id"] = parent_id
+            return client.start_observation(
+                trace_context=trace_context,
+                name=name,
+                as_type="span",
+                metadata=metadata or {},
+            )
+
+        # SDK v2 API
         return trace.span(name=name, metadata=metadata or {})
     except Exception:
         return None
@@ -232,6 +279,11 @@ def update_trace_metadata(trace: Any, metadata: Dict[str, Any]) -> None:
     if not trace:
         return
     try:
+        if isinstance(trace, dict):
+            obs = trace.get("observation")
+            if obs and hasattr(obs, "update"):
+                obs.update(metadata=metadata)
+            return
         trace.update(metadata=metadata)
     except Exception:
         pass
