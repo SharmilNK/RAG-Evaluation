@@ -26,7 +26,12 @@ def _aggregate_by_pillar(results: List[KPIDriverResult]) -> List[AggregatedKPIRe
         if total_weight == 0:
             score = 0.0
         else:
-            score = sum(item.score * item.confidence for item in items) / total_weight
+            # Use the statistical mean score (live_score) when available so the report
+            # reflects mean ± σ rather than a single-point estimate.
+            def _effective_score(x: KPIDriverResult) -> float:
+                return float(x.live_score) if x.live_score is not None else float(x.score)
+
+            score = sum(_effective_score(item) * item.confidence for item in items) / total_weight
         confidence = sum(item.confidence for item in items) / len(items)
         aggregated.append(
             AggregatedKPIResult(
@@ -70,6 +75,13 @@ def aggregate_report_node(state: Dict) -> Dict:
 
     kpi_definitions = state.get("kpi_definitions", [])
 
+<<<<<<< HEAD
+    # Feature 9: surface the collection fingerprint at report level so every
+    # generated report is traceable to the exact ChromaDB snapshot it used.
+    chromadb_snapshot_id: str = state.get("chromadb_snapshot_id", "")
+
+=======
+>>>>>>> origin/main
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,
@@ -86,6 +98,8 @@ def aggregate_report_node(state: Dict) -> Dict:
         # Include RAG evaluation in the final report (None if node was skipped)
         rag_evaluation=rag_evaluation,
         # code change end for RAG Eval by SN
+        # Feature 9: collection fingerprint — makes report traceable to source data
+        chromadb_snapshot_id=chromadb_snapshot_id if chromadb_snapshot_id else None,
     )
 
     output_dir = os.path.join(os.path.dirname(__file__), "..", "output")

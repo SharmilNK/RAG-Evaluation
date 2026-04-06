@@ -54,6 +54,36 @@ class KPIDriverResult(BaseModel):
     citations: List[Citation] = Field(default_factory=list)
     details: Optional[Dict[str, object]] = None
 
+    # ── Feature 1: Score splitting ────────────────────────────────────────
+    # baseline_score: scored from primary-tier (tier=1) chunks only.
+    # live_score:     scored from all retrieved chunks.
+    # score_split_delta: live_score − baseline_score.
+    baseline_score: Optional[float] = None
+    live_score: Optional[float] = None
+    score_split_delta: Optional[float] = None
+
+    # ── Feature 2: Scoring distribution (N=5 runs) ───────────────────────
+    # Stored under key "scoring_distribution" for LangFuse metadata parity.
+    scoring_distribution: Optional[Dict[str, object]] = None
+
+    # ── Feature 3: Quality gate outcomes ─────────────────────────────────
+    quality_gates: Optional[Dict[str, object]] = None
+
+    # ── Feature 4: Score change attribution ──────────────────────────────
+    score_attribution: Optional[Dict[str, object]] = None
+
+    # ── Feature 7: BERTScore F1 ───────────────────────────────────────────
+    bertscore_f1: Optional[float] = None
+
+    # ── Feature 8: Chain-of-thought evaluation ────────────────────────────
+    cot_eval: Optional[Dict[str, object]] = None
+
+    # ── Feature 9 & 10: Traceability IDs ─────────────────────────────────
+    chromadb_snapshot_id: Optional[str] = None
+    prompt_hash: Optional[str] = None
+    mlflow_run_id: Optional[str] = None
+    langfuse_trace_id: Optional[str] = None
+
 
 class AggregatedKPIResult(BaseModel):
     pillar: str
@@ -141,3 +171,6 @@ class ReportArtifact(BaseModel):
     # Optional RAG evaluation section — populated when eval_rag node runs
     rag_evaluation: Optional[RagEvaluationReport] = None
     # code change end for RAG Eval by SN
+    # Feature 9: collection fingerprint at report time — makes report traceable
+    # to exact source data ingested into ChromaDB.
+    chromadb_snapshot_id: Optional[str] = None

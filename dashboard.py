@@ -149,6 +149,32 @@ st.markdown(
     font-size: 0.7rem;
     color: #888;
 }
+
+/* ---------- custom eval tab ---------- */
+.gate-pass {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    background: #1b4332; color: #95d5b2; font-size: 0.78rem; font-weight: 700;
+}
+.gate-fail {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    background: #3a1212; color: #f08080; font-size: 0.78rem; font-weight: 700;
+}
+.gate-warn {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    background: #3a2d12; color: #f0c040; font-size: 0.78rem; font-weight: 700;
+}
+.gate-na {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    background: #1a1a2e; color: #666; font-size: 0.78rem; font-weight: 700;
+}
+.attr-badge {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    font-size: 0.78rem; font-weight: 700;
+}
+.attr-model_change  { background: #2d1b43; color: #c595d5; }
+.attr-prompt_change { background: #3a2d12; color: #f0c040; }
+.attr-data_change   { background: #1a2d3a; color: #64b5f6; }
+.attr-external_noise{ background: #222;    color: #888;    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -490,8 +516,13 @@ missing_evidence = report_data.get("missing_evidence", [])
 debug_log = report_data.get("debug_log", []) or []
 
 # FIX 1: number of tab variables must match number of tab labels
+<<<<<<< HEAD
+tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_custom_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
+    ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "🧪 Custom Eval", "Sources", "Citations", "Raw Report", "Debug Log"]
+=======
 tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
     ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
+>>>>>>> origin/main
 )
 
 # ============================================================================
@@ -1258,6 +1289,612 @@ with tab_rag_eval:
 
 
 # ============================================================================
+<<<<<<< HEAD
+# TAB: Custom Eval
+# Displays all 10-feature extension metrics: score split, scoring distribution,
+# quality gates, score attribution, retrieval metrics (Hit Rate / MRR / nDCG),
+# BERTScore F1, and chain-of-thought evaluation sub-scores.
+# ============================================================================
+with tab_custom_eval:
+    st.markdown("### Custom Evaluation Metrics")
+    st.markdown(
+        "Per-KPI results from the extension suite: **score splitting**, "
+        "**statistical scoring** (mean ± σ), **quality gates**, "
+        "**score attribution**, **retrieval metrics**, "
+        "**BERTScore**, and **chain-of-thought evaluation**."
+    )
+
+    # ── helper: gate badge HTML ───────────────────────────────────────────
+    def _gate_badge(passed, reason: str = "") -> str:
+        if passed is True:
+            return '<span class="gate-pass">✓ PASS</span>'
+        if passed is False:
+            label = reason or "FAIL"
+            return f'<span class="gate-fail">✗ {label}</span>'
+        return '<span class="gate-na">— N/A</span>'
+
+    def _fmt(val, decimals: int = 3) -> str:
+        if val is None:
+            return "—"
+        try:
+            return f"{float(val):.{decimals}f}"
+        except (TypeError, ValueError):
+            return str(val)
+
+    # ── collect data from kpi_results ────────────────────────────────────
+    ce_kpis = [k for k in kpi_results if k.get("type") == "rubric"]
+
+    if not ce_kpis:
+        st.info(
+            "No custom evaluation data found. This tab is populated after a "
+            "pipeline run with the extension suite active (rubric KPIs only)."
+        )
+    else:
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 0 — Summary bar
+        # ─────────────────────────────────────────────────────────────────
+        n_split   = sum(1 for k in ce_kpis if k.get("baseline_score") is not None)
+        n_gates   = sum(1 for k in ce_kpis if k.get("quality_gates"))
+        n_bscore  = sum(1 for k in ce_kpis if k.get("bertscore_f1") is not None)
+        n_cot     = sum(1 for k in ce_kpis if k.get("cot_eval"))
+        n_attr    = sum(1 for k in ce_kpis if k.get("score_attribution"))
+        n_dist    = sum(1 for k in ce_kpis if k.get("scoring_distribution"))
+
+        total = len(ce_kpis)
+        m0, m1, m2, m3, m4, m5 = st.columns(6)
+        m0.metric("Rubric KPIs", total)
+        m1.metric("Score Split", f"{n_split}/{total}")
+        m2.metric("Quality Gates", f"{n_gates}/{total}")
+        m3.metric("BERTScore", f"{n_bscore}/{total}")
+        m4.metric("CoT Eval", f"{n_cot}/{total}")
+        m5.metric("Attributions", n_attr)
+
+        # Report-level snapshot ID
+        snap_id = report_data.get("chromadb_snapshot_id", "")
+        if snap_id:
+            st.caption(f"ChromaDB snapshot: `{snap_id}`")
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 1 — Score Split & Scoring Distribution
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 1. Score Split & Scoring Distribution")
+        st.markdown(
+            "**baseline_score** is computed from primary-tier (tier=1) chunks only — "
+            "the frozen reference corpus. **live_score** uses all retrieved chunks. "
+            "Each is the mean of N=5 LLM runs at temperature > 0."
+        )
+
+        split_rows = []
+        for k in ce_kpis:
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+
+            b = k.get("baseline_score")
+            l = k.get("live_score")
+            delta = k.get("score_split_delta")
+            dist  = k.get("scoring_distribution") or {}
+
+            b_std = dist.get("baseline_std")
+            l_std = dist.get("live_std")
+            l_raw = dist.get("live_raw_scores") or []
+
+            split_rows.append({
+                "KPI": label,
+                "Pillar": k.get("pillar", ""),
+                "Baseline (mean)": _fmt(b, 3),
+                "Baseline σ": _fmt(b_std, 3),
+                "Live (mean)": _fmt(l, 3),
+                "Live σ": _fmt(l_std, 3),
+                "Δ (live−base)": _fmt(delta, 3),
+                "N runs": len(l_raw) if l_raw else "—",
+                "Point score": _fmt(k.get("score"), 2),
+            })
+
+        if split_rows:
+            df_split = pd.DataFrame(split_rows)
+
+            def _colour_delta_val(val):
+                try:
+                    v = float(val)
+                    if v > 0.1:  return "color: #00C49A; font-weight:bold"
+                    if v < -0.1: return "color: #FF6B6B; font-weight:bold"
+                except (TypeError, ValueError):
+                    pass
+                return ""
+
+            styled_split = df_split.style.applymap(_colour_delta_val, subset=["Δ (live−base)"])
+            st.dataframe(styled_split, use_container_width=True, hide_index=True)
+        else:
+            st.info("No score split data available yet.")
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 2 — Quality Gates
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 2. Quality Gates")
+        st.markdown(
+            "Four gates run in sequence after scoring. "
+            "**Gate 1** (faithfulness) and **Gate 4** (competitor bleed) are hard blocks. "
+            "**Gate 2** (stability) shows a score range when σ > 0.4. "
+            "**Gate 3** (source coverage) suppresses the structural score when primary-tier fraction < 40 %."
+        )
+
+        gate_rows = []
+        for k in ce_kpis:
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+            gates = (k.get("quality_gates") or {}).get("gates") or {}
+
+            def _g(name):
+                g = gates.get(name, {})
+                return g.get("passed"), g.get("reason", "")
+
+            f_pass, f_reason = _g("faithfulness_gate")
+            s_pass, s_reason = _g("stability_gate")
+            c_pass, c_reason = _g("source_coverage_gate")
+            b_pass, b_reason = _g("competitor_bleed_gate")
+
+            gate_meta = k.get("quality_gates") or {}
+            range_display = gate_meta.get("score_range_display", "")
+            blocked = gate_meta.get("blocked", False)
+            gate_rows.append({
+                "KPI": label,
+                "Faithfulness": _gate_badge(f_pass, f_reason),
+                "Stability": _gate_badge(s_pass, s_reason),
+                "Coverage": _gate_badge(c_pass, c_reason),
+                "Bleed": _gate_badge(b_pass, b_reason),
+                "Score Display": range_display or _fmt(k.get("live_score") or k.get("score"), 2),
+                "Hard Block": "🚫" if blocked else "✓",
+            })
+
+        if gate_rows:
+            df_gates = pd.DataFrame(gate_rows)
+            # Render badge columns as HTML
+            html_cols = ["Faithfulness", "Stability", "Coverage", "Bleed"]
+            st.write(
+                df_gates.to_html(
+                    escape=False,
+                    index=False,
+                    columns=["KPI"] + html_cols + ["Score Display", "Hard Block"],
+                ),
+                unsafe_allow_html=True,
+            )
+        else:
+            st.info("No quality gate data available yet.")
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 3 — Retrieval Metrics
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 3. Retrieval Metrics")
+        st.markdown(
+            "Computed against the **golden chunk set** (configured via `GOLDEN_CHUNKS_PATH`). "
+            "**Hit Rate** = fraction of golden chunks in top-k. "
+            "**MRR** = reciprocal rank of the first golden chunk. "
+            "**nDCG** = normalised discounted cumulative gain using relevance labels."
+        )
+
+        # The retrieval metrics are logged to LangFuse scores — show them from
+        # the kpi_results details if present, or indicate where to find them.
+        retrieval_rows = []
+        for k in ce_kpis:
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+            details = k.get("details") or {}
+            rm = details.get("retrieval_metrics") or {}
+
+            hit  = rm.get("hit_rate")
+            mrr  = rm.get("mrr")
+            ndcg = rm.get("ndcg")
+
+            if hit is None and mrr is None and ndcg is None:
+                continue
+
+            retrieval_rows.append({
+                "KPI": label,
+                "Pillar": k.get("pillar", ""),
+                "Hit Rate": _fmt(hit, 4),
+                "MRR": _fmt(mrr, 4),
+                "nDCG": _fmt(ndcg, 4),
+            })
+
+        if retrieval_rows:
+            df_ret = pd.DataFrame(retrieval_rows)
+            st.dataframe(
+                df_ret.style.background_gradient(
+                    subset=[c for c in ["Hit Rate", "MRR", "nDCG"] if c in df_ret.columns],
+                    cmap="YlGn",
+                ),
+                use_container_width=True,
+                hide_index=True,
+            )
+        else:
+            st.info(
+                "No retrieval metric data in this report. "
+                "Set `GOLDEN_CHUNKS_PATH` and re-run to compute Hit Rate, MRR, and nDCG. "
+                "Scores are also logged as LangFuse trace scores (`retrieval_hit_rate`, "
+                "`retrieval_mrr`, `retrieval_ndcg`) for each KPI."
+            )
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 4 — BERTScore
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 4. BERTScore F1")
+        st.markdown(
+            "BERTScore F1 measures the **semantic similarity** between the generated "
+            "score rationale (hypothesis) and the top-3 retrieved chunks (reference). "
+            "Uses `distilbert-base-uncased`. Scores below 0.75 trigger a "
+            "`low_semantic_grounding` warning in LangFuse."
+        )
+
+        bert_rows = []
+        for k in ce_kpis:
+            f1 = k.get("bertscore_f1")
+            if f1 is None:
+                continue
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+            bert_rows.append({
+                "KPI": label,
+                "Pillar": k.get("pillar", ""),
+                "BERTScore F1": float(f1),
+                "Flag": "⚠️ low_semantic_grounding" if float(f1) < 0.75 else "✓",
+            })
+
+        if bert_rows:
+            df_bert = pd.DataFrame(bert_rows).sort_values("BERTScore F1")
+            st.dataframe(
+                df_bert.style.background_gradient(
+                    subset=["BERTScore F1"], cmap="RdYlGn", vmin=0.5, vmax=1.0
+                ).format({"BERTScore F1": "{:.4f}"}),
+                use_container_width=True,
+                hide_index=True,
+            )
+
+            # Summary bar
+            avg_f1 = sum(r["BERTScore F1"] for r in bert_rows) / len(bert_rows)
+            n_low  = sum(1 for r in bert_rows if r["BERTScore F1"] < 0.75)
+            bc1, bc2, bc3 = st.columns(3)
+            bc1.metric("Avg BERTScore F1", f"{avg_f1:.4f}")
+            bc2.metric("Below threshold (< 0.75)", n_low)
+            bc3.metric("Pass rate", f"{(len(bert_rows) - n_low) / len(bert_rows):.0%}")
+        else:
+            st.info(
+                "No BERTScore data in this report. "
+                "Install `bert-score` and ensure `bertscore_enabled=True` in feature flags."
+            )
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 5 — Chain-of-Thought Evaluation
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 5. Chain-of-Thought Evaluation")
+        st.markdown(
+            "A second LLM call evaluates the score rationale on three dimensions (1–5): "
+            "**Specificity** (precise claims), **Evidence** (grounded in retrieved chunks), "
+            "**Alignment** (maps to rubric criteria). "
+            "Any sub-score < 3 fires a `cot_weak_reasoning` flag."
+        )
+
+        cot_rows = []
+        for k in ce_kpis:
+            cot = k.get("cot_eval")
+            if not cot:
+                continue
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+
+            spec  = cot.get("cot_specificity")
+            ev    = cot.get("cot_evidence")
+            align = cot.get("cot_alignment")
+            avg_cot = (
+                sum(v for v in [spec, ev, align] if v is not None)
+                / sum(1 for v in [spec, ev, align] if v is not None)
+                if any(v is not None for v in [spec, ev, align]) else None
+            )
+            weak = any(
+                v is not None and v < 3
+                for v in [spec, ev, align]
+            )
+
+            cot_rows.append({
+                "KPI": label,
+                "Pillar": k.get("pillar", ""),
+                "Specificity": spec,
+                "Evidence": ev,
+                "Alignment": align,
+                "Avg CoT": round(avg_cot, 2) if avg_cot else None,
+                "Flag": "⚠️ cot_weak_reasoning" if weak else "✓",
+            })
+
+        if cot_rows:
+            df_cot = pd.DataFrame(cot_rows)
+            num_cols = [c for c in ["Specificity", "Evidence", "Alignment", "Avg CoT"]
+                        if c in df_cot.columns and df_cot[c].notna().any()]
+
+            styled_cot = df_cot.style
+            if num_cols:
+                styled_cot = styled_cot.background_gradient(
+                    subset=num_cols, cmap="RdYlGn", vmin=1, vmax=5
+                )
+            st.dataframe(styled_cot, use_container_width=True, hide_index=True)
+
+            # Radar / bar chart — avg scores per dimension
+            dim_avgs = {
+                "Specificity": df_cot["Specificity"].dropna().mean() if df_cot["Specificity"].notna().any() else 0,
+                "Evidence":    df_cot["Evidence"].dropna().mean()    if df_cot["Evidence"].notna().any()    else 0,
+                "Alignment":   df_cot["Alignment"].dropna().mean()   if df_cot["Alignment"].notna().any()   else 0,
+            }
+            st.markdown("**Average CoT sub-scores across all KPIs:**")
+            cc1, cc2, cc3 = st.columns(3)
+            for col, (dim, avg) in zip([cc1, cc2, cc3], dim_avgs.items()):
+                col.metric(dim, f"{avg:.2f} / 5")
+        else:
+            st.info(
+                "No CoT evaluation data in this report. "
+                "Ensure `cot_eval_enabled=True` in feature flags and re-run the pipeline."
+            )
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 6 — Score Change Attribution
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 6. Score Change Attribution")
+        st.markdown(
+            "When |Δ mean score| > 0.2 vs the previous run, the change is attributed to one of: "
+            "**model_change**, **prompt_change**, **data_change**, or **external_noise**."
+        )
+
+        attr_rows = []
+        for k in ce_kpis:
+            attr = k.get("score_attribution")
+            if not attr:
+                continue
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+            atype = attr.get("attribution_type", "")
+            attr_rows.append({
+                "KPI": label,
+                "Prev Score": _fmt(attr.get("previous_score"), 3),
+                "New Score": _fmt(attr.get("new_score"), 3),
+                "Δ": _fmt(attr.get("delta"), 3),
+                "Attribution": f'<span class="attr-badge attr-{atype}">{atype}</span>',
+            })
+
+        if attr_rows:
+            df_attr = pd.DataFrame(attr_rows)
+            st.write(
+                df_attr.to_html(escape=False, index=False),
+                unsafe_allow_html=True,
+            )
+        else:
+            st.info(
+                "No attribution events in this report. Attribution fires when "
+                "|Δ mean score| > 0.2 vs the previous run for the same company."
+            )
+
+        st.markdown("---")
+
+        # ─────────────────────────────────────────────────────────────────
+        # SECTION 7 — Traceability
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("#### 7. Traceability")
+        st.markdown(
+            "Prompt hashes, ChromaDB snapshot IDs, and MLflow run IDs make every "
+            "evaluation fully reproducible. The snapshot ID on the report header "
+            "is the fingerprint of the collection at report-generation time."
+        )
+
+        trace_rows = []
+        for k in ce_kpis:
+            ph = k.get("prompt_hash")
+            sid = k.get("chromadb_snapshot_id")
+            mlid = k.get("mlflow_run_id")
+            lfid = k.get("langfuse_trace_id")
+            if not any([ph, sid, mlid, lfid]):
+                continue
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+            trace_rows.append({
+                "KPI": label,
+                "Prompt Hash": (ph or "")[:16] + "…" if ph else "—",
+                "Snapshot ID": (sid or "")[:16] + "…" if sid else "—",
+                "MLflow Run ID": (mlid or "")[:16] + "…" if mlid else "—",
+                "Langfuse Trace ID": (lfid or "")[:16] + "…" if lfid else "—",
+            })
+
+        if trace_rows:
+            st.dataframe(pd.DataFrame(trace_rows), use_container_width=True, hide_index=True)
+            with st.expander("Show full hashes"):
+                for r in trace_rows:
+                    kpi_id_r = r["KPI"]
+                    kpi_r = next((k for k in ce_kpis if (_KPI_DEFS.get(str(k["kpi_id"])) and
+                                 _KPI_DEFS[str(k["kpi_id"])].name == kpi_id_r) or str(k["kpi_id"]) == kpi_id_r), None)
+                    if kpi_r:
+                        st.markdown(f"**{kpi_id_r}**")
+                        st.code(
+                            f"prompt_hash:          {kpi_r.get('prompt_hash') or '—'}\n"
+                            f"chromadb_snapshot_id: {kpi_r.get('chromadb_snapshot_id') or '—'}\n"
+                            f"mlflow_run_id:        {kpi_r.get('mlflow_run_id') or '—'}\n"
+                            f"langfuse_trace_id:    {kpi_r.get('langfuse_trace_id') or '—'}"
+                        )
+        else:
+            st.info("No traceability data found. Traceability IDs are populated on rubric KPIs.")
+
+        # ─────────────────────────────────────────────────────────────────
+        # Per-KPI drill-down expanders
+        # ─────────────────────────────────────────────────────────────────
+        st.markdown("---")
+        st.markdown("#### KPI-level Detail")
+        st.caption("Expand any KPI to see the full custom evaluation breakdown.")
+
+        for k in ce_kpis:
+            kpi_id = str(k["kpi_id"])
+            kpi_def = _KPI_DEFS.get(kpi_id)
+            label = kpi_def.name if kpi_def and getattr(kpi_def, "name", None) else kpi_id
+
+            has_data = any([
+                k.get("baseline_score") is not None,
+                k.get("quality_gates"),
+                k.get("bertscore_f1") is not None,
+                k.get("cot_eval"),
+                k.get("score_attribution"),
+            ])
+            if not has_data:
+                continue
+
+            gates_meta = k.get("quality_gates") or {}
+            blocked    = gates_meta.get("blocked", False)
+            icon = "🚫" if blocked else "🧪"
+            f1_str = f"  BERTScore={_fmt(k.get('bertscore_f1'), 3)}" if k.get("bertscore_f1") is not None else ""
+
+            with st.expander(f"{icon} {label}  (score {_fmt(k.get('score'), 1)}/5  |  live {_fmt(k.get('live_score'), 2)}{f1_str})"):
+
+                d1, d2, d3 = st.columns(3)
+
+                # Score split
+                with d1:
+                    st.markdown("**Score Split**")
+                    dist = k.get("scoring_distribution") or {}
+                    b_mean = k.get("baseline_score")
+                    l_mean = k.get("live_score")
+                    b_std  = dist.get("baseline_std")
+                    l_std  = dist.get("live_std")
+                    delta  = k.get("score_split_delta")
+
+                    if b_mean is not None:
+                        st.markdown(
+                            f'<div class="eval-metric">'
+                            f'<div class="eval-value" style="color:{score_color(b_mean, 5.0)}">{_fmt(b_mean, 2)}</div>'
+                            f'<div class="eval-label">Baseline (± {_fmt(b_std, 3)})</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+                    if l_mean is not None:
+                        st.markdown(
+                            f'<div class="eval-metric">'
+                            f'<div class="eval-value" style="color:{score_color(l_mean, 5.0)}">{_fmt(l_mean, 2)}</div>'
+                            f'<div class="eval-label">Live (± {_fmt(l_std, 3)})</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+                    if delta is not None:
+                        dcolor = "#00C49A" if delta > 0 else "#FF6B6B" if delta < 0 else "#888"
+                        st.markdown(
+                            f'<div class="eval-metric">'
+                            f'<div class="eval-value" style="color:{dcolor}">{delta:+.3f}</div>'
+                            f'<div class="eval-label">Δ live − baseline</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+
+                    gate_score_display = gates_meta.get("score_range_display")
+                    if gate_score_display:
+                        st.markdown(
+                            f'<div class="eval-metric">'
+                            f'<div class="eval-value" style="color:#f0c040">{gate_score_display}</div>'
+                            f'<div class="eval-label">Score range (unstable σ)</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+
+                # BERTScore + CoT
+                with d2:
+                    st.markdown("**Semantic & Reasoning Quality**")
+                    f1_val = k.get("bertscore_f1")
+                    if f1_val is not None:
+                        bcolor = score_color(float(f1_val), 1.0)
+                        flag = " ⚠️" if float(f1_val) < 0.75 else ""
+                        st.markdown(
+                            f'<div class="eval-metric">'
+                            f'<div class="eval-value" style="color:{bcolor}">{_fmt(f1_val, 4)}{flag}</div>'
+                            f'<div class="eval-label">BERTScore F1</div>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
+                    cot = k.get("cot_eval") or {}
+                    for dim, label_dim in [
+                        ("cot_specificity", "Specificity"),
+                        ("cot_evidence", "Evidence"),
+                        ("cot_alignment", "Alignment"),
+                    ]:
+                        val = cot.get(dim)
+                        if val is not None:
+                            ccolor = score_color(float(val), 5.0)
+                            flag_cot = " ⚠️" if int(val) < 3 else ""
+                            st.markdown(
+                                f'<div class="eval-metric">'
+                                f'<div class="eval-value" style="color:{ccolor}">{val}{flag_cot}</div>'
+                                f'<div class="eval-label">CoT {label_dim} / 5</div>'
+                                f'</div>',
+                                unsafe_allow_html=True,
+                            )
+
+                # Quality gates
+                with d3:
+                    st.markdown("**Quality Gates**")
+                    gates = gates_meta.get("gates") or {}
+                    for gate_name, gate_label in [
+                        ("faithfulness_gate", "Faithfulness"),
+                        ("stability_gate",    "Stability"),
+                        ("source_coverage_gate", "Source Coverage"),
+                        ("competitor_bleed_gate", "Competitor Bleed"),
+                    ]:
+                        g = gates.get(gate_name, {})
+                        badge = _gate_badge(g.get("passed"), g.get("reason", ""))
+                        st.markdown(f"{badge} &nbsp; {gate_label}", unsafe_allow_html=True)
+
+                    if gates_meta.get("suppress_structural_score"):
+                        st.markdown(
+                            '<span class="gate-warn">⚠ Structural score suppressed</span>',
+                            unsafe_allow_html=True,
+                        )
+                    if gates_meta.get("competitor_bleed_detected"):
+                        st.error("Competitor bleed detected — result blocked.")
+
+                # Attribution
+                attr = k.get("score_attribution")
+                if attr:
+                    atype = attr.get("attribution_type", "")
+                    st.markdown(
+                        f"**Score Attribution:** "
+                        f'<span class="attr-badge attr-{atype}">{atype}</span>  '
+                        f"Δ = {_fmt(attr.get('delta'), 3)}  "
+                        f"({_fmt(attr.get('previous_score'), 2)} → {_fmt(attr.get('new_score'), 2)})",
+                        unsafe_allow_html=True,
+                    )
+
+                # Raw JSON
+                raw_keys = [
+                    "baseline_score", "live_score", "score_split_delta",
+                    "scoring_distribution", "quality_gates", "score_attribution",
+                    "bertscore_f1", "cot_eval", "prompt_hash",
+                    "chromadb_snapshot_id", "mlflow_run_id", "langfuse_trace_id",
+                ]
+                raw_payload = {k2: k.get(k2) for k2 in raw_keys if k.get(k2) is not None}
+                if raw_payload:
+                    with st.popover("Raw JSON"):
+                        st.json(raw_payload)
+
+
+# ============================================================================
+=======
+>>>>>>> origin/main
 # TAB: Sources
 # ============================================================================
 with tab_sources:

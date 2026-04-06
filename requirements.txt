@@ -9,3 +9,7 @@ python-dotenv
 streamlit
 pandas
 matplotlib
+openai
+sentence-transformers
+torch
+rank-bm25

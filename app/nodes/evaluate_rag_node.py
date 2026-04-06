@@ -81,7 +81,9 @@ def evaluate_rag_node(state: Dict) -> Dict:
         kpi_results=kpi_results,
         sources=sources,
         kpi_definitions=kpi_definitions,
-        run_llm_judge=True,
+        # Keep eval deterministic and provider-agnostic in pipeline mode.
+        # LLM-judge can be enabled in standalone experiments if needed.
+        run_llm_judge=False,
         hallucination_threshold=0.4,
         verbose=False,  # Suppress per-KPI print output; results go into YAML only
     )
