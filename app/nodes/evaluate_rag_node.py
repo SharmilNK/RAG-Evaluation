@@ -144,6 +144,7 @@ def evaluate_rag_node(state: Dict) -> Dict:
         ))
 
     # --- Step 5: Build the batch-level summary and overall verdict ---
+    # Counts derived from actual lists (no hardcoding)
     total = len(per_kpi)
     num_flagged = len(flagged_kpi_ids)
 
@@ -187,7 +188,7 @@ def evaluate_rag_node(state: Dict) -> Dict:
     )
     summary = " ".join(filter(None, [f1_line, sem_line, flag_line]))
 
-    # Assemble the full RagEvaluationReport object
+    # Assemble the full RagEvaluationReport object (evaluated_kpi_count = actual list length)
     rag_report = RagEvaluationReport(
         evaluated_kpi_count=total,
         flagged_kpi_count=num_flagged,

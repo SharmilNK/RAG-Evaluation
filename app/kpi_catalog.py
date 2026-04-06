@@ -71,7 +71,11 @@ def _load_kpis_from_csv() -> List[KPIDefinition]:
     Load KPI definitions directly from the AlixPartners KPI Drivers & Quality Criteria CSV.
 
     Each row becomes a rubric KPI:
+<<<<<<< HEAD
       - kpi_id: slug from RDP Reference / row number / question
+=======
+      - kpi_id: slug from column N (KPI Drivers) so each row has a unique id
+>>>>>>> origin/main
       - name:  'Definition (KPI)' (fallback to question)
       - pillar: 'KPI Category'
       - type:  'rubric'
@@ -115,9 +119,18 @@ def _load_kpis_from_csv() -> List[KPIDefinition]:
             name = (row.get("Definition (KPI)") or question).strip()
             pillar = (row.get("KPI Category") or "Uncategorized").strip()
 
+<<<<<<< HEAD
             raw_id = (row.get("RDP Reference") or row.get("#") or "").strip()
             base_id = raw_id or question
             kpi_id = _slugify(base_id) or f"kpi_{idx}"
+=======
+            # Column N (KPI Drivers / KPI Drivers ) has unique values per row — use for unique kpi_id
+            driver_col_n = (row.get("KPI Drivers ") or row.get("KPI Drivers") or "").strip()
+            base_id = driver_col_n or question
+            slug = _slugify(base_id)
+            # Append row index so every row gets a unique id even if slug would collide
+            kpi_id = f"{slug}_{idx}" if slug else f"kpi_{idx}"
+>>>>>>> origin/main
 
             # Build rubric from quality criteria columns (1–5)
             rubric_texts = []

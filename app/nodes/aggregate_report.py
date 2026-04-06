@@ -75,10 +75,13 @@ def aggregate_report_node(state: Dict) -> Dict:
 
     kpi_definitions = state.get("kpi_definitions", [])
 
+<<<<<<< HEAD
     # Feature 9: surface the collection fingerprint at report level so every
     # generated report is traceable to the exact ChromaDB snapshot it used.
     chromadb_snapshot_id: str = state.get("chromadb_snapshot_id", "")
 
+=======
+>>>>>>> origin/main
     report = ReportArtifact(
         run_id=run_id,
         company_name=company_name,
