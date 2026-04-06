@@ -515,14 +515,8 @@ kpi_results = report_data.get("kpi_results", [])
 missing_evidence = report_data.get("missing_evidence", [])
 debug_log = report_data.get("debug_log", []) or []
 
-# FIX 1: number of tab variables must match number of tab labels
-<<<<<<< HEAD
 tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_custom_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
     ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "🧪 Custom Eval", "Sources", "Citations", "Raw Report", "Debug Log"]
-=======
-tab_kpi, tab_diff, tab_eval, tab_rag_eval, tab_sources, tab_citations, tab_raw, tab_debug = st.tabs(
-    ["KPI Scores", "Run Diffs", "Source Evaluation", "RAG Evaluation", "Sources", "Citations", "Raw Report", "Debug Log"]
->>>>>>> origin/main
 )
 
 # ============================================================================
@@ -1288,8 +1282,6 @@ with tab_rag_eval:
                     st.pyplot(fig, clear_figure=True)
 
 
-# ============================================================================
-<<<<<<< HEAD
 # TAB: Custom Eval
 # Displays all 10-feature extension metrics: score split, scoring distribution,
 # quality gates, score attribution, retrieval metrics (Hit Rate / MRR / nDCG),
@@ -1474,7 +1466,8 @@ with tab_custom_eval:
         # ─────────────────────────────────────────────────────────────────
         st.markdown("#### 3. Retrieval Metrics")
         st.markdown(
-            "Computed against the **golden chunk set** (configured via `GOLDEN_CHUNKS_PATH`). "
+            "Computed against the **golden chunk set** in Postgres (`golden_chunks` table by default, "
+            "via `DATABASE_URL`). "
             "**Hit Rate** = fraction of golden chunks in top-k. "
             "**MRR** = reciprocal rank of the first golden chunk. "
             "**nDCG** = normalised discounted cumulative gain using relevance labels."
@@ -1518,7 +1511,8 @@ with tab_custom_eval:
         else:
             st.info(
                 "No retrieval metric data in this report. "
-                "Set `GOLDEN_CHUNKS_PATH` and re-run to compute Hit Rate, MRR, and nDCG. "
+                "Populate the `golden_chunks` table (and `DATABASE_URL`) and re-run eval to compute "
+                "Hit Rate, MRR, and nDCG. "
                 "Scores are also logged as LangFuse trace scores (`retrieval_hit_rate`, "
                 "`retrieval_mrr`, `retrieval_ndcg`) for each KPI."
             )
@@ -1891,10 +1885,6 @@ with tab_custom_eval:
                     with st.popover("Raw JSON"):
                         st.json(raw_payload)
 
-
-# ============================================================================
-=======
->>>>>>> origin/main
 # TAB: Sources
 # ============================================================================
 with tab_sources:

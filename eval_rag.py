@@ -73,6 +73,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
+from app.langfuse_client import create_trace, get_trace_id
+from app.score_extensions import DEFAULT_FEATURE_FLAGS, compute_bertscore, run_cot_eval
+
 
 # ==============================================================================
 # HELPER: Call the LLM (OpenAI or Gemini)
@@ -1147,6 +1150,9 @@ def evaluate_single_kpi(
     hallucination_threshold: float = 0.4,
     run_llm_judge: bool = True,
     verbose: bool = True,
+    retrieved_chunk_ids: Optional[List[str]] = None,
+    trace_id: Optional[str] = None,
+    trace: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """
     Run all 9 RAG evaluation checks for a single KPI result.
@@ -1166,10 +1172,14 @@ def evaluate_single_kpi(
                                 the Score-5 description as ground truth for checks 7-9)
         hallucination_threshold: Flag answers above this unsupported-content level
         run_llm_judge:          Whether to run the LLM-as-judge check
+        retrieved_chunk_ids:    Ordered chunk IDs for Hit Rate / MRR / nDCG (vs DB golden_chunks)
+        trace_id / trace:       LangFuse trace for scores (BERTScore, retrieval, CoT)
 
     Returns:
         Dictionary containing results from all 9 evaluations.
     """
+
+    eval_flags = dict(DEFAULT_FEATURE_FLAGS)
 
     # Extract the Score-5 rubric line as the ground truth benchmark
     # e.g. "Clear, coherent AI strategy with priorities and outcomes."
@@ -1235,6 +1245,38 @@ def evaluate_single_kpi(
     if verbose:
         print_mmr_summary(kpi_name, mmr_result)
 
+    # --- BERTScore + CoT eval (reference = top-3 retrieved chunk texts) ---
+    rubric_text = "\n".join(rubric) if rubric else ""
+    results["bertscore_f1"] = None
+    results["low_semantic_grounding"] = None
+    results["cot_eval"] = None
+    if contexts:
+        try:
+            bs = compute_bertscore(
+                answer,
+                contexts,
+                trace_id=trace_id,
+                trace=trace,
+                config=eval_flags,
+            )
+            results["bertscore_f1"] = bs
+            results["low_semantic_grounding"] = bool(bs is not None and bs < 0.75)
+        except Exception:
+            pass
+        try:
+            cot = run_cot_eval(
+                kpi_name,
+                rubric_text or "No rubric text available.",
+                contexts,
+                answer,
+                trace_id=trace_id,
+                trace=trace,
+                config=eval_flags,
+            )
+            results["cot_eval"] = cot
+        except Exception:
+            pass
+
     # --- 7, 8, 9. Ground-truth-based checks (Factual Correctness, Noise Sensitivity, Semantic Similarity) ---
     # These only run if a ground truth could be extracted from the Score-5 rubric.
     # If no rubric was provided, this section is skipped gracefully.
@@ -1254,6 +1296,31 @@ def evaluate_single_kpi(
         print_ragas_ground_truth_summary(kpi_name, gt_result)
         # --- Overall executive summary ---
         _print_overall_verdict(kpi_name, results)
+
+    # --- Retrieval vs golden chunks (Hit Rate, MRR, nDCG) ---
+    results["retrieval_metrics"] = None
+    if retrieved_chunk_ids:
+        try:
+            from app.langfuse_client import log_score_to_trace
+            from app.retrieval_metrics import compute_hit_rate, compute_mrr, compute_ndcg
+
+            hr = compute_hit_rate(kpi_name, retrieved_chunk_ids)
+            mrr_v = compute_mrr(kpi_name, retrieved_chunk_ids)
+            ndcg_v = compute_ndcg(kpi_name, retrieved_chunk_ids)
+            results["retrieval_metrics"] = {
+                "hit_rate": hr,
+                "mrr": mrr_v,
+                "ndcg": ndcg_v,
+            }
+            if trace_id:
+                if hr is not None:
+                    log_score_to_trace(trace_id, "retrieval_hit_rate", float(hr))
+                if mrr_v is not None:
+                    log_score_to_trace(trace_id, "retrieval_mrr", float(mrr_v))
+                if ndcg_v is not None:
+                    log_score_to_trace(trace_id, "retrieval_ndcg", float(ndcg_v))
+        except Exception:
+            pass
 
     return results
 
@@ -1404,6 +1471,26 @@ def run_all_evaluations(
         if sid:
             source_text_by_id[sid] = s.get("text", "")
 
+    show_progress = os.getenv("RAG_EVAL_PROGRESS", "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+    )
+
+    rubric_total = sum(
+        1
+        for k in kpi_results
+        if k.type == "rubric"
+        and (not kpi_ids_to_evaluate or k.kpi_id in kpi_ids_to_evaluate)
+    )
+    if show_progress:
+        print(
+            f"[eval_rag] {rubric_total} rubric KPIs to evaluate. "
+            f"Each KPI: RAGAS + judge + recall/F1/hallucination/MMR + BERTScore + CoT. "
+            f"This can take a long time — progress below.",
+            flush=True,
+        )
+
     all_results: Dict[str, Dict] = {}
     flagged_kpis: List[str] = []
     evaluated_count = 0
@@ -1441,6 +1528,24 @@ def run_all_evaluations(
         # Use the KPI's actual question from kpi_definitions; fall back to kpi_id
         kpi_question = question_by_kpi_id.get(kpi_id, kpi_id)
 
+        # Chunk IDs for Hit Rate / MRR / nDCG (match DB golden_chunks.kpi_id)
+        retrieved_chunk_ids: List[str] = []
+        for citation in kpi_result.citations or []:
+            sid = getattr(citation, "source_id", None) or ""
+            if sid:
+                retrieved_chunk_ids.append(f"{sid}::chunk_0")
+        if not retrieved_chunk_ids and source_text_by_id:
+            retrieved_chunk_ids = [
+                f"{sid}::chunk_0" for sid in list(source_text_by_id.keys())[:25]
+            ]
+
+        trace = create_trace(
+            name=f"rag_eval_{kpi_id}",
+            metadata={"kpi_id": kpi_id, "module": "eval_rag.run_all_evaluations"},
+            tags=["rag_eval"],
+        )
+        tid = get_trace_id(trace)
+
         # Run all 9 evaluations for this KPI
         eval_result = evaluate_single_kpi(
             kpi_name=kpi_name,
@@ -1451,17 +1556,26 @@ def run_all_evaluations(
             hallucination_threshold=hallucination_threshold,
             run_llm_judge=run_llm_judge,
             verbose=verbose,
+            retrieved_chunk_ids=retrieved_chunk_ids or None,
+            trace_id=tid,
+            trace=trace,
         )
 
         all_results[kpi_id] = eval_result
         evaluated_count += 1
 
+        if show_progress:
+            print(
+                f"[eval_rag] {evaluated_count}/{rubric_total} done  kpi_id={kpi_id[:72]}",
+                flush=True,
+            )
+
         if eval_result.get("hallucination", {}).get("is_flagged"):
             flagged_kpis.append(kpi_name)
 
-        # Small pause between LLM calls to avoid rate limits
+        # Pause between KPIs (rate limits)
         if run_llm_judge:
-            time.sleep(2)
+            time.sleep(float(os.getenv("RAG_EVAL_JUDGE_SLEEP_SEC", "2")))
 
     # --- Final batch summary (only shown in verbose / standalone mode) ---
     if verbose:

@@ -74,6 +74,7 @@ class KPIDriverResult(BaseModel):
 
     # ── Feature 7: BERTScore F1 ───────────────────────────────────────────
     bertscore_f1: Optional[float] = None
+    low_semantic_grounding: Optional[bool] = None
 
     # ── Feature 8: Chain-of-thought evaluation ────────────────────────────
     cot_eval: Optional[Dict[str, object]] = None
@@ -131,6 +132,14 @@ class RagKpiEval(BaseModel):
     factual_correctness: Optional[float] = None   # Claim-level accuracy vs ideal answer
     noise_sensitivity: Optional[float] = None     # Impact of low-quality sources (lower = better)
     semantic_similarity: Optional[float] = None   # Meaning-level match to ideal answer
+
+    # Golden-chunk retrieval metrics (eval_rag + YAML and/or DB via retrieval_metrics)
+    retrieval_hit_rate: Optional[float] = None
+    retrieval_mrr: Optional[float] = None
+    retrieval_ndcg: Optional[float] = None
+    bertscore_f1: Optional[float] = None
+    low_semantic_grounding: Optional[bool] = None
+    cot_eval: Optional[Dict[str, object]] = None
 
 
 class RagEvaluationReport(BaseModel):

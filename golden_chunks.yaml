@@ -1,11 +1,12 @@
-# golden_chunks.yaml
-# -------------------
-# Ground-truth retrieval labels for Vitelis KPI benchmarking.
+# golden_chunks.yaml  (LEGACY — not loaded unless GOLDEN_CHUNKS_PATH + GOLDEN_CHUNKS_SOURCE=yaml)
+# -------------------------------------------------------------------------------------------
+# Canonical golden labels live in Postgres: table golden_chunks (see app/retrieval_metrics.py).
 #
-# HOW TO USE
-# ----------
+# HOW TO USE THIS FILE (optional only)
+# ------------------------------------
 # 1. Set the environment variable:
 #        GOLDEN_CHUNKS_PATH=/path/to/golden_chunks.yaml
+#    and GOLDEN_CHUNKS_SOURCE=yaml  (or both)
 # 2. Chunk IDs follow the pattern:  {source_id}::chunk_{idx}
 #    where source_id = MD5(url)[:8] from the scraper at time of that run.
 # 3. Populate this file with 5-10 manually verified examples per KPI pillar.

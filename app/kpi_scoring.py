@@ -44,7 +44,6 @@ def _extract_json(text: str) -> Optional[dict]:
         return None
 
 
-<<<<<<< HEAD
 def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
     """Call the configured LLM provider and return parsed JSON, or None on failure.
 
@@ -62,54 +61,6 @@ def _llm_score(prompt: str, temperature: float = 0.2) -> Optional[dict]:
     openai_key = os.getenv("OPENAI_API_KEY")
     use_gemini = provider in {"gemini", "google"} or (google_key and provider != "openai")
     if provider in {"gemini", "google"} and not google_key:
-=======
-def _llm_score_gemini(prompt: str, api_key: str) -> Optional[dict]:
-    """Call Google AI Studio (Gemini) REST API. Returns parsed JSON or None."""
-    model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-    full_prompt = "You are a strict JSON generator. Return only valid JSON.\n\n" + prompt
-    try:
-        resp = requests.post(
-            url,
-            json={
-                "contents": [{"parts": [{"text": full_prompt}]}],
-                "generationConfig": {"temperature": 0.2},
-            },
-            timeout=60,
-        )
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        candidates = data.get("candidates") or []
-        if not candidates:
-            return None
-        parts = candidates[0].get("content", {}).get("parts") or []
-        if not parts:
-            return None
-        text = parts[0].get("text", "").strip()
-        return _extract_json(text) if text else None
-    except Exception:
-        return None
-
-
-def _llm_score(prompt: str) -> Optional[dict]:
-    global _LAST_LLM_CALL_AT
-    provider = (os.getenv("VITELIS_LLM_PROVIDER") or "").strip().lower()
-    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-
-    # Prefer Gemini if configured (e.g. free student API from Google AI Studio)
-    if provider in ("gemini", "google") or (google_key and provider != "openai"):
-        if google_key:
-            data = _llm_score_gemini(prompt, google_key)
-            if data is not None:
-                return data
-            print("[KPI scoring] Gemini API call failed; using heuristic fallback.")
-        elif os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
-            add_debug("[llm] GOOGLE_API_KEY/GEMINI_API_KEY not set; trying OpenAI")
-    # OpenAI
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
->>>>>>> origin/main
         if os.getenv("VITELIS_DEBUG", "").lower() in {"1", "true", "yes"}:
             add_debug("[llm] provider set to Gemini but GEMINI/GOOGLE key missing; using fallback scoring")
         return None
@@ -169,12 +120,8 @@ def _llm_score(prompt: str) -> Optional[dict]:
                 time.sleep(wait_time)
                 continue
             if response.status_code != 200:
-<<<<<<< HEAD
                 provider_name = "Gemini" if (use_gemini and google_key) else "OpenAI"
                 print(f"[KPI scoring] {provider_name} API returned {response.status_code}; using heuristic fallback.")
-=======
-                print(f"[KPI scoring] OpenAI API returned {response.status_code}; using heuristic fallback.")
->>>>>>> origin/main
                 return None
             response.raise_for_status()
             if use_gemini and google_key:
@@ -506,7 +453,6 @@ def score_rubric_kpi(
             True,
         )
 
-<<<<<<< HEAD
     system_prompt, prompt = build_rubric_prompt(kpi, evidences)
     # Feature 10: Prompt hash (compute before LLM call so it's a true pre-call fingerprint)
     prompt_hash = ""
@@ -514,41 +460,6 @@ def score_rubric_kpi(
         prompt_hash = compute_prompt_hash(system_prompt, prompt)
     except Exception:
         prompt_hash = ""
-=======
-    rubric = "\n".join(kpi.rubric or [])
-    ideal_5 = _score5_from_rubric(kpi.rubric)
-
-    # Send full chunk (500 chars) so LLM has full context; avoid truncation.
-    char_limit = 500
-    if evidences and len(evidences[0]) == 3:
-        evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
-            for meta, doc, _ in evidences
-        )
-    else:
-        evidence_block = "\n".join(
-            f"- [{meta.get('source_id', '')}] {meta.get('url', '')}: {doc[:char_limit]}"
-            for meta, doc in evidences
-        )
-
-    ideal_line = f"\nIdeal (5 = High): \"{ideal_5}\"\nScore how close the evidence supports this level (1 = not at all, 5 = fully).\n" if ideal_5 else ""
-
-    prompt = f"""
-    You are a Business Analyst. Your task is to audit the following context using 
-    the KPI Drivers.
-    Score the KPI from 1-5 using the rubric and evidence.
-    Return strict JSON: {{"kpi_id": "...", "score": 1-5, "confidence": 0-1, "rationale": "...", "citations": [{{"source_id": "...", "url": "...", "quote": "..."}}]}}.
-    Citations must include source_id, url, quote.
-
-    KPI: {kpi.name}
-    Question: {kpi.question}
-    Rubric:
-    {rubric}
-    {ideal_line}
-    Evidence:
-    {evidence_block}
-    """
->>>>>>> origin/main
 
     llm_data: Optional[dict] = None
     try:

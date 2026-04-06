@@ -13,3 +13,6 @@ openai
 sentence-transformers
 torch
 rank-bm25
+bert-score
+psycopg2-binary
+sqlalchemy

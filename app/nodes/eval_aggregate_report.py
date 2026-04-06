@@ -123,8 +123,19 @@ def eval_aggregate_report_node(state: Dict) -> Dict:
     except Exception:
         pass
 
-    # ── 2. Ground-truth comparison ────────────────────────────────────── #
+    # ── 2. Eval JSON (always) + optional ground-truth comparison ───────── #
     eval_report_path = None
+    eval_path = os.path.join(output_dir, f"eval_{run_id}.json")
+    eval_payload: Dict = {
+        "run_id": run_id,
+        "company_name": company_name,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "overall_score": float(overall_score),
+        "url_count": url_count,
+        "rag_evaluation": rag_eval_dict,
+        "kpi_count": len(kpi_results),
+    }
+
     if company_folder:
         try:
             ground_truth_points = load_ground_truth(company_folder)
@@ -134,23 +145,26 @@ def eval_aggregate_report_node(state: Dict) -> Dict:
                 company_name=company_name,
                 run_id=run_id,
             )
-
-            eval_path = os.path.join(output_dir, f"eval_{run_id}.json")
-            with open(eval_path, "w", encoding="utf-8") as f:
-                json.dump(eval_report.model_dump(), f, indent=2, ensure_ascii=False)
-
-            eval_report_path = eval_path
+            eval_payload["ground_truth_comparison"] = eval_report.model_dump()
             n_matched = len(eval_report.comparisons)
             n_unmatched_kpis = len(eval_report.unmatched_kpis)
             n_unmatched_gt = len(eval_report.unmatched_data_points)
             print(
-                f"[eval_aggregate] Ground-truth comparison written: {eval_path}\n"
+                f"[eval_aggregate] Ground-truth comparison merged into eval JSON.\n"
                 f"  Matched: {n_matched} KPIs | "
                 f"Unmatched KPIs: {n_unmatched_kpis} | "
                 f"Unmatched GT points: {n_unmatched_gt}"
             )
         except FileNotFoundError as exc:
             print(f"[eval_aggregate] WARNING: Could not load ground truth — {exc}")
+
+    try:
+        with open(eval_path, "w", encoding="utf-8") as f:
+            json.dump(eval_payload, f, indent=2, ensure_ascii=False)
+        eval_report_path = eval_path
+        print(f"[eval_aggregate] Eval JSON written: {eval_path}")
+    except OSError as exc:
+        print(f"[eval_aggregate] WARNING: Could not write eval JSON — {exc}")
 
     return {
         "report_path": report_path,
